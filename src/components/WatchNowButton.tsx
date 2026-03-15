@@ -46,6 +46,7 @@ export default function WatchNowButton({ animeSlug, episodes }: WatchNowButtonPr
                 if (episodes.length > 0) {
                     href = `/anime/watch/${episodes[0].slug}?anime=${animeSlug}`;
                 }
+                // eslint-disable-next-line react-hooks/set-state-in-effect
                 setState({ mounted: true, href, label });
                 return;
             }

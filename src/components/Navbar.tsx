@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import SearchBar from "@/components/SearchBar";
 
 const NAV_LINKS = [
@@ -14,9 +15,97 @@ const NAV_LINKS = [
   { label: "Schedule", href: "/schedule" },
   { label: "Saved", href: "/saved" },
   { label: "History", href: "/history" },
-  
 ];
 
+// ─── User Avatar Dropdown ──────────────────────────────────────────
+function UserMenu() {
+  const { data: session, status } = useSession();
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close on click outside
+  useEffect(() => {
+    if (!open) return;
+    function handleClick(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [open]);
+
+  // ── Loading state ────────────────────────────────────────────
+  if (status === "loading") {
+    return (
+      <div className="h-8 w-8 animate-pulse rounded-full bg-white/5" />
+    );
+  }
+
+  // ── Unauthenticated: link to /login ──────────────────────────
+  if (!session?.user) {
+    return (
+      <Link
+        href="/login"
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-white/[0.06] text-white/40 transition-all duration-200 hover:bg-hn-primary/15 hover:text-hn-primary hover:shadow-[0_0_12px_rgba(255,186,222,0.15)]"
+        aria-label="Sign in"
+      >
+        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+        </svg>
+      </Link>
+    );
+  }
+
+  // ── Authenticated: avatar + dropdown ─────────────────────────
+  const initials = (session.user.name ?? session.user.email ?? "U")
+    .charAt(0)
+    .toUpperCase();
+
+  return (
+    <div ref={menuRef} className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-hn-primary/15 text-sm font-bold text-hn-primary transition-all duration-200 hover:bg-hn-primary/25 hover:shadow-[0_0_12px_rgba(255,186,222,0.2)]"
+        aria-label="User menu"
+      >
+        {initials}
+      </button>
+
+      {/* Dropdown */}
+      {open && (
+        <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-60 overflow-hidden rounded-xl border border-white/[0.06] bg-hn-card shadow-2xl shadow-black/40">
+          {/* User info */}
+          <div className="border-b border-white/[0.06] px-4 py-3">
+            <p className="truncate text-sm font-semibold text-white">
+              {session.user.name ?? "User"}
+            </p>
+            {session.user.email && (
+              <p className="truncate text-xs text-white/40">
+                {session.user.email}
+              </p>
+            )}
+          </div>
+
+          {/* Actions */}
+          <div className="p-1.5">
+            <button
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-red-400 transition-all duration-200 hover:bg-red-500/10"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
+              </svg>
+              Sign Out
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Main Navbar ───────────────────────────────────────────────────
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
@@ -27,7 +116,7 @@ export default function Navbar() {
         {/* Hamburger (mobile) */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-white/70 transition-colors hover:bg-white/5 hover:text-white lg:hidden"
+          className="flex h-9 w-9 items-center justify-center rounded-lg text-white/70 transition-all duration-200 hover:bg-white/5 hover:text-white lg:hidden"
           aria-label="Toggle menu"
         >
           <svg
@@ -38,17 +127,9 @@ export default function Navbar() {
             stroke="currentColor"
           >
             {mobileOpen ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18 18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
             ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             )}
           </svg>
         </button>
@@ -63,18 +144,25 @@ export default function Navbar() {
         {/* Desktop Nav Links */}
         <nav className="hidden items-center gap-0.5 pl-6 lg:flex">
           {NAV_LINKS.map((link) => {
-            const isActive = pathname === link.href;
+            const isActive =
+              link.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(link.href);
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors ${
+                className={`relative rounded-lg px-3 py-1.5 text-[13px] font-medium transition-all duration-200 ${
                   isActive
                     ? "text-hn-primary"
                     : "text-white/60 hover:bg-white/5 hover:text-white"
                 }`}
               >
                 {link.label}
+                {/* Active indicator dot */}
+                {isActive && (
+                  <span className="absolute bottom-0 left-1/2 h-[2px] w-4 -translate-x-1/2 rounded-full bg-hn-primary" />
+                )}
               </Link>
             );
           })}
@@ -91,69 +179,34 @@ export default function Navbar() {
         {/* Right side icons */}
         <div className="flex items-center gap-1">
           {/* Mobile search toggle */}
-         <button 
+          <button
             onClick={() => {
-              setMobileOpen(true); 
+              setMobileOpen(true);
               setTimeout(() => {
                 const searchInput = document.querySelector('.md\\:hidden input') as HTMLInputElement;
-                if (searchInput) {
-                  searchInput.focus();
-                }
+                if (searchInput) searchInput.focus();
               }, 100);
             }}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-white/60 transition-colors hover:bg-white/5 hover:text-white md:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-white/60 transition-all duration-200 hover:bg-white/5 hover:text-white md:hidden"
           >
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-              />
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
             </svg>
           </button>
 
           {/* Random button */}
           <a
             href="/api/random"
-            className="hidden h-9 items-center gap-1.5 rounded-lg px-3 text-[12px] font-medium text-white/50 transition-colors hover:bg-white/5 hover:text-white sm:flex"
+            className="hidden h-9 items-center gap-1.5 rounded-lg px-3 text-[12px] font-medium text-white/50 transition-all duration-200 hover:bg-white/5 hover:text-white sm:flex"
           >
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3"
-              />
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3" />
             </svg>
             Random
           </a>
-          {/* User button */}
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-hn-primary/10 text-hn-primary">
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-              />
-            </svg>
-          </div>
+
+          {/* User menu (auth-aware) */}
+          <UserMenu />
         </div>
       </div>
 
@@ -165,13 +218,16 @@ export default function Navbar() {
           </div>
           <nav className="flex flex-col gap-0.5">
             {NAV_LINKS.map((link) => {
-              const isActive = pathname === link.href;
+              const isActive =
+                link.href === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(link.href);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className={`rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                  className={`rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
                     isActive
                       ? "bg-hn-primary/10 text-hn-primary"
                       : "text-white/60 hover:bg-white/5 hover:text-white"

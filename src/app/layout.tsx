@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { SessionProvider } from "next-auth/react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import "./globals.css";
@@ -37,10 +38,13 @@ export default function RootLayout({
       <body
         className={`${inter.variable} font-sans antialiased`}
       >
-        <Navbar />
-        <main className="min-h-screen pt-[60px]">{children}</main>
-        <Footer />
+        <SessionProvider>
+          <Navbar />
+          <main className="min-h-screen pt-[60px]">{children}</main>
+          <Footer />
+        </SessionProvider>
       </body>
     </html>
   );
 }
+
