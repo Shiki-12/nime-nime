@@ -2,59 +2,55 @@
 
 A modern, responsive anime streaming platform built with **Next.js 16**, **React 19**, **TypeScript**, and **Tailwind CSS**. Browse, search, and watch your favorite anime with an elegant user interface.
 
+**Live Demo**: [https://nime-nime.web.id](https://nime-nime.web.id)
+
 ---
 
 ## 📋 Project Overview
 
-**Nime** is a full-featured anime streaming frontend application that aggregates anime content from external APIs. It provides users with a seamless experience to discover, search, and watch anime series with an intuitive interface.
+**Nime** is a full-featured anime streaming frontend application that aggregates anime content from external APIs. It provides users with a seamless experience to discover, search, and watch anime series with an intuitive, premium interface.
 
 ### Key Highlights
-- ⚡ **High Performance**: Built with Next.js 16 with React Compiler enabled for optimized rendering
-- 🎨 **Modern UI**: Tailwind CSS v4 with responsive design
-- 🌐 **Real-time Data**: Fetches anime data with Next.js revalidation caching
-- 🎯 **Type-Safe**: Full TypeScript support for robust development
-- 💾 **Local Storage**: Save and manage your favorite anime
-- 🔍 **Advanced Search**: Search across multiple anime titles and genres
+- ⚡ **High Performance**: Built with Next.js 16 with React Compiler enabled for optimized rendering.
+- 🎨 **Modern UI**: Tailwind CSS v4 with glassmorphism, responsive design, and immersive blurred headers.
+- 🌐 **Real-time Data**: Fetches anime data with Next.js revalidation caching and in-memory client-side caching.
+- 🎯 **Type-Safe**: Full TypeScript support for robust development.
+- 💾 **Local Storage**: Save your favorite anime and track your watch history automatically.
+- 🚀 **Automated CI/CD**: Automated deployment to Google Cloud Platform (GCP) using GitHub Actions.
 
 ---
 
 ## ✨ Features
 
 - **Browse Anime**
-  - View ongoing/airing anime with pagination
-  - Popular anime listings
-  - Movie catalog
-  - Random anime discovery with API endpoint
+  - Immersive hero headers with dynamic blurred backgrounds and gradient overlays.
+  - View ongoing/airing anime with pagination.
+  - Popular anime listings and Movie catalog.
+  - Character & Voice Actor (Seiyuu) integration powered by the Jikan API.
   
 - **Search & Filter**
-  - Full-text anime search
-  - Advanced filtering page with multiple filter options
-  - Browse by genres with curated selections
-  - Filter by anime type and status
+  - Real-time search bar with custom debouncing and in-memory caching to respect API rate limits.
+  - Advanced filtering page with multiple options (genres, types, status).
+  - Browse by genres with curated selections.
 
 - **Watch Anime**
-  - Video player for streaming episodes
-  - Episode list with navigation and sidebar display
-  - Detailed episode information
-  - Streaming integration
+  - Premium Custom Video Player Wrapper with thumbnail overlays, loading states, and error handling.
+  - Smart "Watch Now" / "Continue Watching" CTA that dynamically resumes from your highest watched episode.
+  - Detailed episode list with quick-scroll navigation (First/Latest episode).
+  - Server and resolution selector for optimal streaming quality.
 
 - **User Features**
-  - Save/bookmark your favorite anime
-  - Watch history tracking with timestamps
-  - Clear entire watch history
-  - View sorted watch history
-  - Persistent storage using browser localStorage
-  - Responsive design for desktop and mobile
+  - Save/bookmark your favorite anime.
+  - Watch history tracking with timestamps (stored persistently via `localStorage`).
+  - Clear entire watch history or view sorted history.
+  - Responsive design optimized for both desktop and mobile devices.
+
+- **Android App Integration**
+  - Dedicated APK download page with promotional hero carousels.
 
 - **Release Schedule**
-  - View anime release schedule by day of the week
-  - Automatic detection of current day
-  - Shows all upcoming releases organized by day
-
-- **Navigation**
-  - Intuitive navbar with quick links
-  - Hero banner for featured content
-  - Footer with additional information
+  - View anime release schedule by day of the week.
+  - Automatic detection of the current day.
 
 ---
 
@@ -65,20 +61,9 @@ A modern, responsive anime streaming platform built with **Next.js 16**, **React
 | **Next.js** | 16.1.6 | React framework with SSR/SSG |
 | **React** | 19.2.3 | UI library |
 | **TypeScript** | 5.x | Type safety |
-| **Tailwind CSS** | 4.x | Styling & responsive design |
+| **Tailwind CSS** | 4.x | Styling, responsive design, and custom themes (`hn-*`) |
 | **React Compiler** | 1.0.0 | Optimized render performance |
 | **ESLint** | 9.x | Code linting |
-
-### Project Analytics
-
-```
-Total Dependencies: 3
-Dev Dependencies: 8
-Lines of Code: ~2,000+ (estimated)
-Supported Platforms: Web
-API Type: RESTful (External Services)
-Caching: Next.js ISR (Incremental Static Regeneration)
-```
 
 ---
 
@@ -86,48 +71,29 @@ Caching: Next.js ISR (Incremental Static Regeneration)
 
 ```
 Nime-nime/
+├── .github/workflows/          # GitHub Actions (CI/CD to GCP)
 ├── src/
 │   ├── app/                    # Next.js App Router
-│   │   ├── anime/[slug]/       # Anime detail pages
-│   │   ├── anime/watch/        # Episode watch pages
-│   │   ├── api/random/         # Random anime API endpoint
-│   │   ├── filter/             # Advanced filtering page
-│   │   ├── genres/             # Genre browsing
-│   │   ├── history/            # Watch history tracker
-│   │   ├── movies/             # Movie catalog
-│   │   ├── popular/            # Popular anime
-│   │   ├── saved/              # Bookmarked anime
-│   │   ├── schedule/           # Release schedule
-│   │   ├── search/[query]/     # Search results
+│   │   ├── anime/[slug]/       # Anime detail pages with immersive headers
+│   │   ├── anime/watch/        # Episode watch pages & premium video player
+│   │   ├── download/           # Android APK download promotional page
+│   │   ├── search/[query]/     # Real-time search results
 │   │   ├── layout.tsx          # Root layout
-│   │   ├── page.tsx            # Home/Ongoing anime
-│   │   └── globals.css         # Global styles
+│   │   ├── page.tsx            # Home/Ongoing anime with HeroCarousel
+│   │   └── globals.css         # Global styles & custom utility classes like scrollbar-hide
 │   ├── components/             # React components
-│   │   ├── AnimeCard.tsx       # Anime grid card
-│   │   ├── AnimeActions.tsx    # Action buttons
-│   │   ├── DetailEpisodeList.tsx # Detailed episode list
-│   │   ├── EpisodeList.tsx     # Episode navigation
-│   │   ├── FilterForm.tsx      # Advanced filter form
-│   │   ├── HeroBanner.tsx      # Featured banner
-│   │   ├── Navbar.tsx          # Main navigation
-│   │   ├── SearchBar.tsx       # Search input
-│   │   ├── SidebarEpisodeList.tsx # Episode sidebar
-│   │   ├── VideoPlayer.tsx     # Episode player
-│   │   ├── WatchHistoryTracker.tsx # History tracking
-│   │   └── Footer.tsx          # Footer section
-│   ├── hooks/                  # Custom React hooks
-│   │   ├── useLocalStorage.ts  # Browser storage hook
-│   │   └── useWatchHistory.ts  # Watch history management
-│   ├── lib/                    # Utility functions
-│   │   └── api.ts              # API calls & data fetching
+│   │   ├── AnimeDetailHeader.tsx # Immersive blurred poster backgrounds
+│   │   ├── AnimeCharacters.tsx   # Fetches cast from Jikan API
+│   │   ├── DetailEpisodeList.tsx # List with quick-scroll actions
+│   │   ├── SearchBar.tsx         # Real-time search with caching
+│   │   ├── VideoPlayerWrapper.tsx# Premium player with idle/loading/error states
+│   │   ├── WatchNowButton.tsx    # Dynamic CTA reading from local storage
+│   │   └── ...                 
+│   ├── hooks/                  # Custom hooks (useDebounce, useWatchHistory, etc.)
+│   ├── lib/                    # Utility functions & API clients
 │   └── types/                  # TypeScript interfaces
-│       └── anime.ts            # Anime data types
-├── public/                     # Static assets
-├── package.json                # Dependencies
-├── tsconfig.json               # TypeScript config
-├── next.config.ts              # Next.js config
-├── tailwind.config.js          # Tailwind config
-└── eslint.config.mjs           # ESLint rules
+├── public/                     # Static assets (images, banners)
+└── ...
 ```
 
 ---
@@ -138,9 +104,9 @@ Nime-nime/
 
 Ensure you have the following installed on your system:
 
-- **Node.js** 18.17+ or later ([Download](https://nodejs.org/))
-- **npm** 8.0+, **yarn**, **pnpm**, or **bun** (npm comes with Node.js)
-- **Git** (for version control)
+- **Node.js** 18.17+ or later
+- **npm** 8.0+, **yarn**, **pnpm**, or **bun**
+- **Git**
 
 ### Installation Steps
 
@@ -153,14 +119,6 @@ Ensure you have the following installed on your system:
    ```bash
    npm install
    ```
-   Or using other package managers:
-   ```bash
-   yarn install
-   # or
-   pnpm install
-   # or
-   bun install
-   ```
 
 3. **Verify installation**
    ```bash
@@ -172,172 +130,51 @@ Ensure you have the following installed on your system:
 
 ## 💻 Running Locally
 
-### Development Mode
-
 Start the development server with hot-reload:
 
 ```bash
 npm run dev
 ```
 
-Or with other package managers:
-```bash
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
 The application will be available at:
 - **Local**: [http://localhost:3000](http://localhost:3000)
-- **Network**: http://YOUR_IP:3000
 
 **Hot Module Replacement (HMR)** is enabled—your changes will reflect in the browser instantly.
-
-### Production Build
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Start the production server:
-
-```bash
-npm start
-```
-
-### Linting
-
-Check for code quality issues:
-
-```bash
-npm run lint
-```
-
----
-
-## 🔧 Configuration
-
-### Next.js Configuration
-See [next.config.ts](next.config.ts) for:
-- React Compiler optimization enabled
-- Remote image patterns for anime poster CDNs:
-  - `cdn.myanimelist.net` - MyAnimeList images
-  - `*.wp.com` - WordPress image hosting
-
-### Environment Setup
-
-The application uses the following external API:
-- **Base URL**: `https://www.sankavollerei.com/anime/animasu`
-- **Type**: RESTful API
-- **Caching**: 1-hour ISR (Incremental Static Regeneration)
-
-No API keys or environment variables required for basic functionality.
-
-### TypeScript Configuration
-- **Target**: ES2020
-- **Module**: ESNext
-- **Strict Mode**: Enabled
-- **JSX**: React 19
 
 ---
 
 ## 🌐 API Integration
 
-The app fetches anime data from an external anime database API with the following endpoints:
+The app fetches anime data from external APIs:
 
-| Endpoint | Purpose |
-|---|---|
-| `/ongoing?page=X` | Fetch currently airing anime |
-| `/detail/{slug}` | Get detailed anime information |
-| `/episode/{slug}` | Fetch episode streaming data |
-| `/genre` | List available genres |
-| `/search?query=X` | Search anime by title |
-| `/movies` | Movie catalog |
-| `/popular` | Popular anime rankings |
-| `/schedule` | Get release schedule by day of week |
+1. **Primary Streaming API**: `https://www.sankavollerei.com/anime/animasu`
+   - Handles ongoing lists, details, streaming URLs, genres, and schedules.
+   - Cached via Next.js ISR (1-hour revalidation) and client-side memory caching.
 
-### Custom API Endpoints
-
-| Endpoint | Purpose |
-|---|---|
-| `/api/random` | Get random anime from popular list |
+2. **Jikan API (v4)**: `https://api.jikan.moe/v4`
+   - Used for enriching detail pages with character and voice actor (Seiyuu) data.
+   - Endpoint: `/anime/{mal_id}/characters`
 
 ---
 
-## 🎯 Common Tasks
+## 🚢 Deployment
 
-### View Database/Admin
-Currently, the app uses a read-only external API. For local development with a custom database, you would need to:
-1. Set up a Node.js backend API
-2. Update the `BASE_URL` in [src/lib/api.ts](src/lib/api.ts)
+The project is configured for automated deployment to **Google Cloud Platform (GCP)**.
 
-### Add New Pages
-1. Create a new folder in [src/app/](src/app/)
-2. Add `page.tsx` and `layout.tsx` (if needed)
-3. Use existing API functions from [src/lib/api.ts](src/lib/api.ts)
+- **Workflow**: `.github/workflows/deploy.yml`
+- **Trigger**: Pushes to the `main` branch.
+- **Action**: Connects to the GCP instance via SSH, pulls the latest code, installs dependencies, builds the production bundle, and restarts the PM2 process.
 
-### Customize Styling
-1. Edit Tailwind classes in components
-2. Modify `globals.css` for global styles
-3. Check `tailwind.config.js` for theme configuration
-
-### Add Custom Hooks
-1. Create new files in [src/hooks/](src/hooks/)
-2. Export custom React hooks
-3. Import in components as needed
+**Production Domain**: [https://nime-nime.web.id](https://nime-nime.web.id)
 
 ---
 
-## 📱 Browser Support
+## 📝 Notes & Best Practices Implemented
 
-- Chrome/Edge 90+
-- Firefox 88+
-- Safari 15+
-- Mobile browsers (iOS Safari, Chrome Android)
-
----
-
-## ⚠️ Troubleshooting
-
-### Port 3000 Already in Use
-```bash
-# Find and kill process on port 3000
-# On Windows:
-netstat -ano | findstr :3000
-taskkill /PID <PID> /F
-
-# Then restart: npm run dev
-```
-
-### API Connection Errors
-- Check your internet connection
-- Verify the API is accessible: `https://www.sankavollerei.com/anime/animasu`
-- Clear browser cache and restart dev server
-
-### Build Failures
-```bash
-# Clear cache and rebuild
-rm -r .next node_modules
-npm install
-npm run build
-```
-
-### Hot Reload Not Working
-- Restart the dev server: `Ctrl+C` then `npm run dev`
-- Check that port 3000 is not blocked by firewall
-
----
-
-## 📝 Notes
-
-- **API Rate Limiting**: The external API may have rate limits. The app includes 1-hour caching to minimize requests.
-- **CORS**: The API supports cross-origin requests from this domain.
-- **Responsive Design**: Mobile-first approach with responsive breakpoints (sm, md, lg, xl).
-- **Performance**: React Compiler optimization reduces re-renders and improves bundle size.
+- **Performance**: Client-side API caching (in-memory Map) used in SearchBar to prevent redundant network calls and respect API rate limits. 
+- **Image Optimization**: External images prone to upstream timeouts bypass Next.js image optimization (`unoptimized={true}`) to guarantee fast loads.
+- **Hydration Safety**: Custom hooks accessing `localStorage` (like `useWatchHistory`) strictly read data post-mount to avoid React SSR hydration mismatches.
+- **UX/UI**: Skeleton loaders are used throughout the application to provide smooth perceived performance while data is fetching.
 
 ---
 
@@ -347,16 +184,6 @@ This project is provided as-is for personal and educational use.
 
 ---
 
-## 🤝 Contributing
-
-To contribute improvements:
-1. Create a new branch (`git checkout -b feature/improvement`)
-2. Make your changes and test locally
-3. Commit with clear messages
-4. Push and create a pull request
-
----
-
-**Last Updated**: March 9, 2026  
+**Last Updated**: March 15, 2026  
 **Status**: Active Development  
-**Version**: 0.2.0
+**Version**: 0.3.0
