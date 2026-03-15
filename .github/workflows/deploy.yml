@@ -1,0 +1,25 @@
+name: Deploy GCP
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: order GCP
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: 
+            cd /var/www/Nime-nime
+            
+            git pull origin main
+            npm install
+            npm run build
+            
+            pm2 restart nime-nime

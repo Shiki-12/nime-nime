@@ -10,6 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://nime-nime.web.id'),
   title: 'Nimenime - Nonton Anime Sub Indo',
   description: 'Nonton anime subtitle Indonesia gratis, update setiap hari dengan kualitas HD hanya di Nimenime.',
   openGraph: {
