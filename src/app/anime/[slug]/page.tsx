@@ -1,7 +1,6 @@
-import Image from "next/image";
-import Link from "next/link";
 import { getAnimeDetail, getMalRating } from "@/lib/api";
-import AnimeActions from "@/components/AnimeActions";
+import AnimeCharacters from "@/components/AnimeCharacters";
+import AnimeDetailHeader from "@/components/AnimeDetailHeader";
 import DetailEpisodeList from "@/components/DetailEpisodeList";
 
 interface AnimeDetailPageProps {
@@ -13,89 +12,21 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
     const { detail: anime } = await getAnimeDetail(slug);
     const malScore = await getMalRating(anime.title);
 
-    const hasValidRating = malScore !== "N/A" && malScore !== "0";
-
     return (
-        <div className="relative">
-            {/* Hero Banner */}
-            <div className="relative h-[400px] w-full overflow-hidden sm:h-[440px]">
-                <Image
-                    src={anime.poster}
-                    alt={anime.title}
-                    fill
-                    priority
-                    className="object-cover blur-2xl brightness-[0.2] saturate-150 scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-hn-body via-hn-body/50 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-r from-hn-body/90 to-transparent" />
-
-                <div className="absolute inset-0 flex items-end">
-                    <div className="mx-auto flex w-full max-w-[1440px] gap-6 px-4 pb-8 lg:px-6">
-                        {/* Poster */}
-                        <div className="hidden shrink-0 sm:block">
-                            <div className="relative h-[260px] w-[185px] overflow-hidden rounded-lg shadow-2xl shadow-black/50 ring-1 ring-white/10">
-                                <Image
-                                    src={anime.poster}
-                                    alt={anime.title}
-                                    fill
-                                    priority
-                                    className="object-cover"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Info */}
-                        <div className="flex flex-col justify-end gap-2.5">
-                            <h1 className="text-2xl font-extrabold leading-tight text-white sm:text-3xl">
-                                {anime.title}
-                            </h1>
-
-                            {/* Meta row */}
-                            <div className="flex flex-wrap items-center gap-2 text-[12px]">
-                                <span className="rounded bg-hn-primary/20 px-2 py-0.5 font-semibold text-hn-primary">
-                                    {anime.type}
-                                </span>
-                                <span className="rounded bg-white/[0.06] px-2 py-0.5 font-medium text-white/60">
-                                    {anime.status}
-                                </span>
-                                {anime.duration && (
-                                    <span className="rounded bg-white/[0.06] px-2 py-0.5 font-medium text-white/60">
-                                        {anime.duration}
-                                    </span>
-                                )}
-                            </div>
-
-                            {/* Genres */}
-                            <div className="flex flex-wrap gap-1.5">
-                                {anime.genres.map((g) => (
-                                    <Link
-                                        key={g.slug}
-                                        href={`/genres/${g.slug}`}
-                                        className="rounded bg-white/[0.06] px-2.5 py-1 text-[11px] font-medium text-white/50 transition-colors hover:bg-hn-primary/15 hover:text-hn-primary"
-                                    >
-                                        {g.name}
-                                    </Link>
-                                ))}
-                            </div>
-
-                            {/* Synopsis (truncated) */}
-                            <p className="line-clamp-3 max-w-2xl text-[13px] leading-relaxed text-white/40">
-                                {anime.synopsis}
-                            </p>
-
-                            {/* Actions */}
-                            <AnimeActions
-                                anime={{
-                                    slug,
-                                    title: anime.title,
-                                    poster: anime.poster,
-                                    type: anime.type,
-                                }}
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div className="relative w-full overflow-x-hidden">
+            {/* Tambahin w-full sama overflow-x-hidden biar gak meleber */}
+            {/* Immersive Hero Header */}
+            <AnimeDetailHeader
+                title={anime.title}
+                posterUrl={anime.poster}
+                genres={anime.genres}
+                synopsis={anime.synopsis}
+                status={anime.status}
+                type={anime.type}
+                duration={anime.duration}
+                slug={slug}
+                episodes={anime.episodes}
+            />
 
             {/* Body */}
             <div className="mx-auto max-w-[1440px] px-4 py-8 lg:px-6">
@@ -152,6 +83,9 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
                         </div>
                     </section>
                 )}
+
+                {/* Characters & Voice Actors */}
+                <AnimeCharacters animeTitle={anime.title} />
 
                 {/* Episode List */}
                 <DetailEpisodeList

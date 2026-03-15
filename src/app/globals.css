@@ -65,6 +65,16 @@ body {
   border-radius: 9999px;
 }
 
+/* ─── Hidden scrollbar (mobile character carousel) ─────────────── */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* ─── Skeleton animation ────────────────────────────────────────── */
 @keyframes shimmer {
   0% {

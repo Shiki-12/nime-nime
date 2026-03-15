@@ -91,7 +91,18 @@ export default function Navbar() {
         {/* Right side icons */}
         <div className="flex items-center gap-1">
           {/* Mobile search toggle */}
-          <button className="flex h-9 w-9 items-center justify-center rounded-lg text-white/60 transition-colors hover:bg-white/5 hover:text-white md:hidden">
+         <button 
+            onClick={() => {
+              setMobileOpen(true); 
+              setTimeout(() => {
+                const searchInput = document.querySelector('.md\\:hidden input') as HTMLInputElement;
+                if (searchInput) {
+                  searchInput.focus();
+                }
+              }, 100);
+            }}
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-white/60 transition-colors hover:bg-white/5 hover:text-white md:hidden"
+          >
             <svg
               className="h-5 w-5"
               fill="none"
