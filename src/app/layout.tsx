@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Nimenime - Nonton Anime Sub Indo',
     description: 'Nonton anime subtitle Indonesia gratis, update setiap hari dengan kualitas HD.',
-    url: 'https://nime-nime.vercel.app',
+    url: 'https://nime-nime.web.id',
     siteName: 'Nimenime',
     type: 'website',
   },
