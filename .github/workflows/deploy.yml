@@ -15,11 +15,9 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          script: 
+          script: |
             cd /var/www/Nime-nime
-            
             git pull origin main
             npm install
             npm run build
-            
             pm2 restart nime-nime
