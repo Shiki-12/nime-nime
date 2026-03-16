@@ -179,7 +179,60 @@ export function useSavedAnime() {
         [isAuthenticated, dbSaved, setLocalSaved]
     );
 
-    return { saved, isSaved, toggleSave };
+    const removeSavedItem = useCallback(
+        (slug: string) => {
+            if (isAuthenticated) {
+                // ── API mode ──
+                const removedItem = dbSaved.find((s) => s.slug === slug);
+                if (!removedItem) return;
+
+                // Optimistic remove
+                setDbSaved((prev) => prev.filter((s) => s.slug !== slug));
+                
+                fetch("/api/user/saved", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ animeId: slug }),
+                }).catch(() => {
+                    // Revert on failure
+                    setDbSaved((prev) => [...prev, removedItem]);
+                });
+            } else {
+                // ── localStorage mode ──
+                setLocalSaved((prev) => prev.filter((s) => s.slug !== slug));
+            }
+        },
+        [isAuthenticated, dbSaved, setLocalSaved]
+    );
+
+    const bulkRemoveSaved = useCallback(
+        (slugs: string[]) => {
+            if (slugs.length === 0) return;
+
+            if (isAuthenticated) {
+                // ── API mode ──
+                const removedItems = dbSaved.filter((s) => slugs.includes(s.slug));
+                
+                // Optimistic remove
+                setDbSaved((prev) => prev.filter((s) => !slugs.includes(s.slug)));
+                
+                fetch("/api/user/saved", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ animeIds: slugs }),
+                }).catch(() => {
+                    // Revert on failure
+                    setDbSaved((prev) => [...prev, ...removedItems]);
+                });
+            } else {
+                // ── localStorage mode ──
+                setLocalSaved((prev) => prev.filter((s) => !slugs.includes(s.slug)));
+            }
+        },
+        [isAuthenticated, dbSaved, setLocalSaved]
+    );
+
+    return { saved, isSaved, toggleSave, removeSavedItem, bulkRemoveSaved };
 }
 
 // ─── useAnimeRating (unchanged, localStorage-only) ──────────────────

@@ -25,10 +25,9 @@ export default function WatchNowButton({ animeSlug, episodes }: WatchNowButtonPr
     useEffect(() => {
         let href = "#episodes";
         let label = "Watch Now";
-
-        // Default: first episode
         if (episodes.length > 0) {
-            href = `/anime/watch/${episodes[0].slug}?anime=${animeSlug}`;
+            const earliestEpisode = episodes[episodes.length - 1];
+            href = `/anime/watch/${earliestEpisode.slug}?anime=${animeSlug}`;
         }
 
         const entry = history[animeSlug];

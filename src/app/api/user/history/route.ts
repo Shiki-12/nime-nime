@@ -99,16 +99,45 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(entry, { status: 201 });
 }
 
-// ─── DELETE: Clear all watch history ────────────────────────────────
-export async function DELETE() {
+// ─── DELETE: Remove history (Single, Bulk, or Clear All) ────────────
+export async function DELETE(req: NextRequest) {
     const session = await auth();
     if (!session?.user?.id) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    await prisma.watchHistory.deleteMany({
-        where: { userId: session.user.id },
-    });
+    try {
+        // We might not have a body if it's a legacy clearAll call
+        let body;
+        try {
+            body = await req.json();
+        } catch {
+            body = {};
+        }
 
-    return NextResponse.json({ success: true });
+        const { animeId, animeIds, clearAll } = body;
+
+        // If explicitly asked to clear all, or no specific targets provided
+        if (clearAll || (!animeId && !animeIds)) {
+            await prisma.watchHistory.deleteMany({
+                where: { userId: session.user.id },
+            });
+            return NextResponse.json({ success: true, action: "cleared_all" });
+        }
+
+        // Single or bulk delete
+        const idsToDelete = animeIds ? animeIds : [animeId];
+
+        await prisma.watchHistory.deleteMany({
+            where: {
+                userId: session.user.id,
+                animeId: { in: idsToDelete },
+            },
+        });
+
+        return NextResponse.json({ success: true, count: idsToDelete.length });
+    } catch (error) {
+        console.warn("Delete watch history failed:", error);
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    }
 }

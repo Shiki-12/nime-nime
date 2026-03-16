@@ -72,29 +72,36 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(saved, { status: 201 });
 }
 
-// ─── DELETE: Remove a saved anime ───────────────────────────────────
+// ─── DELETE: Remove saved anime (Single or Bulk) ────────────────────
 export async function DELETE(req: NextRequest) {
     const session = await auth();
     if (!session?.user?.id) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await req.json();
-    const { animeId } = body;
+    try {
+        const body = await req.json();
+        const { animeId, animeIds } = body;
 
-    if (!animeId) {
-        return NextResponse.json(
-            { error: "animeId is required" },
-            { status: 400 }
-        );
+        if (!animeId && (!Array.isArray(animeIds) || animeIds.length === 0)) {
+            return NextResponse.json(
+                { error: "animeId or animeIds array is required" },
+                { status: 400 }
+            );
+        }
+
+        const idsToDelete = animeIds ? animeIds : [animeId];
+
+        await prisma.savedAnime.deleteMany({
+            where: {
+                userId: session.user.id,
+                animeId: { in: idsToDelete },
+            },
+        });
+
+        return NextResponse.json({ success: true, count: idsToDelete.length });
+    } catch (error) {
+        console.warn("Delete saved anime failed:", error);
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
-
-    await prisma.savedAnime.deleteMany({
-        where: {
-            userId: session.user.id,
-            animeId,
-        },
-    });
-
-    return NextResponse.json({ success: true });
 }

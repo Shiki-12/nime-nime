@@ -185,6 +185,86 @@ export function useWatchHistory() {
         }
     }, [isAuthenticated, setLocalHistory]);
 
+    /**
+     * Remove a single anime from history.
+     */
+    const removeHistoryItem = useCallback(
+        (animeSlug: string) => {
+            if (isAuthenticated) {
+                // Optimistic update
+                const removedItem = dbHistory[animeSlug];
+                if (!removedItem) return;
+
+                setDbHistory((prev) => {
+                    const next = { ...prev };
+                    delete next[animeSlug];
+                    return next;
+                });
+
+                fetch("/api/user/history", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ animeId: animeSlug }),
+                }).catch((err) => {
+                    console.warn("Failed to remove history item:", err);
+                    // Revert on failure
+                    setDbHistory((prev) => ({ ...prev, [animeSlug]: removedItem }));
+                });
+            } else {
+                setLocalHistory((prev) => {
+                    const next = { ...prev };
+                    delete next[animeSlug];
+                    return next;
+                });
+            }
+        },
+        [isAuthenticated, dbHistory, setLocalHistory]
+    );
+
+    /**
+     * Remove multiple anime from history.
+     */
+    const bulkRemoveHistory = useCallback(
+        (animeSlugs: string[]) => {
+            if (animeSlugs.length === 0) return;
+
+            if (isAuthenticated) {
+                // Optimistic update
+                const removedItems: WatchHistoryMap = {};
+                for (const slug of animeSlugs) {
+                    if (dbHistory[slug]) removedItems[slug] = dbHistory[slug];
+                }
+
+                setDbHistory((prev) => {
+                    const next = { ...prev };
+                    for (const slug of animeSlugs) {
+                        delete next[slug];
+                    }
+                    return next;
+                });
+
+                fetch("/api/user/history", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ animeIds: animeSlugs }),
+                }).catch((err) => {
+                    console.warn("Failed to bulk remove history:", err);
+                    // Revert on failure
+                    setDbHistory((prev) => ({ ...prev, ...removedItems }));
+                });
+            } else {
+                setLocalHistory((prev) => {
+                    const next = { ...prev };
+                    for (const slug of animeSlugs) {
+                        delete next[slug];
+                    }
+                    return next;
+                });
+            }
+        },
+        [isAuthenticated, dbHistory, setLocalHistory]
+    );
+
     return {
         history,
         markEpisodeAsWatched,
@@ -192,5 +272,7 @@ export function useWatchHistory() {
         isEpisodeWatched,
         getHistorySorted,
         clearHistory,
+        removeHistoryItem,
+        bulkRemoveHistory,
     };
 }
