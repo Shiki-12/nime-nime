@@ -12,6 +12,7 @@
     "@prisma/adapter-pg": "^7.5.0",
     "@prisma/client": "^7.5.0",
     "bcryptjs": "^3.0.3",
+    "disqus-react": "^1.1.7",
     "dotenv": "^17.3.1",
     "next": "16.1.6",
     "next-auth": "^5.0.0-beta.30",
