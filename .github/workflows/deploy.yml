@@ -10,15 +10,17 @@ jobs:
     runs-on: ubuntu-latest
     environment: server-update
     steps:
-      - name: order GCP
+      - name: Execute Deployment Script via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
+          key: ${{ secrets.KEY }}
+          port: 22
           script: |
             cd /var/www/Nime-nime
             git pull origin main
             npm install
+            npx prisma migrate deploy
             npm run build
-            pm2 restart nime-nime
+            pm2 restart nime-nime --update-env
