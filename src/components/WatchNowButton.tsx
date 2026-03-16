@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import type { EpisodeItem } from "@/types/anime";
+import { useWatchHistory } from "@/hooks/useWatchHistory";
 
 // ─── Props ─────────────────────────────────────────────────────────
 interface WatchNowButtonProps {
@@ -10,22 +11,9 @@ interface WatchNowButtonProps {
     episodes: EpisodeItem[];
 }
 
-// ─── Helper: extract episode number from a slug or name ────────────
-// Episode names look like "Episode 1", "Episode 12", etc.
-// Episode slugs look like "some-anime-episode-3"
-function extractEpisodeNumber(ep: EpisodeItem): number {
-    // Try name first: "Episode 12" → 12
-    const nameMatch = ep.name.match(/(\d+)/);
-    if (nameMatch) return parseInt(nameMatch[1], 10);
-
-    // Fallback: try slug trailing number
-    const slugMatch = ep.slug.match(/(\d+)$/);
-    if (slugMatch) return parseInt(slugMatch[1], 10);
-
-    return 0;
-}
-
 export default function WatchNowButton({ animeSlug, episodes }: WatchNowButtonProps) {
+    const { history } = useWatchHistory();
+
     // Single state object set once on mount to avoid cascading renders
     const [state, setState] = useState<{
         mounted: boolean;
@@ -33,79 +21,35 @@ export default function WatchNowButton({ animeSlug, episodes }: WatchNowButtonPr
         label: string;
     }>({ mounted: false, href: "#episodes", label: "Watch Now" });
 
-    // ── Hydration-safe: compute everything in one shot after mount ──
+    // ── Compute link based on watch history (from hook, not raw localStorage) ──
     useEffect(() => {
         let href = "#episodes";
         let label = "Watch Now";
 
-        try {
-            const raw = window.localStorage.getItem("nimenime-watch-history");
+        // Default: first episode
+        if (episodes.length > 0) {
+            href = `/anime/watch/${episodes[0].slug}?anime=${animeSlug}`;
+        }
 
-            if (!raw) {
-                // No history at all → "Watch Now" linking to Ep 1
-                if (episodes.length > 0) {
-                    href = `/anime/watch/${episodes[0].slug}?anime=${animeSlug}`;
-                }
-                // eslint-disable-next-line react-hooks/set-state-in-effect
-                setState({ mounted: true, href, label });
-                return;
-            }
+        const entry = history[animeSlug];
 
-            const history = JSON.parse(raw) as Record<
-                string,
-                { watchedEpisodes?: string[] }
-            >;
+        if (entry && entry.watchedEpisodes && entry.watchedEpisodes.length > 0) {
+            // Use the most recently watched episode (by timestamp)
+            // The hook already sets lastWatchedEpisode to the most recent one
+            const lastSlug = entry.lastWatchedEpisode;
+            const lastEpName = entry.lastWatchedEpisodeName;
 
-            const entry = history[animeSlug];
-
-            if (!entry || !entry.watchedEpisodes || entry.watchedEpisodes.length === 0) {
-                // Anime exists in history but no episodes watched → Ep 1
-                if (episodes.length > 0) {
-                    href = `/anime/watch/${episodes[0].slug}?anime=${animeSlug}`;
-                }
-                setState({ mounted: true, href, label });
-                return;
-            }
-
-            // ── Scenario B: user HAS watched episodes ──────────────
-            const slugToEpisode = new Map<string, EpisodeItem>();
-            for (const ep of episodes) {
-                slugToEpisode.set(ep.slug, ep);
-            }
-
-            // Find the highest episode NUMBER among watched slugs
-            let maxEpNumber = -1;
-            let maxEpSlug = episodes[0]?.slug ?? "";
-
-            for (const watchedSlug of entry.watchedEpisodes) {
-                const ep = slugToEpisode.get(watchedSlug);
-                if (!ep) continue;
-
-                const epNum = extractEpisodeNumber(ep);
-                if (epNum > maxEpNumber) {
-                    maxEpNumber = epNum;
-                    maxEpSlug = ep.slug;
-                }
-            }
-
-            if (maxEpNumber > 0) {
-                label = `Continue Ep ${maxEpNumber}`;
-                href = `/anime/watch/${maxEpSlug}?anime=${animeSlug}`;
-            } else {
-                // Fallback: couldn't parse numbers, use last watched
-                const lastSlug = entry.watchedEpisodes[entry.watchedEpisodes.length - 1];
-                label = "Continue Watching";
+            if (lastSlug) {
+                label = lastEpName
+                    ? `Continue ${lastEpName}`
+                    : "Continue Watching";
                 href = `/anime/watch/${lastSlug}?anime=${animeSlug}`;
-            }
-        } catch {
-            // localStorage parse error → fallback to Ep 1
-            if (episodes.length > 0) {
-                href = `/anime/watch/${episodes[0].slug}?anime=${animeSlug}`;
             }
         }
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setState({ mounted: true, href, label });
-    }, [animeSlug, episodes]);
+    }, [animeSlug, episodes, history]);
 
     // ── SSR fallback: generic skeleton-style button ────────────────
     if (!state.mounted) {

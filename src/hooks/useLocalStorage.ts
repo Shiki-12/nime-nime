@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useSession } from "next-auth/react";
+
+// ─── Base useLocalStorage (unchanged) ──────────────────────────────
 
 export function useLocalStorage<T>(
     key: string,
@@ -56,27 +59,130 @@ export interface AnimeRating {
     rating: "like" | "dislike" | null;
 }
 
-// ─── Helpers ────────────────────────────────────────────────────────
+// ─── API SavedAnime shape (from DB) ────────────────────────────────
+
+interface DbSavedAnime {
+    id: string;
+    animeId: string;
+    title: string;
+    image: string;
+    type: string;
+    createdAt: string;
+}
+
+// ─── Dual-mode useSavedAnime ────────────────────────────────────────
 
 export function useSavedAnime() {
-    const [saved, setSaved] = useLocalStorage<SavedAnimeItem[]>(
+    const { data: session, status } = useSession();
+    const isAuthenticated = status === "authenticated" && !!session?.user;
+
+    // ── localStorage mode state ──
+    const [localSaved, setLocalSaved] = useLocalStorage<SavedAnimeItem[]>(
         "nimenime-saved",
         []
     );
 
-    const isSaved = (slug: string) => saved.some((s) => s.slug === slug);
+    // ── API mode state ──
+    const [dbSaved, setDbSaved] = useState<SavedAnimeItem[]>([]);
+    const [dbLoaded, setDbLoaded] = useState(false);
 
-    const toggleSave = (anime: Omit<SavedAnimeItem, "savedAt">) => {
-        setSaved((prev) => {
-            if (prev.some((s) => s.slug === anime.slug)) {
-                return prev.filter((s) => s.slug !== anime.slug);
+    // Fetch from API when authenticated
+    useEffect(() => {
+        if (!isAuthenticated) {
+            setDbLoaded(false);
+            return;
+        }
+
+        const fetchSaved = async () => {
+            try {
+                const res = await fetch("/api/user/saved");
+                if (res.ok) {
+                    const data: DbSavedAnime[] = await res.json();
+                    setDbSaved(
+                        data.map((item) => ({
+                            slug: item.animeId,
+                            title: item.title,
+                            poster: item.image,
+                            type: item.type,
+                            savedAt: new Date(item.createdAt).getTime(),
+                        }))
+                    );
+                }
+            } catch (error) {
+                console.warn("Failed to fetch saved anime:", error);
+            } finally {
+                setDbLoaded(true);
             }
-            return [...prev, { ...anime, savedAt: Date.now() }];
-        });
-    };
+        };
+
+        fetchSaved();
+    }, [isAuthenticated]);
+
+    // Pick the correct data source
+    const saved = isAuthenticated && dbLoaded ? dbSaved : localSaved;
+
+    const isSaved = useCallback(
+        (slug: string) => saved.some((s) => s.slug === slug),
+        [saved]
+    );
+
+    const toggleSave = useCallback(
+        (anime: Omit<SavedAnimeItem, "savedAt">) => {
+            if (isAuthenticated) {
+                // ── API mode ──
+                const alreadySaved = dbSaved.some((s) => s.slug === anime.slug);
+
+                if (alreadySaved) {
+                    // Optimistic remove
+                    setDbSaved((prev) => prev.filter((s) => s.slug !== anime.slug));
+                    fetch("/api/user/saved", {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ animeId: anime.slug }),
+                    }).catch(() => {
+                        // Revert on failure
+                        setDbSaved((prev) => [
+                            ...prev,
+                            { ...anime, savedAt: Date.now() },
+                        ]);
+                    });
+                } else {
+                    // Optimistic add
+                    const newItem = { ...anime, savedAt: Date.now() };
+                    setDbSaved((prev) => [...prev, newItem]);
+                    fetch("/api/user/saved", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            animeId: anime.slug,
+                            title: anime.title,
+                            image: anime.poster,
+                            type: anime.type,
+                        }),
+                    }).catch(() => {
+                        // Revert on failure
+                        setDbSaved((prev) =>
+                            prev.filter((s) => s.slug !== anime.slug)
+                        );
+                    });
+                }
+            } else {
+                // ── localStorage mode ──
+                setLocalSaved((prev) => {
+                    if (prev.some((s) => s.slug === anime.slug)) {
+                        return prev.filter((s) => s.slug !== anime.slug);
+                    }
+                    return [...prev, { ...anime, savedAt: Date.now() }];
+                });
+            }
+        },
+        [isAuthenticated, dbSaved, setLocalSaved]
+    );
 
     return { saved, isSaved, toggleSave };
 }
+
+// ─── useAnimeRating (unchanged, localStorage-only) ──────────────────
 
 export function useAnimeRating(slug: string) {
     const [ratings, setRatings] = useLocalStorage<Record<string, "like" | "dislike">>(

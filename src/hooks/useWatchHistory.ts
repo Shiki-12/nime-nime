@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useSession } from "next-auth/react";
 import { useLocalStorage } from "./useLocalStorage";
 
 // ─── Types ─────────────────────────────────────────────────────────
@@ -13,7 +14,7 @@ export interface WatchedAnimeEntry {
     type: string;
     /** Episode slugs the user has watched */
     watchedEpisodes: string[];
-    /** The most recently watched episode slug */
+    /** The most recently watched episode slug (by watchedAt timestamp) */
     lastWatchedEpisode: string;
     /** Human-readable name of the last watched episode */
     lastWatchedEpisodeName: string;
@@ -27,14 +28,54 @@ type WatchHistoryMap = Record<string, WatchedAnimeEntry>;
 // ─── Hook ──────────────────────────────────────────────────────────
 
 export function useWatchHistory() {
-    const [history, setHistory] = useLocalStorage<WatchHistoryMap>(
+    const { data: session, status } = useSession();
+    const isAuthenticated = status === "authenticated" && !!session?.user;
+
+    // ── localStorage mode ──
+    const [localHistory, setLocalHistory] = useLocalStorage<WatchHistoryMap>(
         "nimenime-watch-history",
         {}
     );
 
+    // ── API mode ──
+    const [dbHistory, setDbHistory] = useState<WatchHistoryMap>({});
+    const [dbLoaded, setDbLoaded] = useState(false);
+
+    // Fetch from API when authenticated
+    useEffect(() => {
+        if (!isAuthenticated) {
+            setDbLoaded(false);
+            return;
+        }
+
+        const fetchHistory = async () => {
+            try {
+                const res = await fetch("/api/user/history");
+                if (res.ok) {
+                    const data: WatchedAnimeEntry[] = await res.json();
+                    const map: WatchHistoryMap = {};
+                    for (const entry of data) {
+                        map[entry.slug] = entry;
+                    }
+                    setDbHistory(map);
+                }
+            } catch (error) {
+                console.warn("Failed to fetch watch history:", error);
+            } finally {
+                setDbLoaded(true);
+            }
+        };
+
+        fetchHistory();
+    }, [isAuthenticated]);
+
+    // Pick the correct data source
+    const history = isAuthenticated && dbLoaded ? dbHistory : localHistory;
+
     /**
-     * Mark an episode as watched. Call this on the streaming page.
-     * If the anime doesn't exist in history yet, a new entry is created.
+     * Mark an episode as watched. 
+     * In API mode: POST to /api/user/history + optimistic update.
+     * In localStorage mode: same as before.
      */
     const markEpisodeAsWatched = useCallback(
         (
@@ -42,27 +83,65 @@ export function useWatchHistory() {
             episodeSlug: string,
             episodeName: string
         ) => {
-            setHistory((prev) => {
-                const existing = prev[anime.slug];
-                const watchedSet = new Set(existing?.watchedEpisodes ?? []);
-                watchedSet.add(episodeSlug);
+            if (isAuthenticated) {
+                // Optimistic update
+                setDbHistory((prev) => {
+                    const existing = prev[anime.slug];
+                    const watchedSet = new Set(existing?.watchedEpisodes ?? []);
+                    watchedSet.add(episodeSlug);
 
-                return {
-                    ...prev,
-                    [anime.slug]: {
-                        slug: anime.slug,
+                    return {
+                        ...prev,
+                        [anime.slug]: {
+                            slug: anime.slug,
+                            title: anime.title,
+                            poster: anime.poster,
+                            type: anime.type,
+                            watchedEpisodes: Array.from(watchedSet),
+                            lastWatchedEpisode: episodeSlug,
+                            lastWatchedEpisodeName: episodeName,
+                            timestamp: Date.now(),
+                        },
+                    };
+                });
+
+                // Fire-and-forget API call
+                fetch("/api/user/history", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        animeId: anime.slug,
                         title: anime.title,
-                        poster: anime.poster,
+                        image: anime.poster,
                         type: anime.type,
-                        watchedEpisodes: Array.from(watchedSet),
-                        lastWatchedEpisode: episodeSlug,
-                        lastWatchedEpisodeName: episodeName,
-                        timestamp: Date.now(),
-                    },
-                };
-            });
+                        episodeId: episodeSlug,
+                        episodeName,
+                    }),
+                }).catch((err) => console.warn("Failed to save watch history:", err));
+            } else {
+                // localStorage mode
+                setLocalHistory((prev) => {
+                    const existing = prev[anime.slug];
+                    const watchedSet = new Set(existing?.watchedEpisodes ?? []);
+                    watchedSet.add(episodeSlug);
+
+                    return {
+                        ...prev,
+                        [anime.slug]: {
+                            slug: anime.slug,
+                            title: anime.title,
+                            poster: anime.poster,
+                            type: anime.type,
+                            watchedEpisodes: Array.from(watchedSet),
+                            lastWatchedEpisode: episodeSlug,
+                            lastWatchedEpisodeName: episodeName,
+                            timestamp: Date.now(),
+                        },
+                    };
+                });
+            }
         },
-        [setHistory]
+        [isAuthenticated, setLocalHistory]
     );
 
     /**
@@ -86,7 +165,7 @@ export function useWatchHistory() {
     );
 
     /**
-     * Get all history entries sorted by most recent first.
+     * Get all history entries sorted by most recent first (by timestamp/watchedAt).
      */
     const getHistorySorted = useCallback((): WatchedAnimeEntry[] => {
         return Object.values(history).sort((a, b) => b.timestamp - a.timestamp);
@@ -96,8 +175,15 @@ export function useWatchHistory() {
      * Clear all watch history.
      */
     const clearHistory = useCallback(() => {
-        setHistory({});
-    }, [setHistory]);
+        if (isAuthenticated) {
+            setDbHistory({});
+            fetch("/api/user/history", { method: "DELETE" }).catch((err) =>
+                console.warn("Failed to clear history:", err)
+            );
+        } else {
+            setLocalHistory({});
+        }
+    }, [isAuthenticated, setLocalHistory]);
 
     return {
         history,

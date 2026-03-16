@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { useSavedAnime } from "@/hooks/useLocalStorage";
 
 export default function SavedPage() {
   const { saved, toggleSave } = useSavedAnime();
+  const { status } = useSession();
 
   return (
     <div className="mx-auto max-w-[1440px] px-4 py-8 lg:px-6">
@@ -14,7 +16,9 @@ export default function SavedPage() {
           <span className="text-hn-primary">Saved</span> Anime
         </h1>
         <p className="mx-auto mt-2 max-w-md text-sm text-white/40">
-          Your personal bookmarks — saved locally in your browser.
+          {status === "authenticated"
+            ? "Your personal bookmarks — synced to your account."
+            : "Your personal bookmarks — saved locally in your browser."}
         </p>
       </section>
 
