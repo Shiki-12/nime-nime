@@ -133,11 +133,11 @@ Ensure you have the following installed on your system:
    - `RESEND_API_KEY`: API key for the Resend email service (used for sending verification emails).
 
 4. **Database Setup**
-   Push the Prisma schema to your PostgreSQL database to create the required tables:
+   Ensure your PostgreSQL server is running. Then, push the Prisma schema to create the required tables:
    ```bash
    npx prisma db push
    ```
-   Generate the Prisma Client:
+   Generate the Prisma Client so TypeScript knows about the models:
    ```bash
    npx prisma generate
    ```
