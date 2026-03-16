@@ -107,12 +107,13 @@ Ensure you have the following installed on your system:
 - **Node.js** 18.17+ or later
 - **npm** 8.0+, **yarn**, **pnpm**, or **bun**
 - **Git**
+- **PostgreSQL** database (running locally or remotely)
 
 ### Installation Steps
 
 1. **Clone or navigate to the project directory**
    ```bash
-   cd c:\laragon\www\Nime-nime
+   cd Nime-nime
    ```
 
 2. **Install dependencies**
@@ -120,10 +121,25 @@ Ensure you have the following installed on your system:
    npm install
    ```
 
-3. **Verify installation**
+3. **Environment Setup**
+   Copy the `.env.example` file to create your own `.env` file:
    ```bash
-   npm --version
-   node --version
+   cp .env.example .env
+   ```
+   Open the `.env` file and fill in your details:
+   - `DATABASE_URL`: Your PostgreSQL connection string (e.g., `postgresql://[USER]:[PASSWORD]@localhost:5432/[NAMA_DATABASE]`).
+   - `NEXTAUTH_SECRET`: A secret string used for session encryption.
+   - `NEXTAUTH_URL`: Your website URL (e.g., `http://localhost:3000` for local development).
+   - `RESEND_API_KEY`: API key for the Resend email service (used for sending verification emails).
+
+4. **Database Setup**
+   Push the Prisma schema to your PostgreSQL database to create the required tables:
+   ```bash
+   npx prisma db push
+   ```
+   Generate the Prisma Client:
+   ```bash
+   npx prisma generate
    ```
 
 ---
