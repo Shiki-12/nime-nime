@@ -73,8 +73,8 @@ interface DbSavedAnime {
 // ─── Dual-mode useSavedAnime ────────────────────────────────────────
 
 export function useSavedAnime() {
-    const { data: session, status } = useSession();
-    const isAuthenticated = status === "authenticated" && !!session?.user;
+    const { status } = useSession();
+    const isAuthenticated = status === "authenticated";
 
     // ── localStorage mode state ──
     const [localSaved, setLocalSaved] = useLocalStorage<SavedAnimeItem[]>(

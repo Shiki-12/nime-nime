@@ -28,8 +28,8 @@ type WatchHistoryMap = Record<string, WatchedAnimeEntry>;
 // ─── Hook ──────────────────────────────────────────────────────────
 
 export function useWatchHistory() {
-    const { data: session, status } = useSession();
-    const isAuthenticated = status === "authenticated" && !!session?.user;
+    const { status } = useSession();
+    const isAuthenticated = status === "authenticated";
 
     // ── localStorage mode ──
     const [localHistory, setLocalHistory] = useLocalStorage<WatchHistoryMap>(
