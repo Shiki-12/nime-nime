@@ -118,7 +118,13 @@ export default function EpisodeList({
                                             e.preventDefault();
                                             e.stopPropagation();
                                             toggleEpisodeWatched(
-                                                { slug: animeSlug, title: animeTitle, poster: animePoster, type: animeType },
+                                                { 
+                                                    slug: animeSlug, 
+                                                    title: animeTitle, 
+                                                    poster: animePoster, 
+                                                    type: animeType,
+                                                    totalEpisodes: episodes.length
+                                                },
                                                 { slug: ep.slug, name: ep.name }
                                             );
                                         }}

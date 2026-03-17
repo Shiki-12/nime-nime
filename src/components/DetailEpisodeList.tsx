@@ -135,7 +135,7 @@ export default function DetailEpisodeList({
                         <div key={ep.slug} className="group relative">
                             <Link
                                 href={`/anime/watch/${ep.slug}?anime=${animeSlug}`}
-                                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all ${
+                                className={`flex items-center gap-3 rounded-lg pl-3 pr-20 py-2.5 transition-all ${
                                     watched
                                         ? "bg-white/[0.02] hover:bg-hn-card-hover"
                                         : "hover:bg-hn-card-hover"
@@ -196,11 +196,17 @@ export default function DetailEpisodeList({
                                     e.preventDefault();
                                     e.stopPropagation();
                                     toggleEpisodeWatched(
-                                        { slug: animeSlug, title: animeTitle, poster: animePoster, type: animeType },
+                                        { 
+                                            slug: animeSlug, 
+                                            title: animeTitle, 
+                                            poster: animePoster, 
+                                            type: animeType,
+                                            totalEpisodes: episodes.length
+                                        },
                                         { slug: ep.slug, name: ep.name }
                                     );
                                 }}
-                                className={`absolute right-[44px] top-1/2 -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded-full transition-all duration-200 ${
+                                className={`absolute right-4 top-1/2 -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded-full transition-all duration-200 ${
                                     watched 
                                         ? "bg-hn-green text-hn-dark shadow-lg shadow-hn-green/20" 
                                         : "bg-white/5 text-white/20 hover:bg-white/10 hover:text-white/40"

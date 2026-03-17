@@ -86,6 +86,7 @@ export default async function StreamingPage({
               animeType={animeType}
               episodeSlug={episodeSlug}
               episodeName={episode.title}
+              totalEpisodes={episodes.length}
             />
           )}
 

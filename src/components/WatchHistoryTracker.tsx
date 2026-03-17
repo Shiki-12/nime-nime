@@ -10,6 +10,7 @@ interface WatchHistoryTrackerProps {
     animeType: string;
     episodeSlug: string;
     episodeName: string;
+    totalEpisodes: number;
 }
 
 /**
@@ -23,6 +24,7 @@ export default function WatchHistoryTracker({
     animeType,
     episodeSlug,
     episodeName,
+    totalEpisodes,
 }: WatchHistoryTrackerProps) {
     const { markEpisodeAsWatched } = useWatchHistory();
 
@@ -33,6 +35,7 @@ export default function WatchHistoryTracker({
                 title: animeTitle,
                 poster: animePoster,
                 type: animeType,
+                totalEpisodes,
             },
             episodeSlug,
             episodeName

@@ -47,7 +47,7 @@ export default function SidebarEpisodeList({
                             <div key={ep.slug} className="group relative">
                                 <Link
                                     href={href}
-                                    className={`flex items-center gap-2 rounded-md px-3 py-2 text-[12px] font-medium transition-all ${
+                                    className={`flex items-center gap-2 rounded-md pl-3 pr-10 py-2 text-[12px] font-medium transition-all ${
                                         isActive
                                             ? "bg-hn-primary text-hn-dark"
                                             : watched
@@ -73,7 +73,13 @@ export default function SidebarEpisodeList({
                                         e.preventDefault();
                                         e.stopPropagation();
                                         toggleEpisodeWatched(
-                                            { slug: animeSlug, title: animeTitle, poster: animePoster, type: animeType },
+                                            { 
+                                                slug: animeSlug, 
+                                                title: animeTitle, 
+                                                poster: animePoster, 
+                                                type: animeType,
+                                                totalEpisodes: episodes.length
+                                            },
                                             { slug: ep.slug, name: ep.name }
                                         );
                                     }}
