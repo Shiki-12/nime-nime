@@ -86,15 +86,19 @@ export default async function StreamingPage({
               animeType={animeType}
               episodeSlug={episodeSlug}
               episodeName={episode.title}
+              totalEpisodes={episodes.length}
             />
           )}
 
           {/* Episode Navigation */}
-          {episodes.length > 0 && (
+          {episodes.length > 0 && animeSlug && animeTitle && (
             <EpisodeList
               episodes={episodes}
               currentEpisodeSlug={episodeSlug}
               animeSlug={animeSlug}
+              animeTitle={animeTitle}
+              animePoster={animePoster}
+              animeType={animeType}
             />
           )}
 
@@ -109,11 +113,14 @@ export default async function StreamingPage({
         </div>
 
         {/* Right Sidebar: Episode List (desktop) */}
-        {episodes.length > 0 && (
+        {episodes.length > 0 && animeSlug && animeTitle && (
           <SidebarEpisodeList
             episodes={episodes}
             currentEpisodeSlug={episodeSlug}
             animeSlug={animeSlug}
+            animeTitle={animeTitle}
+            animePoster={animePoster}
+            animeType={animeType}
           />
         )}
       </div>
