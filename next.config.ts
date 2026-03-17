@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
         hostname: "cdn.myanimelist.net",
         pathname: "/images/**",
       },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
     ],
   },
 };
