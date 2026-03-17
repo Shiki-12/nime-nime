@@ -8,14 +8,20 @@ import { useWatchHistory } from "@/hooks/useWatchHistory";
 interface DetailEpisodeListProps {
     episodes: EpisodeItem[];
     animeSlug: string;
+    animeTitle: string;
+    animePoster: string;
+    animeType: string;
 }
 
 export default function DetailEpisodeList({
     episodes,
     animeSlug,
+    animeTitle,
+    animePoster,
+    animeType,
 }: DetailEpisodeListProps) {
     const [search, setSearch] = useState("");
-    const { isEpisodeWatched } = useWatchHistory();
+    const { isEpisodeWatched, toggleEpisodeWatched } = useWatchHistory();
     const containerRef = useRef<HTMLDivElement>(null);
 
     // Scroll helpers
@@ -126,63 +132,86 @@ export default function DetailEpisodeList({
                     const watched = isEpisodeWatched(animeSlug, ep.slug);
 
                     return (
-                        <Link
-                            key={ep.slug}
-                            href={`/anime/watch/${ep.slug}?anime=${animeSlug}`}
-                            className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all ${
-                                watched
-                                    ? "bg-white/[0.02] hover:bg-hn-card-hover"
-                                    : "hover:bg-hn-card-hover"
-                            }`}
-                        >
-                            {/* Icon */}
-                            <div
-                                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md transition-colors ${
+                        <div key={ep.slug} className="group relative">
+                            <Link
+                                href={`/anime/watch/${ep.slug}?anime=${animeSlug}`}
+                                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all ${
                                     watched
-                                        ? "bg-hn-green/10 text-hn-green"
-                                        : "bg-hn-primary/10 text-hn-primary group-hover:bg-hn-primary group-hover:text-hn-dark"
+                                        ? "bg-white/[0.02] hover:bg-hn-card-hover"
+                                        : "hover:bg-hn-card-hover"
                                 }`}
                             >
-                                {watched ? (
-                                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                                    </svg>
-                                ) : (
-                                    <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
-                                    </svg>
-                                )}
-                            </div>
+                                {/* Icon */}
+                                <div
+                                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md transition-colors ${
+                                        watched
+                                            ? "bg-hn-green/10 text-hn-green"
+                                            : "bg-hn-primary/10 text-hn-primary group-hover:bg-hn-primary group-hover:text-hn-dark"
+                                    }`}
+                                >
+                                    {watched ? (
+                                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                                        </svg>
+                                    ) : (
+                                        <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
+                                        </svg>
+                                    )}
+                                </div>
 
-                            {/* Title */}
-                            <span
-                                className={`flex-1 truncate text-[13px] font-medium transition-colors ${
-                                    watched
-                                        ? "text-white/35 group-hover:text-white/60"
-                                        : "text-white/70 group-hover:text-hn-primary"
-                                }`}
-                            >
-                                {ep.name}
-                            </span>
-
-                            {/* Watched badge */}
-                            {watched && (
-                                <span className="shrink-0 rounded bg-hn-green/10 px-2 py-0.5 text-[10px] font-semibold text-hn-green/60">
-                                    Watched
+                                {/* Title */}
+                                <span
+                                    className={`flex-1 truncate text-[13px] font-medium transition-colors ${
+                                        watched
+                                            ? "text-white/35 group-hover:text-white/60"
+                                            : "text-white/70 group-hover:text-hn-primary"
+                                    }`}
+                                >
+                                    {ep.name}
                                 </span>
-                            )}
 
-                            {/* Arrow */}
-                            <svg
-                                className="h-3.5 w-3.5 shrink-0 text-white/15 transition-all group-hover:translate-x-0.5 group-hover:text-white/40"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={2}
-                                stroke="currentColor"
+                                {/* Watched badge & Arrow */}
+                                <div className="flex items-center gap-2">
+                                    {watched && (
+                                        <span className="shrink-0 rounded bg-hn-green/10 px-2 py-0.5 text-[10px] font-semibold text-hn-green/60">
+                                            Watched
+                                        </span>
+                                    )}
+                                    <svg
+                                        className="h-3.5 w-3.5 shrink-0 text-white/15 transition-all group-hover:translate-x-0.5 group-hover:text-white/40"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={2}
+                                        stroke="currentColor"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                                    </svg>
+                                </div>
+                            </Link>
+
+                            {/* Manual Toggle Checkmark */}
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    toggleEpisodeWatched(
+                                        { slug: animeSlug, title: animeTitle, poster: animePoster, type: animeType },
+                                        { slug: ep.slug, name: ep.name }
+                                    );
+                                }}
+                                className={`absolute right-[44px] top-1/2 -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded-full transition-all duration-200 ${
+                                    watched 
+                                        ? "bg-hn-green text-hn-dark shadow-lg shadow-hn-green/20" 
+                                        : "bg-white/5 text-white/20 hover:bg-white/10 hover:text-white/40"
+                                }`}
+                                title={watched ? "Mark as unwatched" : "Mark as watched"}
                             >
-                                <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                            </svg>
-                        </Link>
+                                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                                </svg>
+                            </button>
+                        </div>
                     );
                 })}
             </div>

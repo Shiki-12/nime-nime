@@ -91,6 +91,9 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
                 <DetailEpisodeList
                     episodes={anime.episodes}
                     animeSlug={slug}
+                    animeTitle={anime.title}
+                    animePoster={anime.poster}
+                    animeType={anime.type}
                 />
             </div>
         </div>

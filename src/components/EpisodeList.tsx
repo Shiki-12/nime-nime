@@ -7,15 +7,21 @@ import { useWatchHistory } from "@/hooks/useWatchHistory";
 interface EpisodeListProps {
     episodes: EpisodeItem[];
     currentEpisodeSlug: string;
-    animeSlug?: string;
+    animeSlug: string;
+    animeTitle: string;
+    animePoster: string;
+    animeType: string;
 }
 
 export default function EpisodeList({
     episodes,
     currentEpisodeSlug,
     animeSlug,
+    animeTitle,
+    animePoster,
+    animeType,
 }: EpisodeListProps) {
-    const { isEpisodeWatched } = useWatchHistory();
+    const { isEpisodeWatched, toggleEpisodeWatched } = useWatchHistory();
 
     const currentIdx = episodes.findIndex(
         (ep) => ep.slug === currentEpisodeSlug
@@ -83,28 +89,50 @@ export default function EpisodeList({
                                 isEpisodeWatched(animeSlug, ep.slug);
 
                             return (
-                                <Link
-                                    key={ep.slug}
-                                    href={buildHref(ep.slug)}
-                                    className={`flex items-center gap-1.5 rounded-md px-2.5 py-2 text-[11px] font-medium transition-all ${
-                                        isActive
-                                            ? "bg-hn-primary text-hn-dark"
-                                            : watched
-                                              ? "bg-white/[0.03] text-white/30"
-                                              : "text-white/50 hover:bg-white/5 hover:text-white"
-                                    }`}
-                                >
-                                    {watched ? (
-                                        <svg className="h-2.5 w-2.5 shrink-0 text-hn-green" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+                                <div key={ep.slug} className="group relative">
+                                    <Link
+                                        href={buildHref(ep.slug)}
+                                        className={`flex items-center gap-1.5 rounded-md px-2.5 py-2 text-[11px] font-medium transition-all ${
+                                            isActive
+                                                ? "bg-hn-primary text-hn-dark"
+                                                : watched
+                                                  ? "bg-white/[0.03] text-white/30"
+                                                  : "text-white/50 hover:bg-white/5 hover:text-white"
+                                        }`}
+                                    >
+                                        {watched ? (
+                                            <svg className="h-2.5 w-2.5 shrink-0 text-hn-green" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                                            </svg>
+                                        ) : (
+                                            <svg className="h-2.5 w-2.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
+                                            </svg>
+                                        )}
+                                        <span className="truncate">{ep.name}</span>
+                                    </Link>
+
+                                    {/* Manual Toggle */}
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            toggleEpisodeWatched(
+                                                { slug: animeSlug, title: animeTitle, poster: animePoster, type: animeType },
+                                                { slug: ep.slug, name: ep.name }
+                                            );
+                                        }}
+                                        className={`absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full transition-all duration-200 ${
+                                            watched 
+                                                ? "bg-hn-green text-hn-dark shadow-sm" 
+                                                : "bg-white/10 text-white/40 hover:bg-white/20 hover:text-white opacity-0 group-hover:opacity-100"
+                                        }`}
+                                    >
+                                        <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" strokeWidth={5} stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                                         </svg>
-                                    ) : (
-                                        <svg className="h-2.5 w-2.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
-                                        </svg>
-                                    )}
-                                    <span className="truncate">{ep.name}</span>
-                                </Link>
+                                    </button>
+                                </div>
                             );
                         })}
                     </div>

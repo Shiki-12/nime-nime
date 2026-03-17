@@ -115,7 +115,7 @@ export async function DELETE(req: NextRequest) {
             body = {};
         }
 
-        const { animeId, animeIds, clearAll } = body;
+        const { animeId, animeIds, clearAll, episodeId } = body;
 
         // If explicitly asked to clear all, or no specific targets provided
         if (clearAll || (!animeId && !animeIds)) {
@@ -125,7 +125,21 @@ export async function DELETE(req: NextRequest) {
             return NextResponse.json({ success: true, action: "cleared_all" });
         }
 
-        // Single or bulk delete
+        // Single episode delete
+        if (animeId && episodeId) {
+            await prisma.watchHistory.delete({
+                where: {
+                    userId_animeId_episodeId: {
+                        userId: session.user.id,
+                        animeId,
+                        episodeId,
+                    },
+                },
+            });
+            return NextResponse.json({ success: true, action: "deleted_episode" });
+        }
+
+        // Single or bulk delete (Full anime history)
         const idsToDelete = animeIds ? animeIds : [animeId];
 
         await prisma.watchHistory.deleteMany({

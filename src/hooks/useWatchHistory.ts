@@ -14,6 +14,8 @@ export interface WatchedAnimeEntry {
     type: string;
     /** Episode slugs the user has watched */
     watchedEpisodes: string[];
+    /** Total episodes available for this anime */
+    totalEpisodes: number;
     /** The most recently watched episode slug (by watchedAt timestamp) */
     lastWatchedEpisode: string;
     /** Human-readable name of the last watched episode */
@@ -79,7 +81,7 @@ export function useWatchHistory() {
      */
     const markEpisodeAsWatched = useCallback(
         (
-            anime: { slug: string; title: string; poster: string; type: string },
+            anime: { slug: string; title: string; poster: string; type: string; totalEpisodes?: number },
             episodeSlug: string,
             episodeName: string
         ) => {
@@ -98,6 +100,7 @@ export function useWatchHistory() {
                             poster: anime.poster,
                             type: anime.type,
                             watchedEpisodes: Array.from(watchedSet),
+                            totalEpisodes: anime.totalEpisodes ?? (existing?.totalEpisodes || 0),
                             lastWatchedEpisode: episodeSlug,
                             lastWatchedEpisodeName: episodeName,
                             timestamp: Date.now(),
@@ -133,6 +136,7 @@ export function useWatchHistory() {
                             poster: anime.poster,
                             type: anime.type,
                             watchedEpisodes: Array.from(watchedSet),
+                            totalEpisodes: anime.totalEpisodes ?? (existing?.totalEpisodes || 0),
                             lastWatchedEpisode: episodeSlug,
                             lastWatchedEpisodeName: episodeName,
                             timestamp: Date.now(),
@@ -170,6 +174,84 @@ export function useWatchHistory() {
     const getHistorySorted = useCallback((): WatchedAnimeEntry[] => {
         return Object.values(history).sort((a, b) => b.timestamp - a.timestamp);
     }, [history]);
+
+    /**
+     * Remove a single episode from watch history.
+     */
+    const unmarkEpisodeAsWatched = useCallback(
+        async (animeSlug: string, episodeSlug: string) => {
+            if (isAuthenticated) {
+                // Optimistic update
+                const existing = dbHistory[animeSlug];
+                if (!existing) return;
+
+                setDbHistory((prev) => {
+                    const item = prev[animeSlug];
+                    if (!item) return prev;
+                    const nextEpisodes = item.watchedEpisodes.filter(e => e !== episodeSlug);
+                    
+                    if (nextEpisodes.length === 0) {
+                        const next = { ...prev };
+                        delete next[animeSlug];
+                        return next;
+                    }
+
+                    return {
+                        ...prev,
+                        [animeSlug]: { ...item, watchedEpisodes: nextEpisodes }
+                    };
+                });
+
+                try {
+                    await fetch("/api/user/history", {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ animeId: animeSlug, episodeId: episodeSlug }),
+                    });
+                } catch (err) {
+                    console.warn("Failed to unmark episode:", err);
+                    // Revert is complex here as we'd need previous state, 
+                    // ideally we should fetch fresh from API on error
+                }
+            } else {
+                setLocalHistory((prev) => {
+                    const item = prev[animeSlug];
+                    if (!item) return prev;
+                    const nextEpisodes = item.watchedEpisodes.filter(e => e !== episodeSlug);
+
+                    if (nextEpisodes.length === 0) {
+                        const next = { ...prev };
+                        delete next[animeSlug];
+                        return next;
+                    }
+
+                    return {
+                        ...prev,
+                        [animeSlug]: { ...item, watchedEpisodes: nextEpisodes }
+                    };
+                });
+            }
+        },
+        [isAuthenticated, dbHistory, setLocalHistory]
+    );
+
+    /**
+     * Toggle watched status for an episode.
+     */
+    const toggleEpisodeWatched = useCallback(
+        (
+            anime: { slug: string; title: string; poster: string; type: string; totalEpisodes?: number },
+            episode: { slug: string; name: string }
+        ) => {
+            const watched = isEpisodeWatched(anime.slug, episode.slug);
+            if (watched) {
+                unmarkEpisodeAsWatched(anime.slug, episode.slug);
+            } else {
+                markEpisodeAsWatched(anime, episode.slug, episode.name);
+            }
+        },
+        [isEpisodeWatched, unmarkEpisodeAsWatched, markEpisodeAsWatched]
+    );
 
     /**
      * Clear all watch history.
@@ -268,6 +350,8 @@ export function useWatchHistory() {
     return {
         history,
         markEpisodeAsWatched,
+        unmarkEpisodeAsWatched,
+        toggleEpisodeWatched,
         getWatchedEpisodes,
         isEpisodeWatched,
         getHistorySorted,

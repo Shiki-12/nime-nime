@@ -316,9 +316,16 @@ export default function HistoryPage() {
                                                 </div>
                                             )}
 
-                                            <p className="mt-1 text-[11px] text-white/30">
-                                                {watchedCount} episode{watchedCount !== 1 ? "s" : ""} watched · {timeAgo}
-                                            </p>
+                                            <div className="flex items-center gap-2 mt-1">
+                                                <p className="text-[11px] text-white/30">
+                                                    {watchedCount}{entry.totalEpisodes > 0 ? `/${entry.totalEpisodes}` : ""} episode{watchedCount !== 1 ? "s" : ""} watched · {timeAgo}
+                                                </p>
+                                                {entry.totalEpisodes > 0 && watchedCount >= entry.totalEpisodes && (
+                                                    <span className="rounded bg-hn-green/20 px-1.5 py-0.5 text-[9px] font-bold uppercase text-hn-green">
+                                                        Completed
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
 
                                         <div className="mt-2 space-y-1.5">
