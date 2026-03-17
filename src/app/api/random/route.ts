@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic'; 
 
 export async function GET(request: Request) {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.AUTH_URL || request.url;
+
     try {
         const randomPage = Math.floor(Math.random() * 5) + 1;
     
@@ -39,26 +41,26 @@ export async function GET(request: Request) {
 
         if (!animeArray || animeArray.length === 0) {
             console.error("Gagal nemu Array list anime dari data API:", data);
-            return NextResponse.redirect(new URL('/', request.url));
+            return NextResponse.redirect(new URL('/', baseUrl));
         }
         const randomIndex = Math.floor(Math.random() * animeArray.length);
         const randomAnime = animeArray[randomIndex];
 
         if (!randomAnime) {
-            return NextResponse.redirect(new URL('/', request.url));
+            return NextResponse.redirect(new URL('/', baseUrl));
         }
 
         const slug = randomAnime.slug || randomAnime.id;
         
         if (!slug) {
             console.error("Struktur anime ini aneh, ga punya slug/id:", randomAnime);
-            return NextResponse.redirect(new URL('/', request.url));
+            return NextResponse.redirect(new URL('/', baseUrl));
         }
 
-        return NextResponse.redirect(new URL(`/anime/${slug}`, request.url));
+        return NextResponse.redirect(new URL(`/anime/${slug}`, baseUrl));
 
     } catch (error) {
         console.error("Gagal get random anime:", error);
-        return NextResponse.redirect(new URL('/', request.url));
+        return NextResponse.redirect(new URL('/', baseUrl));
     }
 }
