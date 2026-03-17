@@ -163,6 +163,7 @@ export default function SettingsPage() {
                         {/* Preview */}
                         <div className="relative h-20 w-20 shrink-0">
                             {avatarPreview ? (
+                                // eslint-disable-next-line @next/next/no-img-element
                                 <img
                                     src={avatarPreview}
                                     alt="Avatar"

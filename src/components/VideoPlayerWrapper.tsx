@@ -121,13 +121,8 @@ export default function VideoPlayerWrapper({
                             </svg>
                         </div>
                     </button>
-
-                    {/* Title overlay at bottom */}
-                    <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/80 to-transparent px-5 pb-4 pt-10">
-                        <p className="truncate text-sm font-semibold text-white/80">
-                            {title}
-                        </p>
-                    </div>
+                    
+                    {/* Bagian overlay title yang bikin dobel udah dihapus dari sini */}
                 </>
             )}
 

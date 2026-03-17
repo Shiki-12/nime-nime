@@ -68,7 +68,7 @@ export default async function StreamingPage({
             Reload the page if the video not working{" "}
             <a
               href={`/anime/watch/${episodeSlug}${animeSlug ? `?anime=${animeSlug}` : ""}`}
-              className="font-bold text-cyan-400 hover:underline cursor-pointer"
+              className="cursor-pointer font-bold text-pink-400 transition-colors hover:text-pink-300 hover:underline"
             >
              Reload ↻
             </a>
@@ -92,23 +92,45 @@ export default async function StreamingPage({
 
           {/* Episode Navigation */}
           {episodes.length > 0 && animeSlug && animeTitle && (
-            <EpisodeList
-              episodes={episodes}
-              currentEpisodeSlug={episodeSlug}
-              animeSlug={animeSlug}
-              animeTitle={animeTitle}
-              animePoster={animePoster}
-              animeType={animeType}
-            />
+            <div className="mb-6">
+              <EpisodeList
+                episodes={episodes}
+                currentEpisodeSlug={episodeSlug}
+                animeSlug={animeSlug}
+                animeTitle={animeTitle}
+                animePoster={animePoster}
+                animeType={animeType}
+              />
+            </div>
           )}
+
+          {/* Back buttons - Dipindah ke sini (Di atas Disqus) */}
+          <div className="mb-6 border-t border-white/10 pt-6 flex items-center gap-2">
+            {animeSlug && (
+              <Link
+                href={`/anime/${animeSlug}`}
+                className="rounded-full bg-hn-card px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-hn-card-hover"
+              >
+                ← Back to Anime
+              </Link>
+            )}
+            <Link
+              href="/"
+              className="rounded-full bg-white/[0.04] px-4 py-2 text-xs font-medium text-white/40 transition-all hover:bg-white/[0.08] hover:text-white"
+            >
+              Home
+            </Link>
+          </div>
 
           {/* Disqus Comments - Episode-Specific Thread */}
           {animeSlug && (
-            <DisqusWrapper
-              animeSlug={animeSlug}
-              episodeSlug={episodeSlug}
-              episodeTitle={episode.title}
-            />
+            <div>
+              <DisqusWrapper
+                animeSlug={animeSlug}
+                episodeSlug={episodeSlug}
+                episodeTitle={episode.title}
+              />
+            </div>
           )}
         </div>
 
@@ -123,24 +145,6 @@ export default async function StreamingPage({
             animeType={animeType}
           />
         )}
-      </div>
-
-      {/* Back buttons */}
-      <div className="mt-6 flex items-center gap-2">
-        {animeSlug && (
-          <Link
-            href={`/anime/${animeSlug}`}
-            className="rounded-full bg-hn-card px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-hn-card-hover"
-          >
-            ← Back to Anime
-          </Link>
-        )}
-        <Link
-          href="/"
-          className="rounded-full bg-white/[0.04] px-4 py-2 text-xs font-medium text-white/40 transition-all hover:bg-white/[0.08] hover:text-white"
-        >
-          Home
-        </Link>
       </div>
     </div>
   );
