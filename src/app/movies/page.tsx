@@ -6,7 +6,7 @@ import type { OngoingAnime, Pagination } from "@/types/anime";
 interface MoviesPageProps {
   searchParams: Promise<{ page?: string }>;
 }
-
+export const dynamic = "force-dynamic";
 export default async function MoviesPage({ searchParams }: MoviesPageProps) {
   const sp = await searchParams;
   const currentPage = Number(sp.page) || 1;

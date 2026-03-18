@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getGenres } from "@/lib/api";
 
+export const dynamic = "force-dynamic";
 export default async function GenresPage() {
     const { genres } = await getGenres();
 
