@@ -44,7 +44,7 @@ export async function getHomeAnime(
         status: string;
         ongoing?: OngoingAnime[];
         recent?: OngoingAnime[];
-    }>(`/home?page=${page}`, 3600); // Tier 3: 1 hour (ongoing feeds)
+    }>(`/home?page=${page}`, 1800); // Tier 3: 30 minutes (ongoing feeds)
 
     return {
         status: raw.status,
@@ -58,7 +58,7 @@ export async function getHomeAnime(
 export async function getOngoingAnime(
     page: number = 1
 ): Promise<AnimeListResponse> {
-    return apiFetch<AnimeListResponse>(`/ongoing?page=${page}`, 3600); // Tier 3: 1 hour
+    return apiFetch<AnimeListResponse>(`/ongoing?page=${page}`, 1800); // Tier 3: 30 minutes
 }
 
 export async function getCompletedAnime(
@@ -126,7 +126,7 @@ export async function getPopularAnime(
 // ─── Schedule ──────────────────────────────────────────────────────
 
 export async function getAnimeSchedule(): Promise<ScheduleResponse> {
-    return apiFetch<ScheduleResponse>("/schedule", 3600); // Tier 3: 1 hour
+    return apiFetch<ScheduleResponse>("/schedule", 1800); // Tier 3: 30 minutes
 }
 
 // ─── Advanced Search ────────────────────────────────────────────────

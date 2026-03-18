@@ -43,6 +43,7 @@ function LoadingSpinner() {
     );
 }
 
+
 // ─── Main Component ────────────────────────────────────────────────
 export default function VideoPlayerWrapper({
     iframeSrc,
@@ -69,7 +70,6 @@ export default function VideoPlayerWrapper({
             });
         }, 20_000);
     }, []);
-
     // ── Iframe loaded successfully ─────────────────────────────────
     const handleIframeLoad = useCallback(() => {
         setIsLoading(false);
@@ -83,6 +83,15 @@ export default function VideoPlayerWrapper({
         setHasError(false);
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
     }, []);
+
+    // ─── Sandbox Logic ──────────────────────────────────────────────
+    const strictSandbox = "allow-scripts allow-same-origin";
+
+    const isProblematicHost =
+        iframeSrc.includes("vidhide") || iframeSrc.includes("callistanise");
+        
+    // KUNCINYA DI SINI: Kalau host bandel, kita kasih undefined biar atribut sandbox-nya MENGHILANG dari DOM
+    const sandboxRules = isProblematicHost ? undefined : strictSandbox;
 
     return (
         <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-hn-card">
@@ -141,7 +150,7 @@ export default function VideoPlayerWrapper({
                         allowFullScreen
                         allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
                         referrerPolicy="no-referrer"
-                        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                        sandbox={sandboxRules}
                     />
 
                     {/* Loading spinner overlay */}

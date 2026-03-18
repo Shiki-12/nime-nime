@@ -32,6 +32,36 @@ const slides = [
     ),
   },
   {
+    id: "adblock-tip",
+    title: (
+      <>
+        Watch Without{" "}
+        <span className="bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">
+          Interruptions
+        </span>
+      </>
+    ),
+    subtitle:
+      "Third-party video servers contain pop-up ads. We strongly recommend using Brave Browser or installing the uBlock Origin extension for a safe, smooth, and ad-free experience.",
+    image: "/images/banner_adblock.jpg",
+    buttonLabel: "Get uBlock Origin",
+    buttonHref: "https://ublockorigin.com/",
+    tag: "Pro Tip",
+    icon: (
+      <svg
+        className="h-4 w-4 transition-transform group-hover:-translate-y-0.5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </svg>
+    ),
+  },
+  {
     id: "default",
     title: (
       <>
@@ -117,6 +147,8 @@ export default function HeroCarousel() {
                 <div className="mt-5 flex items-center gap-3">
                   <Link
                     href={slide.buttonHref}
+                    target={slide.buttonHref.startsWith("http") ? "_blank" : undefined}
+                    rel={slide.buttonHref.startsWith("http") ? "noopener noreferrer" : undefined}
                     className="group inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition-all hover:bg-blue-500 hover:shadow-blue-500/30"
                   >
                     {slide.icon}

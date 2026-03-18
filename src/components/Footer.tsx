@@ -26,10 +26,10 @@ const FOOTER_SECTIONS = [
   {
     title: "Legal",
     links: [
-      { label: "Terms of Service", href: "#" },
-      { label: "Privacy Policy", href: "#" },
-      { label: "DMCA", href: "#" },
-      { label: "Contact", href: "#" },
+      { label: "Terms of Service", href: "/terms" },
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "DMCA", href: "/dmca" },
+      { label: "Contact", href: "/contact" },
     ],
   },
 ];

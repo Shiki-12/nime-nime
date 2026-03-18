@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -10,35 +10,39 @@ export default function VerifyPage() {
     const searchParams = useSearchParams();
     const token = searchParams.get("token");
 
-    const [state, setState] = useState<VerifyState>("loading");
-    const [message, setMessage] = useState("");
-
-    const verify = useCallback(async (verifyToken: string) => {
-        try {
-            const res = await fetch(`/api/auth/verify?token=${verifyToken}`);
-            const data = await res.json();
-
-            if (res.ok) {
-                setState("success");
-                setMessage(data.message || "Your email has been verified!");
-            } else {
-                setState("error");
-                setMessage(data.error || "Verification failed.");
-            }
-        } catch {
-            setState("error");
-            setMessage("Network error. Please try again.");
-        }
-    }, []);
+    const [state, setState] = useState<VerifyState>(() => token ? "loading" : "error");
+    const [message, setMessage] = useState(() => token ? "" : "No verification token provided.");
+    const hasRun = useRef(false);
 
     useEffect(() => {
-        if (!token) {
-            setState("error");
-            setMessage("No verification token provided.");
-            return;
-        }
-        verify(token);
-    }, [token, verify]);
+        if (!token || hasRun.current) return;
+        hasRun.current = true;
+
+        let cancelled = false;
+
+        (async () => {
+            try {
+                const res = await fetch(`/api/auth/verify?token=${token}`);
+                const data = await res.json();
+                if (cancelled) return;
+
+                if (res.ok) {
+                    setState("success");
+                    setMessage(data.message || "Your email has been verified!");
+                } else {
+                    setState("error");
+                    setMessage(data.error || "Verification failed.");
+                }
+            } catch {
+                if (!cancelled) {
+                    setState("error");
+                    setMessage("Network error. Please try again.");
+                }
+            }
+        })();
+
+        return () => { cancelled = true; };
+    }, [token]);
 
     return (
         <div className="w-full max-w-md rounded-2xl bg-hn-card p-8 text-center shadow-2xl">
