@@ -1,8 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 import { prisma } from "@/lib/prisma";
+import { authLimiter } from "@/lib/rate-limit";
 
 export async function GET(req: NextRequest) {
     try {
+        // ── Rate Limiting ─────────────────────────────────────────
+        const ip =
+            req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+            req.headers.get("x-real-ip") ??
+            "anonymous";
+
+        const rl = authLimiter.check(10, `verify:${ip}`);
+        if (!rl.success) {
+            return NextResponse.json(
+                { error: "Too many requests. Please try again later." },
+                {
+                    status: 429,
+                    headers: {
+                        "Retry-After": String(
+                            Math.ceil((rl.reset - Date.now()) / 1000)
+                        ),
+                    },
+                }
+            );
+        }
+
         const token = req.nextUrl.searchParams.get("token");
 
         if (!token) {
@@ -12,10 +35,17 @@ export async function GET(req: NextRequest) {
             );
         }
 
-        // ── Find user with valid, non-expired token ────────────
+        // ── Hash the incoming token to compare with the DB ─────
+        // The DB stores the SHA-256 hash; the user received the raw token
+        const hashedToken = crypto
+            .createHash("sha256")
+            .update(token)
+            .digest("hex");
+
+        // ── Find user with valid, non-expired hashed token ─────
         const user = await prisma.user.findFirst({
             where: {
-                verifyToken: token,
+                verifyToken: hashedToken,
                 verifyTokenExpiry: { gt: new Date() },
             },
         });

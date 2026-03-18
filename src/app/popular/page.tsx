@@ -3,6 +3,9 @@ import AnimeCard from "@/components/AnimeCard";
 import Link from "next/link";
 import type { OngoingAnime, Pagination } from "@/types/anime";
 
+// Tier 2: Moderately Static — popularity rankings update occasionally
+export const revalidate = 10800; // 3 hours
+
 interface PopularPageProps {
   searchParams: Promise<{ page?: string }>;
 }

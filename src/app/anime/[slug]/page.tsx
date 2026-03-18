@@ -3,6 +3,9 @@ import AnimeCharacters from "@/components/AnimeCharacters";
 import AnimeDetailHeader from "@/components/AnimeDetailHeader";
 import DetailEpisodeList from "@/components/DetailEpisodeList";
 
+// Tier 2: Moderately Static — anime metadata updates occasionally
+export const revalidate = 10800; // 3 hours
+
 interface AnimeDetailPageProps {
     params: Promise<{ slug: string }>;
 }

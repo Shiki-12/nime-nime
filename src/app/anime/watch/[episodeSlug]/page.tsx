@@ -7,6 +7,9 @@ import DisqusWrapper from "@/components/DisqusWrapper";
 import type { EpisodeItem } from "@/types/anime";
 import VideoPlayer from "@/components/VideoPlayer";
 
+// Tier 2: Moderately Static — episode/stream data updates occasionally
+export const revalidate = 10800; // 3 hours
+
 interface StreamingPageProps {
   params: Promise<{ episodeSlug: string }>;
   searchParams: Promise<{ anime?: string }>;

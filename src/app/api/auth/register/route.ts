@@ -1,11 +1,33 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import crypto from "crypto";
 import { prisma } from "@/lib/prisma";
 import { sendVerificationEmail } from "@/lib/mail";
+import { authLimiter } from "@/lib/rate-limit";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
     try {
+        // ── Rate Limiting ─────────────────────────────────────────
+        const ip =
+            req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+            req.headers.get("x-real-ip") ??
+            "anonymous";
+
+        const rl = authLimiter.check(5, `register:${ip}`);
+        if (!rl.success) {
+            return NextResponse.json(
+                { error: "Too many requests. Please try again later." },
+                {
+                    status: 429,
+                    headers: {
+                        "Retry-After": String(
+                            Math.ceil((rl.reset - Date.now()) / 1000)
+                        ),
+                    },
+                }
+            );
+        }
+
         const body = await req.json();
         const { name, email, password } = body as {
             name?: string;
@@ -42,25 +64,38 @@ export async function POST(req: Request) {
 
         // ── Hash password & generate token ─────────────────────
         const hashedPassword = await bcryptjs.hash(password, 12);
-        const verifyToken = crypto.randomBytes(32).toString("hex");
+
+        // Generate a raw token (this is what gets sent in the email)
+        const rawToken = crypto.randomBytes(32).toString("hex");
+
+        // Hash the token with SHA-256 before storing in the database
+        // This way, even if the DB is compromised, tokens can't be reused
+        const hashedToken = crypto
+            .createHash("sha256")
+            .update(rawToken)
+            .digest("hex");
+
         const verifyTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
 
-        // ── Create user ────────────────────────────────────────
+        // ── Create user (store HASHED token) ────────────────────
         await prisma.user.create({
             data: {
                 name,
                 email: email.toLowerCase(),
                 password: hashedPassword,
-                verifyToken,
+                verifyToken: hashedToken,
                 verifyTokenExpiry,
             },
         });
 
-        // ── Send verification email ────────────────────────────
-        await sendVerificationEmail(email.toLowerCase(), name, verifyToken);
+        // ── Send verification email (with RAW token) ───────────
+        await sendVerificationEmail(email.toLowerCase(), name, rawToken);
 
         return NextResponse.json(
-            { message: "Account created successfully. Please check your email to verify your account." },
+            {
+                message:
+                    "Account created successfully. Please check your email to verify your account.",
+            },
             { status: 201 }
         );
     } catch (error) {

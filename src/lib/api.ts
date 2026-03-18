@@ -16,7 +16,7 @@ const BASE_URL = "https://www.sankavollerei.com/anime/animasu";
  */
 async function apiFetch<T>(
     endpoint: string,
-    revalidate: number = 3600
+    revalidate: number = 3600 // default: Tier 3 (1 hour)
 ): Promise<T> {
     const url = `${BASE_URL}${endpoint}`;
 
@@ -44,7 +44,7 @@ export async function getHomeAnime(
         status: string;
         ongoing?: OngoingAnime[];
         recent?: OngoingAnime[];
-    }>(`/home?page=${page}`, 3600);
+    }>(`/home?page=${page}`, 3600); // Tier 3: 1 hour (ongoing feeds)
 
     return {
         status: raw.status,
@@ -58,13 +58,13 @@ export async function getHomeAnime(
 export async function getOngoingAnime(
     page: number = 1
 ): Promise<AnimeListResponse> {
-    return apiFetch<AnimeListResponse>(`/ongoing?page=${page}`, 3600);
+    return apiFetch<AnimeListResponse>(`/ongoing?page=${page}`, 3600); // Tier 3: 1 hour
 }
 
 export async function getCompletedAnime(
     page: number = 1
 ): Promise<AnimeListResponse> {
-    return apiFetch<AnimeListResponse>(`/completed?page=${page}`, 3600);
+    return apiFetch<AnimeListResponse>(`/completed?page=${page}`, 3600); // Tier 3: 1 hour
 }
 
 // ─── Detail & Episode ──────────────────────────────────────────────
@@ -72,13 +72,13 @@ export async function getCompletedAnime(
 export async function getAnimeDetail(
     slug: string
 ): Promise<AnimeDetailResponse> {
-    return apiFetch<AnimeDetailResponse>(`/detail/${slug}`, 3600);
+    return apiFetch<AnimeDetailResponse>(`/detail/${slug}`, 10800); // Tier 2: 3 hours
 }
 
 export async function getEpisodeData(
     episodeSlug: string
 ): Promise<EpisodeResponse> {
-    return apiFetch<EpisodeResponse>(`/episode/${episodeSlug}`, 3600);
+    return apiFetch<EpisodeResponse>(`/episode/${episodeSlug}`, 10800); // Tier 2: 3 hours
 }
 
 // ─── Search ────────────────────────────────────────────────────────
@@ -89,14 +89,14 @@ export async function searchAnime(
 ): Promise<AnimeListResponse> {
     return apiFetch<AnimeListResponse>(
         `/search/${encodeURIComponent(query)}?page=${page}`,
-        60 // short cache for search
+        300 // Tier 4: 5 minutes
     );
 }
 
 // ─── Genres ────────────────────────────────────────────────────────
 
 export async function getGenres(): Promise<GenreListResponse> {
-    return apiFetch<GenreListResponse>("/genres", 86400); // cache 24h
+    return apiFetch<GenreListResponse>("/genres", 86400); // Tier 1: 24 hours
 }
 
 export async function getAnimeByGenre(
@@ -105,7 +105,7 @@ export async function getAnimeByGenre(
 ): Promise<AnimeListResponse> {
     return apiFetch<AnimeListResponse>(
         `/genre/${genreSlug}?page=${page}`,
-        3600
+        86400 // Tier 1: 24 hours (genre listings are stable)
     );
 }
 
@@ -114,19 +114,19 @@ export async function getAnimeByGenre(
 export async function getMovies(
     page: number = 1
 ): Promise<AnimeListResponse> {
-    return apiFetch<AnimeListResponse>(`/movies?page=${page}`, 3600);
+    return apiFetch<AnimeListResponse>(`/movies?page=${page}`, 86400); // Tier 1: 24 hours
 }
 
 export async function getPopularAnime(
     page: number = 1
 ): Promise<AnimeListResponse> {
-    return apiFetch<AnimeListResponse>(`/popular?page=${page}`, 3600);
+    return apiFetch<AnimeListResponse>(`/popular?page=${page}`, 10800); // Tier 2: 3 hours
 }
 
 // ─── Schedule ──────────────────────────────────────────────────────
 
 export async function getAnimeSchedule(): Promise<ScheduleResponse> {
-    return apiFetch<ScheduleResponse>("/schedule", 3600);
+    return apiFetch<ScheduleResponse>("/schedule", 3600); // Tier 3: 1 hour
 }
 
 // ─── Advanced Search ────────────────────────────────────────────────
@@ -136,7 +136,7 @@ export async function getAdvancedSearch(
 ): Promise<AnimeListResponse> {
     return apiFetch<AnimeListResponse>(
         `/advanced-search?${queryString}`,
-        1800
+        10800 // Tier 2: 3 hours
     );
 }
 

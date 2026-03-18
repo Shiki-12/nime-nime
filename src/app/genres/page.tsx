@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { getGenres } from "@/lib/api";
 
-export const dynamic = "force-dynamic";
+// Tier 1: Highly Static — genre list rarely changes
+export const revalidate = 86400; // 24 hours
+
 export default async function GenresPage() {
     const { genres } = await getGenres();
 

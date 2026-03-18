@@ -4,6 +4,9 @@ import HeroCarousel from "@/components/HeroCarousel";
 import Link from "next/link";
 import type { OngoingAnime, Pagination } from "@/types/anime";
 
+// Tier 3: Frequently Updated — ongoing/completed feeds update hourly
+export const revalidate = 3600; // 1 hour
+
 interface HomeProps {
   searchParams: Promise<{ tab?: string; page?: string }>;
 }

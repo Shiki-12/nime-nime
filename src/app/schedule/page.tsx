@@ -1,6 +1,9 @@
 import { getAnimeSchedule } from "@/lib/api";
 import ScheduleTabs from "./ScheduleTabs";
 
+// Tier 3: Frequently Updated — schedule changes daily/hourly
+export const revalidate = 3600; // 1 hour
+
 // Indonesian → English day name mapping (for display)
 const DAY_LABELS: Record<string, string> = {
     senin: "Monday",

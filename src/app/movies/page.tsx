@@ -3,10 +3,12 @@ import AnimeCard from "@/components/AnimeCard";
 import Link from "next/link";
 import type { OngoingAnime, Pagination } from "@/types/anime";
 
+// Tier 1: Highly Static — movie catalog rarely changes
+export const revalidate = 86400; // 24 hours
+
 interface MoviesPageProps {
   searchParams: Promise<{ page?: string }>;
 }
-export const dynamic = "force-dynamic";
 export default async function MoviesPage({ searchParams }: MoviesPageProps) {
   const sp = await searchParams;
   const currentPage = Number(sp.page) || 1;

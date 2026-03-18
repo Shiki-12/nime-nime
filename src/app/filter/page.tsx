@@ -5,6 +5,9 @@ import AnimeCard from "@/components/AnimeCard";
 import FilterForm from "@/components/FilterForm";
 import type { OngoingAnime, Pagination } from "@/types/anime";
 
+// Tier 2: Moderately Static — advanced search results
+export const revalidate = 10800; // 3 hours
+
 interface FilterPageProps {
     searchParams: Promise<Record<string, string | string[] | undefined>>;
 }

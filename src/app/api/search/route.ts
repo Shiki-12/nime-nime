@@ -24,7 +24,7 @@ export async function GET(request: Request) {
             `${BASE_URL}/search/${encodeURIComponent(query)}?page=${page}`,
             {
                 headers: BROWSER_HEADERS,
-                next: { revalidate: 60 }, // short cache for search
+                next: { revalidate: 300 }, // Tier 4: 5 minutes
             }
         );
 

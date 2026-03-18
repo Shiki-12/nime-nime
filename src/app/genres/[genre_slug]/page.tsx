@@ -3,6 +3,9 @@ import { getAnimeByGenre } from "@/lib/api";
 import AnimeCard from "@/components/AnimeCard";
 import type { OngoingAnime, Pagination } from "@/types/anime";
 
+// Tier 1: Highly Static — genre listings are stable
+export const revalidate = 86400; // 24 hours
+
 interface GenrePageProps {
     params: Promise<{ genre_slug: string }>;
     searchParams: Promise<{ page?: string }>;

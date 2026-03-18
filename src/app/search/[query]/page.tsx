@@ -3,6 +3,9 @@ import AnimeCard from "@/components/AnimeCard";
 import Link from "next/link";
 import type { OngoingAnime, Pagination } from "@/types/anime";
 
+// Tier 4: Dynamic/Search — fresh enough to catch new content
+export const revalidate = 300; // 5 minutes
+
 interface SearchPageProps {
     params: Promise<{ query: string }>;
     searchParams: Promise<{ page?: string }>;
