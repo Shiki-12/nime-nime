@@ -101,7 +101,7 @@ export default function SearchBar() {
 
             try {
                 const res = await fetch(
-                    `https://www.sankavollerei.com/anime/animasu/search/${encodeURIComponent(debouncedQuery)}?page=1`,
+                    `/api/search?q=${encodeURIComponent(debouncedQuery)}&page=1`,
                     { signal: controller.signal }
                 );
 

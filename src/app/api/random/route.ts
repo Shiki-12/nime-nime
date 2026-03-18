@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { BROWSER_HEADERS } from '@/lib/fetcher';
 
 export const dynamic = 'force-dynamic'; 
 
@@ -11,7 +12,8 @@ export async function GET(request: Request) {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://www.sankavollerei.com'; 
         
         const res = await fetch(`${apiUrl}/anime/animasu/popular?page=${randomPage}`, {
-            cache: 'no-store'
+            cache: 'no-store',
+            headers: BROWSER_HEADERS,
         });
         
         if (!res.ok) {

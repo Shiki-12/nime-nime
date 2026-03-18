@@ -6,11 +6,13 @@ import type {
     ScheduleResponse,
     OngoingAnime,
 } from "@/types/anime";
+import { nimeFetch } from "@/lib/fetcher";
 
 const BASE_URL = "https://www.sankavollerei.com/anime/animasu";
 
 /**
- * Generic fetcher with error handling and Next.js revalidation.
+ * Generic fetcher with error handling, browser-spoofing headers,
+ * and Next.js ISR revalidation (anti-403 on GCP).
  */
 async function apiFetch<T>(
     endpoint: string,
@@ -18,9 +20,7 @@ async function apiFetch<T>(
 ): Promise<T> {
     const url = `${BASE_URL}${endpoint}`;
 
-    const res = await fetch(url, {
-        next: { revalidate },
-    });
+    const res = await nimeFetch(url, revalidate);
 
     if (!res.ok) {
         throw new Error(
@@ -144,9 +144,9 @@ export async function getAdvancedSearch(
 
 export async function getMalRating(animeTitle: string): Promise<string> {
     try {
-        const res = await fetch(
+        const res = await nimeFetch(
             `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(animeTitle)}&limit=1`,
-            { next: { revalidate: 86400 } }
+            86400
         );
 
         if (!res.ok) return "N/A";
