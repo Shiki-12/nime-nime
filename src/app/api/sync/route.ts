@@ -2,6 +2,29 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { syncLimiter } from "@/lib/rate-limit";
+import { z } from "zod";
+import { withAuthAndValidation } from "@/lib/api-wrapper";
+
+// ─── Zod Schemas ────────────────────────────────────────────────────
+const SyncPayloadSchema = z.object({
+    saved: z.array(z.object({
+        slug: z.string(),
+        title: z.string(),
+        poster: z.string(),
+        type: z.string().optional(),
+        savedAt: z.number(),
+    })).optional(),
+    history: z.record(z.string(), z.object({
+        slug: z.string(),
+        title: z.string(),
+        poster: z.string(),
+        type: z.string().optional(),
+        watchedEpisodes: z.array(z.string()),
+        lastWatchedEpisode: z.string(),
+        lastWatchedEpisodeName: z.string(),
+        timestamp: z.number(),
+    })).optional(),
+});
 
 // ─── Types matching localStorage shapes ─────────────────────────────
 
@@ -25,7 +48,7 @@ interface LocalWatchedEntry {
 }
 
 // ─── POST: Sync localStorage data into the database ─────────────────
-export async function POST(req: NextRequest) {
+export const POST = withAuthAndValidation(async (req: NextRequest) => {
     // ── Rate Limiting ───────────────────────────────────────────
     const ip =
         req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
@@ -46,11 +69,7 @@ export async function POST(req: NextRequest) {
     }
 
     const session = await auth();
-    if (!session?.user?.id) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const userId = session.user.id;
+    const userId = session!.user!.id;
     const body = await req.json();
     const saved: LocalSavedItem[] = body.saved ?? [];
     const history: Record<string, LocalWatchedEntry> = body.history ?? {};
@@ -182,4 +201,4 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true });
-}
+}, SyncPayloadSchema);

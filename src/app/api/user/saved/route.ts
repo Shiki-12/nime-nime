@@ -1,23 +1,45 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { z } from "zod";
+import { withAuthAndValidation } from "@/lib/api-wrapper";
+
+const AddSavedSchema = z.object({
+    animeId: z.string(),
+    title: z.string(),
+    image: z.string().optional(),
+    type: z.string().optional(),
+});
+
+const DeleteSavedSchema = z.object({
+    animeId: z.string().optional(),
+    animeIds: z.array(z.string()).optional(),
+});
 
 // ─── GET: List saved anime (or check a specific one) ────────────────
-export async function GET(req: NextRequest) {
+export const GET = withAuthAndValidation(async (req: NextRequest) => {
     const session = await auth();
-    if (!session?.user?.id) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const userId = session!.user!.id;
 
     const { searchParams } = new URL(req.url);
     const animeId = searchParams.get("animeId");
+    const type = searchParams.get("type");
+    
+    // Lightweight global state fetch
+    if (type === "ids") {
+        const savedIds = await prisma.savedAnime.findMany({
+            where: { userId },
+            select: { animeId: true },
+        });
+        return NextResponse.json(savedIds.map(s => s.animeId));
+    }
 
     // If animeId is provided, just check if it's saved
     if (animeId) {
         const exists = await prisma.savedAnime.findUnique({
             where: {
                 userId_animeId: {
-                    userId: session.user.id,
+                    userId,
                     animeId,
                 },
             },
@@ -25,43 +47,46 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ isSaved: !!exists });
     }
 
+    // Pagination params
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const limit = parseInt(searchParams.get("limit") || "20", 10);
+    const skip = (Math.max(1, page) - 1) * limit;
+
+    const total = await prisma.savedAnime.count({ where: { userId } });
+
     // Otherwise, return all saved anime sorted by newest first
     const saved = await prisma.savedAnime.findMany({
-        where: { userId: session.user.id },
+        where: { userId },
         orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
     });
 
-    return NextResponse.json(saved);
-}
+    return NextResponse.json({
+        data: saved,
+        meta: { total, page, limit, totalPages: Math.ceil(total / limit) }
+    });
+});
 
 // ─── POST: Save an anime ────────────────────────────────────────────
-export async function POST(req: NextRequest) {
+export const POST = withAuthAndValidation(async (req: NextRequest) => {
     const session = await auth();
-    if (!session?.user?.id) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const userId = session!.user!.id;
 
     const body = await req.json();
     const { animeId, title, image, type } = body;
-
-    if (!animeId || !title) {
-        return NextResponse.json(
-            { error: "animeId and title are required" },
-            { status: 400 }
-        );
-    }
 
     // Upsert to gracefully handle duplicates
     const saved = await prisma.savedAnime.upsert({
         where: {
             userId_animeId: {
-                userId: session.user.id,
+                userId,
                 animeId,
             },
         },
         update: {}, // Already saved, do nothing
         create: {
-            userId: session.user.id,
+            userId,
             animeId,
             title,
             image: image ?? "",
@@ -70,38 +95,39 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json(saved, { status: 201 });
-}
+}, AddSavedSchema);
 
 // ─── DELETE: Remove saved anime (Single or Bulk) ────────────────────
-export async function DELETE(req: NextRequest) {
+export const DELETE = withAuthAndValidation(async (req: NextRequest) => {
     const session = await auth();
-    if (!session?.user?.id) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const userId = session!.user!.id;
 
-    try {
-        const body = await req.json();
-        const { animeId, animeIds } = body;
-
-        if (!animeId && (!Array.isArray(animeIds) || animeIds.length === 0)) {
-            return NextResponse.json(
-                { error: "animeId or animeIds array is required" },
-                { status: 400 }
-            );
+    let body: { animeId?: string; animeIds?: string[] } = {};
+    if (req.body) {
+        try {
+            body = await req.json();
+        } catch {
+            // Ignore format error in DELETE since it may not send body sometimes
         }
-
-        const idsToDelete = animeIds ? animeIds : [animeId];
-
-        await prisma.savedAnime.deleteMany({
-            where: {
-                userId: session.user.id,
-                animeId: { in: idsToDelete },
-            },
-        });
-
-        return NextResponse.json({ success: true, count: idsToDelete.length });
-    } catch (error) {
-        console.warn("Delete saved anime failed:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
-}
+    
+    const { animeId, animeIds } = body;
+
+    if (!animeId && (!Array.isArray(animeIds) || animeIds.length === 0)) {
+        return NextResponse.json(
+            { error: "animeId or animeIds array is required" },
+            { status: 400 }
+        );
+    }
+
+    const idsToDelete = animeIds ? animeIds : animeId ? [animeId] : [];
+
+    await prisma.savedAnime.deleteMany({
+        where: {
+            userId,
+            animeId: { in: idsToDelete },
+        },
+    });
+
+    return NextResponse.json({ success: true, count: idsToDelete.length });
+}, DeleteSavedSchema);

@@ -12,7 +12,7 @@ interface WatchNowButtonProps {
 }
 
 export default function WatchNowButton({ animeSlug, episodes }: WatchNowButtonProps) {
-    const { history } = useWatchHistory();
+    const { getWatchedEpisodes } = useWatchHistory();
 
     // Single state object set once on mount to avoid cascading renders
     const [state, setState] = useState<{
@@ -30,10 +30,10 @@ export default function WatchNowButton({ animeSlug, episodes }: WatchNowButtonPr
             href = `/anime/watch/${earliestEpisode.slug}?anime=${animeSlug}`;
         }
 
-        const entry = history[animeSlug];
+        const watchedSet = getWatchedEpisodes(animeSlug);
 
-        if (entry && entry.watchedEpisodes && entry.watchedEpisodes.length > 0) {
-            const watchedCount = entry.watchedEpisodes.length;
+        if (watchedSet.size > 0) {
+            const watchedCount = watchedSet.size;
             const isCompleted = watchedCount >= episodes.length && episodes.length > 0;
 
             if (isCompleted) {
@@ -41,22 +41,19 @@ export default function WatchNowButton({ animeSlug, episodes }: WatchNowButtonPr
                 const firstEp = episodes[episodes.length - 1]; // First ep is at the end of the list usually (desciding)
                 href = `/anime/watch/${firstEp.slug}?anime=${animeSlug}`;
             } else {
-                // Use the most recently watched episode (by timestamp)
-                const lastSlug = entry.lastWatchedEpisode;
-                const lastEpName = entry.lastWatchedEpisodeName;
+                // Find the highest watched episode in the list (assuming episodes is sorted descending)
+                const lastWatchedEp = episodes.find(ep => watchedSet.has(ep.slug));
 
-                if (lastSlug) {
-                    label = lastEpName
-                        ? `Continue ${lastEpName}`
-                        : "Continue Watching";
-                    href = `/anime/watch/${lastSlug}?anime=${animeSlug}`;
+                if (lastWatchedEp) {
+                    label = "Continue Watching";
+                    href = `/anime/watch/${lastWatchedEp.slug}?anime=${animeSlug}`;
                 }
             }
         }
 
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setState({ mounted: true, href, label });
-    }, [animeSlug, episodes, history]);
+    }, [animeSlug, episodes, getWatchedEpisodes]);
 
     // ── SSR fallback: generic skeleton-style button ────────────────
     if (!state.mounted) {

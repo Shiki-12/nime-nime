@@ -5,6 +5,7 @@ import bcryptjs from "bcryptjs";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { settingsLimiter } from "@/lib/rate-limit";
+import { withAuthAndValidation } from "@/lib/api-wrapper";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
@@ -45,38 +46,31 @@ function isValidImageBuffer(buffer: Uint8Array): boolean {
     return false;
 }
 
-export async function PUT(req: NextRequest) {
-    try {
-        // ── Rate Limiting ─────────────────────────────────────────
-        const ip =
-            req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-            req.headers.get("x-real-ip") ??
-            "anonymous";
+export const PUT = withAuthAndValidation(async (req: NextRequest) => {
+    // ── Rate Limiting ─────────────────────────────────────────
+    const ip =
+        req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+        req.headers.get("x-real-ip") ??
+        "anonymous";
 
-        const rl = settingsLimiter.check(10, `settings:${ip}`);
-        if (!rl.success) {
-            return NextResponse.json(
-                { error: "Too many requests. Please try again later." },
-                {
-                    status: 429,
-                    headers: {
-                        "Retry-After": String(
-                            Math.ceil((rl.reset - Date.now()) / 1000)
-                        ),
-                    },
-                }
-            );
-        }
+    const rl = settingsLimiter.check(10, `settings:${ip}`);
+    if (!rl.success) {
+        return NextResponse.json(
+            { error: "Too many requests. Please try again later." },
+            {
+                status: 429,
+                headers: {
+                    "Retry-After": String(
+                        Math.ceil((rl.reset - Date.now()) / 1000)
+                    ),
+                },
+            }
+        );
+    }
 
-        const session = await auth();
-        if (!session?.user?.id) {
-            return NextResponse.json(
-                { error: "Unauthorized" },
-                { status: 401 }
-            );
-        }
-
-        const formData = await req.formData();
+    const session = await auth();
+    const userId = session!.user!.id;
+    const formData = await req.formData();
         const name = formData.get("name") as string | null;
         const currentPassword = formData.get("currentPassword") as
             | string
@@ -86,7 +80,7 @@ export async function PUT(req: NextRequest) {
 
         // Fetch current user from DB
         const user = await prisma.user.findUnique({
-            where: { id: session.user.id },
+            where: { id: userId },
             select: { password: true, image: true },
         });
 
@@ -175,7 +169,7 @@ export async function PUT(req: NextRequest) {
             }
 
             const ext = avatarFile.name.split(".").pop() ?? "jpg";
-            const fileName = `${session.user.id}-${Date.now()}.${ext}`;
+            const fileName = `${userId}-${Date.now()}.${ext}`;
             const uploadDir = path.join(
                 process.cwd(),
                 "public",
@@ -203,7 +197,7 @@ export async function PUT(req: NextRequest) {
         }
 
         const updatedUser = await prisma.user.update({
-            where: { id: session.user.id },
+            where: { id: userId },
             data: updateData,
             select: { id: true, name: true, email: true, image: true },
         });
@@ -212,11 +206,4 @@ export async function PUT(req: NextRequest) {
             message: "Settings updated successfully.",
             user: updatedUser,
         });
-    } catch (error) {
-        console.error("[SETTINGS_ERROR]", error);
-        return NextResponse.json(
-            { error: "Something went wrong. Please try again." },
-            { status: 500 }
-        );
-    }
-}
+});

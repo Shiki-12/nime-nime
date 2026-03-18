@@ -3,12 +3,17 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useWatchHistory } from "@/hooks/useWatchHistory";
+import { usePaginatedHistory } from "@/hooks/useWatchHistory";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { swalConfirm, swalDestructive } from "@/lib/swal";
 
 export default function HistoryPage() {
-    const { getHistorySorted, clearHistory, removeHistoryItem, bulkRemoveHistory } = useWatchHistory();
-    const entries = getHistorySorted();
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathname = usePathname();
+    const page = parseInt(searchParams.get("page") || "1", 10);
+
+    const { history: entries, meta, isLoading, clearHistory, removeHistoryItem, bulkRemoveHistory } = usePaginatedHistory(page);
 
     // ── Selection State ──────────────────────────────────────────────
     const [isSelecting, setIsSelecting] = useState(false);
@@ -358,6 +363,28 @@ export default function HistoryPage() {
                             </div>
                         );
                     })}
+                </div>
+            )}
+            {/* Pagination UI */}
+            {meta && meta.totalPages > 1 && (
+                <div className="mt-8 flex items-center justify-center gap-4">
+                    <button
+                        disabled={meta.page <= 1 || isLoading}
+                        onClick={() => router.push(`${pathname}?page=${meta.page - 1}`)}
+                        className="rounded-full bg-white/5 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Previous
+                    </button>
+                    <span className="text-sm font-medium text-white/50">
+                        Page {meta.page} of {meta.totalPages}
+                    </span>
+                    <button
+                        disabled={meta.page >= meta.totalPages || isLoading}
+                        onClick={() => router.push(`${pathname}?page=${meta.page + 1}`)}
+                        className="rounded-full bg-white/5 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Next
+                    </button>
                 </div>
             )}
         </main>

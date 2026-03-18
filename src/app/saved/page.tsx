@@ -4,11 +4,17 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { useSavedAnime } from "@/hooks/useLocalStorage";
+import { usePaginatedSaved } from "@/hooks/useLocalStorage";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { swalConfirm } from "@/lib/swal";
 
 export default function SavedPage() {
-    const { saved, removeSavedItem, bulkRemoveSaved } = useSavedAnime();
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathname = usePathname();
+    const page = parseInt(searchParams.get("page") || "1", 10);
+
+    const { saved, meta, isLoading, removeSavedItem, bulkRemoveSaved } = usePaginatedSaved(page);
     const { status } = useSession();
 
     // ── Selection State ──────────────────────────────────────────────
@@ -286,6 +292,28 @@ export default function SavedPage() {
                             </div>
                         );
                     })}
+                </div>
+            )}
+            {/* Pagination UI */}
+            {meta && meta.totalPages > 1 && (
+                <div className="mt-8 flex items-center justify-center gap-4">
+                    <button
+                        disabled={meta.page <= 1 || isLoading}
+                        onClick={() => router.push(`${pathname}?page=${meta.page - 1}`)}
+                        className="rounded-full bg-white/5 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Previous
+                    </button>
+                    <span className="text-sm font-medium text-white/50">
+                        Page {meta.page} of {meta.totalPages}
+                    </span>
+                    <button
+                        disabled={meta.page >= meta.totalPages || isLoading}
+                        onClick={() => router.push(`${pathname}?page=${meta.page + 1}`)}
+                        className="rounded-full bg-white/5 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Next
+                    </button>
                 </div>
             )}
         </main>

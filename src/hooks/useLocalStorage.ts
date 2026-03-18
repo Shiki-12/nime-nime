@@ -70,7 +70,7 @@ interface DbSavedAnime {
     createdAt: string;
 }
 
-// ─── Dual-mode useSavedAnime ────────────────────────────────────────
+// ─── Dual-mode useSavedAnime (Lightweight Global State) ──────────────
 
 export function useSavedAnime() {
     const { status } = useSession();
@@ -82,8 +82,8 @@ export function useSavedAnime() {
         []
     );
 
-    // ── API mode state ──
-    const [dbSaved, setDbSaved] = useState<SavedAnimeItem[]>([]);
+    // ── API mode state (IDs only) ──
+    const [dbSavedIds, setDbSavedIds] = useState<string[]>([]);
     const [dbLoaded, setDbLoaded] = useState(false);
 
     // Fetch from API when authenticated
@@ -93,63 +93,51 @@ export function useSavedAnime() {
             return;
         }
 
-        const fetchSaved = async () => {
+        const fetchSavedIds = async () => {
             try {
-                const res = await fetch("/api/user/saved");
+                const res = await fetch("/api/user/saved?type=ids");
                 if (res.ok) {
-                    const data: DbSavedAnime[] = await res.json();
-                    setDbSaved(
-                        data.map((item) => ({
-                            slug: item.animeId,
-                            title: item.title,
-                            poster: item.image,
-                            type: item.type,
-                            savedAt: new Date(item.createdAt).getTime(),
-                        }))
-                    );
+                    const data: string[] = await res.json();
+                    setDbSavedIds(data);
                 }
             } catch (error) {
-                console.warn("Failed to fetch saved anime:", error);
+                console.warn("Failed to fetch saved anime IDs:", error);
             } finally {
                 setDbLoaded(true);
             }
         };
 
-        fetchSaved();
+        fetchSavedIds();
     }, [isAuthenticated]);
 
-    // Pick the correct data source
-    const saved = isAuthenticated && dbLoaded ? dbSaved : localSaved;
-
     const isSaved = useCallback(
-        (slug: string) => saved.some((s) => s.slug === slug),
-        [saved]
+        (slug: string) => {
+            if (isAuthenticated && dbLoaded) return dbSavedIds.includes(slug);
+            return localSaved.some((s) => s.slug === slug);
+        },
+        [isAuthenticated, dbLoaded, dbSavedIds, localSaved]
     );
 
     const toggleSave = useCallback(
         (anime: Omit<SavedAnimeItem, "savedAt">) => {
             if (isAuthenticated) {
                 // ── API mode ──
-                const alreadySaved = dbSaved.some((s) => s.slug === anime.slug);
+                const alreadySaved = dbSavedIds.includes(anime.slug);
 
                 if (alreadySaved) {
                     // Optimistic remove
-                    setDbSaved((prev) => prev.filter((s) => s.slug !== anime.slug));
+                    setDbSavedIds((prev) => prev.filter((id) => id !== anime.slug));
                     fetch("/api/user/saved", {
                         method: "DELETE",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ animeId: anime.slug }),
                     }).catch(() => {
                         // Revert on failure
-                        setDbSaved((prev) => [
-                            ...prev,
-                            { ...anime, savedAt: Date.now() },
-                        ]);
+                        setDbSavedIds((prev) => [...prev, anime.slug]);
                     });
                 } else {
                     // Optimistic add
-                    const newItem = { ...anime, savedAt: Date.now() };
-                    setDbSaved((prev) => [...prev, newItem]);
+                    setDbSavedIds((prev) => [...prev, anime.slug]);
                     fetch("/api/user/saved", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -161,9 +149,7 @@ export function useSavedAnime() {
                         }),
                     }).catch(() => {
                         // Revert on failure
-                        setDbSaved((prev) =>
-                            prev.filter((s) => s.slug !== anime.slug)
-                        );
+                        setDbSavedIds((prev) => prev.filter((id) => id !== anime.slug));
                     });
                 }
             } else {
@@ -176,63 +162,103 @@ export function useSavedAnime() {
                 });
             }
         },
-        [isAuthenticated, dbSaved, setLocalSaved]
+        [isAuthenticated, dbSavedIds, setLocalSaved]
     );
+
+    return { isSaved, toggleSave };
+}
+
+// ─── usePaginatedSaved (For the /saved page) ──────────────────────────
+
+export function usePaginatedSaved(page: number = 1, limit: number = 20) {
+    const { status } = useSession();
+    const isAuthenticated = status === "authenticated";
+
+    const [localSaved, setLocalSaved] = useLocalStorage<SavedAnimeItem[]>("nimenime-saved", []);
+    const [dbSaved, setDbSaved] = useState<SavedAnimeItem[]>([]);
+    const [meta, setMeta] = useState<{ total: number; page: number; limit: number; totalPages: number } | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        if (!isAuthenticated) {
+            setIsLoading(false);
+            return;
+        }
+
+        setIsLoading(true);
+        const fetchSaved = async () => {
+            try {
+                const res = await fetch(`/api/user/saved?page=${page}&limit=${limit}`);
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json.data && json.meta) {
+                        setDbSaved(
+                            json.data.map((item: DbSavedAnime) => ({
+                                slug: item.animeId,
+                                title: item.title,
+                                poster: item.image,
+                                type: item.type,
+                                savedAt: new Date(item.createdAt).getTime(),
+                            }))
+                        );
+                        setMeta(json.meta);
+                    } else {
+                        setDbSaved([]);
+                    }
+                }
+            } catch (error) {
+                console.warn("Failed to fetch paginated saved anime:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchSaved();
+    }, [isAuthenticated, page, limit]);
+
+    const saved = isAuthenticated ? dbSaved : localSaved.slice((page - 1) * limit, page * limit);
+    const localMeta = {
+        total: localSaved.length,
+        page,
+        limit,
+        totalPages: Math.ceil(localSaved.length / limit) || 1,
+    };
+    const currentMeta = isAuthenticated && meta ? meta : localMeta;
 
     const removeSavedItem = useCallback(
         (slug: string) => {
             if (isAuthenticated) {
-                // ── API mode ──
-                const removedItem = dbSaved.find((s) => s.slug === slug);
-                if (!removedItem) return;
-
-                // Optimistic remove
                 setDbSaved((prev) => prev.filter((s) => s.slug !== slug));
-                
                 fetch("/api/user/saved", {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ animeId: slug }),
-                }).catch(() => {
-                    // Revert on failure
-                    setDbSaved((prev) => [...prev, removedItem]);
                 });
             } else {
-                // ── localStorage mode ──
                 setLocalSaved((prev) => prev.filter((s) => s.slug !== slug));
             }
         },
-        [isAuthenticated, dbSaved, setLocalSaved]
+        [isAuthenticated, setLocalSaved]
     );
 
     const bulkRemoveSaved = useCallback(
         (slugs: string[]) => {
             if (slugs.length === 0) return;
-
             if (isAuthenticated) {
-                // ── API mode ──
-                const removedItems = dbSaved.filter((s) => slugs.includes(s.slug));
-                
-                // Optimistic remove
                 setDbSaved((prev) => prev.filter((s) => !slugs.includes(s.slug)));
-                
                 fetch("/api/user/saved", {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ animeIds: slugs }),
-                }).catch(() => {
-                    // Revert on failure
-                    setDbSaved((prev) => [...prev, ...removedItems]);
                 });
             } else {
-                // ── localStorage mode ──
                 setLocalSaved((prev) => prev.filter((s) => !slugs.includes(s.slug)));
             }
         },
-        [isAuthenticated, dbSaved, setLocalSaved]
+        [isAuthenticated, setLocalSaved]
     );
 
-    return { saved, isSaved, toggleSave, removeSavedItem, bulkRemoveSaved };
+    return { saved, meta: currentMeta, isLoading, removeSavedItem, bulkRemoveSaved };
 }
 
 // ─── useAnimeRating (unchanged, localStorage-only) ──────────────────
