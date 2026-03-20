@@ -1,4 +1,5 @@
 import { getAnimeDetail, getMalRating } from "@/lib/api";
+import { fetchSerialSlug } from "@/lib/fetchSerialSlug";
 import AnimeCharacters from "@/components/AnimeCharacters";
 import AnimeDetailHeader from "@/components/AnimeDetailHeader";
 import DetailEpisodeList from "@/components/DetailEpisodeList";
@@ -12,7 +13,12 @@ interface AnimeDetailPageProps {
 
 export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) {
     const { slug } = await params;
-    const { detail: anime } = await getAnimeDetail(slug);
+
+    // Dual-fetch: run API calls and scraper concurrently
+    const [{ detail: anime }, serialSlug] = await Promise.all([
+        getAnimeDetail(slug),
+        fetchSerialSlug(slug),
+    ]);
     const malScore = await getMalRating(anime.title);
 
     return (
@@ -29,6 +35,7 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
                 duration={anime.duration}
                 slug={slug}
                 episodes={anime.episodes}
+                serialSlug={serialSlug}
             />
 
             {/* Body */}

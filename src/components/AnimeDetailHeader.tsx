@@ -20,6 +20,7 @@ interface AnimeDetailHeaderProps {
     duration?: string;
     slug: string;
     episodes: EpisodeItem[];
+    serialSlug?: string | null;
 }
 
 // ─── Skeleton Loader ───────────────────────────────────────────────
@@ -78,6 +79,7 @@ export default function AnimeDetailHeader({
     duration,
     slug,
     episodes,
+    serialSlug,
 }: AnimeDetailHeaderProps) {
     return (
         <div className="relative w-full overflow-hidden">
@@ -168,7 +170,7 @@ export default function AnimeDetailHeader({
                         </p>
 
                         {/* Actions row: Watch Now CTA + Save/Like/Dislike */}
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-wrap items-center gap-3">
                             {/* Primary CTA: Watch Now / Continue Watching */}
                             <WatchNowButton animeSlug={slug} episodes={episodes} />
 
@@ -181,6 +183,27 @@ export default function AnimeDetailHeader({
                                     type,
                                 }}
                             />
+
+                            {/* Franchise / Serial link */}
+                            {serialSlug && (
+                                <Link
+                                    href={`/serial/${serialSlug}`}
+                                    className="group relative inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[13px] font-semibold text-hn-primary transition-all duration-300 hover:shadow-[0_0_16px_rgba(var(--color-hn-primary-rgb,99,102,241),0.25)]"
+                                >
+                                    {/* Gradient border ring */}
+                                    <span className="absolute inset-0 rounded-full border border-hn-primary/40 bg-hn-primary/[0.06] backdrop-blur-sm transition-colors group-hover:border-hn-primary/70 group-hover:bg-hn-primary/10" />
+                                    <svg
+                                        className="relative h-4 w-4"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        strokeWidth={2}
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0-4-4m4 4-4 4" />
+                                    </svg>
+                                    <span className="relative">Cek Urutan Series / OVA</span>
+                                </Link>
+                            )}
                         </div>
                     </div>
                 </div>
