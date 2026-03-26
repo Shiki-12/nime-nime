@@ -5,7 +5,7 @@ import { authLimiter } from "@/lib/rate-limit";
 // This catches POST requests to /api/auth/callback/credentials (the
 // actual endpoint NextAuth hits when `signIn("credentials")` is called).
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
     // Only rate-limit POST (the actual sign-in attempt)
     if (req.method !== "POST") {
         return NextResponse.next();

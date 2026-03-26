@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
+import Swal from "sweetalert2";
 
 // ─── Base useLocalStorage (unchanged) ──────────────────────────────
 
@@ -147,10 +148,33 @@ export function useSavedAnime() {
                             image: anime.poster,
                             type: anime.type,
                         }),
-                    }).catch(() => {
-                        // Revert on failure
-                        setDbSavedIds((prev) => prev.filter((id) => id !== anime.slug));
-                    });
+                    })
+                        .then(async (res) => {
+                            if (!res.ok) {
+                                const data = await res.json().catch(() => ({}));
+                                // Revert optimistic add
+                                setDbSavedIds((prev) => prev.filter((id) => id !== anime.slug));
+                                
+                                if (data.message) {
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: "Save Failed",
+                                        text: data.message,
+                                        toast: true,
+                                        position: "bottom-end",
+                                        showConfirmButton: false,
+                                        timer: 3000,
+                                    });
+                                    if (data.message.toLowerCase().includes("log in") || data.message.toLowerCase().includes("log out")) {
+                                        signOut();
+                                    }
+                                }
+                            }
+                        })
+                        .catch(() => {
+                            // Revert on network failure
+                            setDbSavedIds((prev) => prev.filter((id) => id !== anime.slug));
+                        });
                 }
             } else {
                 // ── localStorage mode ──

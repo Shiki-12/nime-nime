@@ -1,8 +1,9 @@
-import { getAnimeDetail, getMalRating } from "@/lib/api";
+import { getAnimeDetail } from "@/lib/api";
 import { fetchSerialSlug } from "@/lib/fetchSerialSlug";
 import AnimeCharacters from "@/components/AnimeCharacters";
 import AnimeDetailHeader from "@/components/AnimeDetailHeader";
 import DetailEpisodeList from "@/components/DetailEpisodeList";
+import MalRatingCard from "@/components/MalRatingCard";
 
 // Tier 2: Moderately Static — anime metadata updates occasionally
 export const revalidate = 10800; // 3 hours
@@ -19,7 +20,7 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
         getAnimeDetail(slug),
         fetchSerialSlug(slug),
     ]);
-    const malScore = await getMalRating(anime.title);
+
 
     return (
         <div className="relative w-full overflow-x-hidden">
@@ -42,8 +43,10 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
             <div className="mx-auto max-w-[1440px] px-4 pt-10 pb-8 lg:px-6">
                 {/* Meta cards */}
                 <div className="mb-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                    {/* Client-side MAL Rating — fetched from user's IP */}
+                    <MalRatingCard fallbackTitle={anime.title} />
+
                     {[
-                        { label: "Rating MAL", value: malScore },
                         { label: "Studio", value: anime.studio },
                         { label: "Season", value: anime.season },
                         { label: "Aired", value: anime.aired },

@@ -71,30 +71,59 @@ export const GET = withAuthAndValidation(async (req: NextRequest) => {
 // ─── POST: Save an anime ────────────────────────────────────────────
 export const POST = withAuthAndValidation(async (req: NextRequest) => {
     const session = await auth();
-    const userId = session!.user!.id;
+    
+    // 1. Strict Session Validation
+    if (!session?.user?.id) {
+        return NextResponse.json(
+            { success: false, message: "Unauthorized. Please log in." },
+            { status: 401 }
+        );
+    }
+    const userId = session.user.id;
+
+    // 2. Database User Verification
+    const dbUser = await prisma.user.findUnique({
+        where: { id: userId },
+    });
+    
+    if (!dbUser) {
+        return NextResponse.json(
+            { success: false, message: "User account not found. Please log out and log back in." },
+            { status: 404 }
+        );
+    }
 
     const body = await req.json();
     const { animeId, title, image, type } = body;
 
-    // Upsert to gracefully handle duplicates
-    const saved = await prisma.savedAnime.upsert({
-        where: {
-            userId_animeId: {
+    // 3. Graceful Error Handling
+    try {
+        // Upsert to gracefully handle duplicates
+        const saved = await prisma.savedAnime.upsert({
+            where: {
+                userId_animeId: {
+                    userId,
+                    animeId,
+                },
+            },
+            update: {}, // Already saved, do nothing
+            create: {
                 userId,
                 animeId,
+                title,
+                image: image ?? "",
+                type: type ?? "",
             },
-        },
-        update: {}, // Already saved, do nothing
-        create: {
-            userId,
-            animeId,
-            title,
-            image: image ?? "",
-            type: type ?? "",
-        },
-    });
+        });
 
-    return NextResponse.json(saved, { status: 201 });
+        return NextResponse.json(saved, { status: 201 });
+    } catch (error) {
+        console.error("[POST_SAVED_ANIME_ERROR]", error);
+        return NextResponse.json(
+            { success: false, message: "An error occurred while saving." },
+            { status: 500 }
+        );
+    }
 }, AddSavedSchema);
 
 // ─── DELETE: Remove saved anime (Single or Bulk) ────────────────────

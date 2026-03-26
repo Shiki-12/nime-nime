@@ -142,20 +142,28 @@ export async function getAdvancedSearch(
 
 // ─── MAL Rating (Jikan API v4) ─────────────────────────────────────
 
+import { jikanFetch, cleanTitle } from "@/lib/jikanFetch";
+
+/**
+ * Fetch the MAL score for an anime title via Jikan search.
+ *
+ * IMPORTANT: This function **throws** on failure instead of returning
+ * "N/A".  Throwing prevents Next.js from caching a poisoned fallback.
+ * If you need a graceful "N/A" fallback, handle the error at the
+ * call-site (or use the client-side `<MalRatingCard>` component).
+ */
 export async function getMalRating(animeTitle: string): Promise<string> {
-    try {
-        const res = await nimeFetch(
-            `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(animeTitle)}&limit=1`,
-            86400
-        );
+    const cleaned = cleanTitle(animeTitle);
 
-        if (!res.ok) return "N/A";
+    const json = await jikanFetch<{
+        data?: { score?: number; mal_id?: number }[];
+    }>(`/anime?q=${encodeURIComponent(cleaned)}&limit=1`);
 
-        const json = await res.json();
-        const score = json?.data?.[0]?.score;
+    const score = json?.data?.[0]?.score;
 
-        return score != null ? String(score) : "N/A";
-    } catch {
-        return "N/A";
+    if (score == null) {
+        throw new Error(`[getMalRating] No score found for "${cleaned}"`);
     }
+
+    return String(score);
 }
