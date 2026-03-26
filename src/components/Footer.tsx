@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const FOOTER_SECTIONS = [
   {
@@ -35,6 +38,11 @@ const FOOTER_SECTIONS = [
 ];
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  // Hide footer on the isolated /hentai section
+  if (pathname.startsWith("/hentai")) return null;
+
   return (
     <footer className="relative mt-16 overflow-hidden border-t border-white/[0.04] bg-hn-dark">
       {/* Gradient glow behind footer */}

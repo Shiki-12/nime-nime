@@ -26,6 +26,8 @@
   --hn-text: #ffffff;
   --hn-text-muted: #9c9c9c;
   --hn-border: rgba(255, 186, 222, 0.08);
+  --hn-nsfw: #dc2626;
+  --hn-nsfw-muted: rgba(220, 38, 38, 0.15);
 
   /* Scrollbar / glass / gradient raw values */
   --hn-scrollbar-hover: #ff9ec2;
@@ -50,6 +52,8 @@
   --hn-text: #f8fafc;
   --hn-text-muted: #94a3b8;
   --hn-border: rgba(59, 130, 246, 0.08);
+  --hn-nsfw: #ef4444;
+  --hn-nsfw-muted: rgba(239, 68, 68, 0.15);
 
   --hn-scrollbar-hover: #60a5fa;
   --hn-scrollbar-thin: rgba(59, 130, 246, 0.4);
@@ -73,6 +77,8 @@
   --hn-text: #e0f2e9;
   --hn-text-muted: #5a8a6e;
   --hn-border: rgba(0, 255, 136, 0.08);
+  --hn-nsfw: #f87171;
+  --hn-nsfw-muted: rgba(248, 113, 113, 0.15);
 
   --hn-scrollbar-hover: #33ffaa;
   --hn-scrollbar-thin: rgba(0, 255, 136, 0.3);
@@ -96,6 +102,8 @@
   --hn-text: #fdfaf8;
   --hn-text-muted: #a39590;
   --hn-border: rgba(255, 115, 0, 0.08);
+  --hn-nsfw: #dc2626;
+  --hn-nsfw-muted: rgba(220, 38, 38, 0.15);
 
   --hn-scrollbar-hover: #ff9d4d;
   --hn-scrollbar-thin: rgba(255, 115, 0, 0.3);
@@ -119,6 +127,8 @@
   --hn-text: #fef2f2;
   --hn-text-muted: #a08888;
   --hn-border: rgba(230, 0, 18, 0.08);
+  --hn-nsfw: #fbbf24;
+  --hn-nsfw-muted: rgba(251, 191, 36, 0.15);
 
   --hn-scrollbar-hover: #ff4d5a;
   --hn-scrollbar-thin: rgba(230, 0, 18, 0.3);
@@ -142,6 +152,8 @@
   --hn-text: #f1f5f9;
   --hn-text-muted: #71717a;
   --hn-border: rgba(248, 250, 252, 0.08);
+  --hn-nsfw: #ef4444;
+  --hn-nsfw-muted: rgba(239, 68, 68, 0.15);
 
   --hn-scrollbar-hover: #cbd5e1;
   --hn-scrollbar-thin: rgba(248, 250, 252, 0.25);
@@ -167,6 +179,8 @@
   --color-hn-text: var(--hn-text);
   --color-hn-text-muted: var(--hn-text-muted);
   --color-hn-border: var(--hn-border);
+  --color-hn-nsfw: var(--hn-nsfw);
+  --color-hn-nsfw-muted: var(--hn-nsfw-muted);
 }
 
 /* ─── Base ──────────────────────────────────────────────────────── */

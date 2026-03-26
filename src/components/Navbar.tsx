@@ -119,6 +119,14 @@ function UserMenu() {
               </svg>
               Appearance
             </Link>
+            <Link
+              href="/hentai"
+              onClick={() => setOpen(false)}
+              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-white/70 transition-all duration-200 hover:bg-white/5 hover:text-white"
+            >
+              <span className="flex h-4 w-4 items-center justify-center rounded bg-red-600 text-[8px] font-bold text-white">18</span>
+              18+ Section
+            </Link>
             <button
               onClick={() => signOut({ callbackUrl: "/login" })}
               className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-red-400 transition-all duration-200 hover:bg-red-500/10"
@@ -139,6 +147,9 @@ function UserMenu() {
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
+
+  // Hide main navbar on the isolated /hentai section (it has its own)
+  if (pathname.startsWith("/hentai")) return null;
 
   return (
     <header className="header-glass fixed left-0 right-0 top-0 z-50">
