@@ -230,8 +230,8 @@ export default async function Home({ searchParams }: HomeProps) {
 
         {/* ── Ongoing Anime section ─────────────────────────────── */}
         {ongoingList.length > 0 && (
-          <section className="mb-12">
-            <div className="mb-5 flex items-center gap-2.5">
+          <section className="mb-16">
+            <div className="mb-7 flex items-center gap-2.5">
               <div className="h-5 w-1 rounded-full bg-hn-primary" />
               <h2 className="text-lg font-bold text-white">Ongoing Anime</h2>
               <Link
@@ -242,7 +242,7 @@ export default async function Home({ searchParams }: HomeProps) {
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               {ongoingList.map((anime) => (
                 <AnimeCard key={anime.slug} anime={anime} />
               ))}
@@ -253,7 +253,7 @@ export default async function Home({ searchParams }: HomeProps) {
         {/* ── Completed Anime section ───────────────────────────── */}
         {completedList.length > 0 && (
           <section>
-            <div className="mb-5 flex items-center gap-2.5">
+            <div className="mb-7 flex items-center gap-2.5">
               <div className="h-5 w-1 rounded-full bg-hn-secondary" />
               <h2 className="text-lg font-bold text-white">Completed Anime</h2>
               <Link
@@ -264,7 +264,7 @@ export default async function Home({ searchParams }: HomeProps) {
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               {completedList.map((anime) => (
                 <AnimeCard key={anime.slug} anime={anime} />
               ))}

@@ -132,7 +132,7 @@ export default function Navbar() {
 
   return (
     <header className="header-glass fixed left-0 right-0 top-0 z-50">
-      <div className="mx-auto flex h-[60px] max-w-[1440px] items-center gap-3 px-4 lg:px-6">
+      <div className="mx-auto flex h-14 md:h-[60px] max-w-[1440px] items-center gap-4 px-4 lg:px-8">
         {/* Hamburger (mobile) */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -162,7 +162,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Nav Links */}
-        <nav className="hidden items-center gap-0.5 pl-6 lg:flex">
+        <nav className="hidden items-center gap-1 pl-8 lg:flex">
           {NAV_LINKS.map((link) => {
             const isActive =
               link.href === "/"
@@ -197,7 +197,7 @@ export default function Navbar() {
         </div>
 
         {/* Right side icons */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           {/* Mobile search toggle */}
           <button
             onClick={() => {
@@ -232,7 +232,7 @@ export default function Navbar() {
 
       {/* Mobile drawer */}
       {mobileOpen && (
-        <div className="border-t border-white/5 bg-hn-dark px-4 pb-4 pt-3 lg:hidden">
+        <div className="border-t border-white/5 bg-hn-dark px-5 pb-6 pt-4 lg:hidden">
           <div className="mb-3 md:hidden">
             <SearchBar />
           </div>

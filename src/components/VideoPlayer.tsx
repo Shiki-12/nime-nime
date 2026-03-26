@@ -43,23 +43,27 @@ export default function VideoPlayer({ streams, title }: VideoPlayerProps) {
 
                 {/* Navigation Row: Server Selector + Lights Off */}
                 <div className="flex flex-wrap items-center justify-between gap-4">
-                    {/* Server / Quality selector */}
+                    {/* Server / Quality dropdown */}
                     {streams.length > 1 && (
-                        <div className="flex flex-wrap items-center gap-2 text-xs">
+                        <div className="flex items-center gap-2 text-xs">
                             <span className="font-medium text-white/40">Server:</span>
-                            {streams.map((s, i) => (
-                                <button
-                                    key={`${s.name}-${i}`}
-                                    onClick={() => setActiveIdx(i)}
-                                    className={`rounded-lg px-3 py-1.5 font-semibold transition-all ${
-                                        i === activeIdx
-                                            ? "bg-hn-primary text-hn-dark shadow-lg shadow-hn-primary/25"
-                                            : "bg-white/[0.06] text-white/50 hover:bg-white/10 hover:text-white"
-                                    }`}
+                            <div className="relative">
+                                <select
+                                    value={activeIdx}
+                                    onChange={(e) => setActiveIdx(Number(e.target.value))}
+                                    className="appearance-none rounded-lg bg-white/[0.06] py-1.5 pl-3 pr-8 text-xs font-semibold text-white/80 outline-none ring-1 ring-white/10 transition-all hover:bg-white/10 focus:ring-hn-primary/40 cursor-pointer"
+                                    style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}
                                 >
-                                    {s.name}
-                                </button>
-                            ))}
+                                    {streams.map((s, i) => (
+                                        <option key={`${s.name}-${i}`} value={i} className="bg-hn-dark text-white">
+                                            {s.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                <svg className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/40" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                </svg>
+                            </div>
                         </div>
                     )}
 
@@ -78,7 +82,7 @@ export default function VideoPlayer({ streams, title }: VideoPlayerProps) {
                 </div>
 
                 {/* Title */}
-                <h1 className="text-lg font-bold text-white sm:text-xl">{title}</h1>
+                <h1 className="mt-2 text-lg font-bold text-white sm:text-xl">{title}</h1>
             </div>
         </>
     );

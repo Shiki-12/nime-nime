@@ -42,9 +42,9 @@ export default async function StreamingPage({
   }
 
   return (
-    <div className="mx-auto max-w-[1440px] px-4 py-6 lg:px-6">
+    <div className="mx-auto max-w-[1440px] px-4 pt-8 pb-20 lg:px-6">
       {/* Breadcrumb */}
-      <nav className="mb-4 flex items-center gap-2 text-xs text-white/30">
+      <nav className="mb-5 flex items-center gap-2.5 py-1 text-xs text-white/30">
         <Link href="/" className="transition-colors hover:text-hn-primary">
           Home
         </Link>
@@ -63,17 +63,20 @@ export default async function StreamingPage({
         <span className="max-w-xs truncate text-white/50">{episode.title}</span>
       </nav>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+      <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
         {/* Left: Player + Navigation */}
         <div>
-          {/* Alert Text: Reload/Error Info */}
-          <div className="mb-3 rounded-lg border border-white/5 bg-hn-card/50 px-4 py-2 text-sm text-white/50">
-            Reload the page if the video not working{" "}
+          {/* Compact reload notice */}
+          <div className="mb-4 flex items-center gap-2 rounded-lg border border-white/5 bg-hn-card/40 px-3 py-2 text-xs text-white/40">
+            <svg className="h-3.5 w-3.5 shrink-0 text-white/30" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182" />
+            </svg>
+            <span>Video not loading?</span>
             <a
               href={`/anime/watch/${episodeSlug}${animeSlug ? `?anime=${animeSlug}` : ""}`}
-              className="cursor-pointer font-bold text-pink-400 transition-colors hover:text-pink-300 hover:underline"
+              className="font-semibold text-hn-primary transition-colors hover:text-hn-primary/80"
             >
-             Reload ↻
+              Reload
             </a>
           </div>
 

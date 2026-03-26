@@ -55,7 +55,7 @@ export default function AnimeCard({ anime }: AnimeCardProps) {
             </div>
 
             {/* Title */}
-            <div className="px-2.5 py-2">
+            <div className="px-3 py-3">
                 <h3 className="line-clamp-2 text-[13px] font-medium leading-snug text-white/90 transition-colors group-hover:text-hn-primary">
                     {anime.title}
                 </h3>

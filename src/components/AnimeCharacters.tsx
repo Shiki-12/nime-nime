@@ -56,9 +56,9 @@ function SkeletonCard() {
 }
 
 // ─── Character Card ────────────────────────────────────────────────
-function CharacterCard({ char }: { char: DisplayCharacter }) {
+function CharacterCard({ char, isHiddenOnDesktop }: { char: DisplayCharacter; isHiddenOnDesktop?: boolean }) {
     return (
-        <div className="flex min-w-[280px] snap-start overflow-hidden rounded-xl bg-hn-card transition-shadow hover:shadow-lg hover:shadow-black/20 md:min-w-0">
+        <div className={`flex min-w-[280px] snap-start overflow-hidden rounded-xl bg-hn-card transition-shadow hover:shadow-lg hover:shadow-black/20 md:min-w-0 ${isHiddenOnDesktop ? "md:hidden" : ""}`}>
             {/* Left: Character */}
             <div className="flex w-1/2 flex-col items-center gap-1.5 p-3">
                 <div className="relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-full bg-white/5 ring-2 ring-hn-primary/20">
@@ -120,6 +120,7 @@ export default function AnimeCharacters({ animeTitle }: AnimeCharactersProps) {
     const [characters, setCharacters] = useState<DisplayCharacter[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isEmpty, setIsEmpty] = useState(false);
+    const [showAllCharacters, setShowAllCharacters] = useState(false);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -230,10 +231,37 @@ export default function AnimeCharacters({ animeTitle }: AnimeCharactersProps) {
 
                     {/* Desktop: grid layout */}
                     <div className="hidden gap-3 md:grid md:grid-cols-2 lg:grid-cols-3">
-                        {characters.map((char) => (
-                            <CharacterCard key={char.id} char={char} />
+                        {characters.map((char, index) => (
+                            <CharacterCard
+                                key={char.id}
+                                char={char}
+                                isHiddenOnDesktop={!showAllCharacters && index >= 6}
+                            />
                         ))}
                     </div>
+
+                    {/* Desktop-only: Show More Toggle Button */}
+                    {characters.length > 6 && (
+                        <div className="mt-4 hidden w-full justify-center md:flex">
+                            <button
+                                onClick={() => setShowAllCharacters(!showAllCharacters)}
+                                className="group flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.02] px-5 py-2 text-sm font-medium text-white/70 transition-all hover:border-white/20 hover:bg-white/5 hover:text-white"
+                            >
+                                {showAllCharacters ? "Show Less" : "Show More Characters"}
+                                <svg
+                                    className={`h-4 w-4 transition-transform duration-300 ${
+                                        showAllCharacters ? "rotate-180" : ""
+                                    }`}
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={2}
+                                    stroke="currentColor"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                </svg>
+                            </button>
+                        </div>
+                    )}
                 </>
             )}
         </section>

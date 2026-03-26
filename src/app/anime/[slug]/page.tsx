@@ -39,9 +39,9 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
             />
 
             {/* Body */}
-            <div className="mx-auto max-w-[1440px] px-4 py-8 lg:px-6">
+            <div className="mx-auto max-w-[1440px] px-4 pt-10 pb-8 lg:px-6">
                 {/* Meta cards */}
-                <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                <div className="mb-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
                     {[
                         { label: "Rating MAL", value: malScore },
                         { label: "Studio", value: anime.studio },
@@ -53,12 +53,12 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
                         .map((item) => (
                             <div
                                 key={item.label}
-                                className="rounded-lg bg-hn-card p-4"
+                                className="rounded-lg bg-hn-card p-5"
                             >
                                 <p className="text-[10px] font-bold uppercase tracking-wider text-white/30">
                                     {item.label}
                                 </p>
-                                <p className="mt-1 text-sm font-semibold text-white">
+                                <p className="mt-2 text-sm font-semibold text-white">
                                     {item.value}
                                 </p>
                             </div>
@@ -66,7 +66,7 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
                 </div>
 
                 {/* Synopsis */}
-                <section className="mb-8">
+                <section className="mb-10">
                     <h2 className="mb-3 flex items-center gap-2 text-base font-bold text-white">
                         <div className="h-4 w-1 rounded-full bg-hn-primary" />
                         Synopsis
@@ -78,7 +78,7 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
 
                 {/* Trailer */}
                 {anime.trailer && (
-                    <section className="mb-8 ">
+                    <section className="mb-10 ">
                         <h2 className="mb-3 flex items-center gap-2 text-base font-bold text-white">
                             <div className="h-4 w-1 rounded-full bg-hn-primary" />
                             Trailer

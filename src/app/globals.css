@@ -1,24 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
-/* ─── HiAnime / Zoro.to Inspired Theme ──────────────────────────── */
+/* ─── Hacker / Matrix Dark-Green Theme ──────────────────────────── */
 @theme inline {
   /* Typography */
   --font-sans: 'Inter', var(--font-inter), system-ui, sans-serif;
 
   /* ── Core palette ──────────────────────────────────────────────── */
-  --color-hn-body: #201f31;
-  --color-hn-dark: #191826;
-  --color-hn-card: #27263a;
-  --color-hn-card-hover: #2f2e45;
-  --color-hn-primary: #ffbade;
-  --color-hn-secondary: #cae962;
-  --color-hn-green: #b0e3af;
-  --color-hn-orange: #f8b84e;
-  --color-hn-blue: #89c4f4;
-  --color-hn-text: #ffffff;
-  --color-hn-text-muted: #9c9c9c;
-  --color-hn-border: rgba(255, 255, 255, 0.06);
+  --color-hn-body: #0a0f0d;
+  --color-hn-dark: #060b08;
+  --color-hn-card: #0f1a14;
+  --color-hn-card-hover: #162a1e;
+  --color-hn-primary: #00ff88;
+  --color-hn-secondary: #39ff14;
+  --color-hn-green: #00e676;
+  --color-hn-orange: #76ff03;
+  --color-hn-blue: #00e5ff;
+  --color-hn-text: #e0f2e9;
+  --color-hn-text-muted: #5a8a6e;
+  --color-hn-border: rgba(0, 255, 136, 0.08);
 }
 
 /* ─── Base ──────────────────────────────────────────────────────── */
@@ -47,7 +47,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #ff9ec2;
+  background: #33ffaa;
 }
 
 /* ─── Scrollbar for episode list ────────────────────────────────── */
@@ -61,7 +61,7 @@ body {
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: rgba(255, 186, 222, 0.3);
+  background: rgba(0, 255, 136, 0.3);
   border-radius: 9999px;
 }
 
@@ -115,10 +115,10 @@ body {
 
 /* ─── Glass header ──────────────────────────────────────────────── */
 .header-glass {
-  background: rgba(25, 24, 38, 0.85);
+  background: rgba(6, 11, 8, 0.88);
   backdrop-filter: blur(16px) saturate(150%);
   -webkit-backdrop-filter: blur(16px) saturate(150%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(0, 255, 136, 0.06);
 }
 
 /* ─── Dot separator ─────────────────────────────────────────────── */
@@ -138,7 +138,7 @@ body {
 }
 
 .hero-gradient-r {
-  background: linear-gradient(90deg, rgba(32, 31, 49, 0.95) 0%, rgba(32, 31, 49, 0.7) 40%, transparent 100%);
+  background: linear-gradient(90deg, rgba(10, 15, 13, 0.95) 0%, rgba(10, 15, 13, 0.7) 40%, transparent 100%);
 }
 
 /* ─── Card hover overlay ────────────────────────────────────────── */

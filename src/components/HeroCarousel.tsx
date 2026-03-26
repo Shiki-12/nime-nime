@@ -42,7 +42,7 @@ const slides = [
       </>
     ),
     subtitle:
-      "Third-party video servers contain pop-up ads. We strongly recommend using Brave Browser or installing the uBlock Origin extension for a safe, smooth, and ad-free experience.",
+      "For a safer, ad-free experience, we recommend Brave Browser or uBlock Origin.",
     image: "/images/banner_adblock.jpg",
     buttonLabel: "Get uBlock Origin",
     buttonHref: "https://ublockorigin.com/",
@@ -106,7 +106,7 @@ export default function HeroCarousel() {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
 
   return (
-    <section className="relative mx-auto mb-8 max-w-[1440px] overflow-hidden rounded-none px-0 sm:rounded-2xl sm:px-4 lg:px-6">
+    <section className="relative mx-auto mb-12 max-w-[1440px] overflow-hidden rounded-none px-0 sm:rounded-2xl sm:px-4 lg:px-6">
       <div className="relative overflow-hidden rounded-none shadow-[0_0_40px_rgba(59,130,246,0.15)] ring-1 ring-blue-500/10 sm:rounded-2xl h-[240px] sm:h-[300px] md:h-[360px] lg:h-[400px]">
         {slides.map((slide, index) => (
           <div
@@ -130,7 +130,7 @@ export default function HeroCarousel() {
             <div className="absolute -left-20 top-1/2 h-60 w-60 -translate-y-1/2 rounded-full bg-blue-500/10 blur-[100px]" />
 
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full max-w-xl px-6 sm:px-10 lg:px-14">
+              <div className="w-full max-w-xl px-8 sm:px-12 lg:px-14">
                 <span className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-blue-500/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-blue-300 ring-1 ring-blue-400/20 backdrop-blur-sm">
                   <span className="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse" />
                   {slide.tag}

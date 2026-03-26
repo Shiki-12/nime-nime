@@ -113,7 +113,7 @@ export default function AnimeDetailHeader({
 
             {/* ── Content Layer ─────────────────────────────────────── */}
             <div className="absolute inset-x-0 bottom-0 flex">
-                <div className="mx-auto flex w-full max-w-[1440px] gap-6 px-4 pb-8 lg:px-8">
+                <div className="mx-auto flex w-full max-w-[1440px] gap-6 px-4 pb-12 lg:px-8">
 
                     {/* ── Sharp Poster (desktop only) ───────────────── */}
                     <div className="hidden shrink-0 md:block">
@@ -130,7 +130,7 @@ export default function AnimeDetailHeader({
                     </div>
 
                     {/* ── Text & Actions ────────────────────────────── */}
-                    <div className="flex flex-1 flex-col justify-end gap-2.5">
+                    <div className="flex flex-1 flex-col justify-end gap-4">
                         {/* Title */}
                         <h1 className="text-2xl font-extrabold leading-tight text-white drop-shadow-lg sm:text-3xl md:text-4xl">
                             {title}
@@ -152,12 +152,12 @@ export default function AnimeDetailHeader({
                         </div>
 
                         {/* Genre tags */}
-                        <div className="flex flex-wrap gap-1.5">
+                        <div className="flex flex-wrap gap-2.5">
                             {genres.map((g) => (
                                 <Link
                                     key={g.slug}
                                     href={`/genres/${g.slug}`}
-                                    className="rounded bg-white/[0.06] px-2.5 py-1 text-[11px] font-medium text-white/50 backdrop-blur-sm transition-colors hover:bg-hn-primary/15 hover:text-hn-primary"
+                                    className="rounded bg-white/[0.06] px-3 py-1.5 text-[11px] font-medium text-white/50 backdrop-blur-sm transition-colors hover:bg-hn-primary/15 hover:text-hn-primary"
                                 >
                                     {g.name}
                                 </Link>
@@ -170,7 +170,7 @@ export default function AnimeDetailHeader({
                         </p>
 
                         {/* Actions row: Watch Now CTA + Save/Like/Dislike */}
-                        <div className="flex flex-wrap items-center gap-3">
+                        <div className="flex flex-wrap items-center gap-4">
                             {/* Primary CTA: Watch Now / Continue Watching */}
                             <WatchNowButton animeSlug={slug} episodes={episodes} />
 
