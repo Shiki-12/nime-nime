@@ -61,7 +61,7 @@ export default function SavedPage() {
         if (selectedIds.length === 0) return;
         const result = await swalConfirm.fire({
             title: "Remove Selected?",
-            html: `<span style="color:rgba(255,255,255,0.5)">This will remove <strong style="color:#ffbade">${selectedIds.length}</strong> anime from your saved list.</span>`,
+            html: `<span style="color:rgba(255,255,255,0.5)">This will remove <strong style="color:${getComputedStyle(document.documentElement).getPropertyValue('--hn-primary').trim()}">${selectedIds.length}</strong> anime from your saved list.</span>`,
             confirmButtonText: "Yes, remove",
         });
         if (result.isConfirmed) {

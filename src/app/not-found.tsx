@@ -33,7 +33,7 @@ export default function NotFound() {
                     {/* Primary Button: Home */}
                     <Link
                         href="/"
-                        className="group flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-hn-primary px-6 py-3 font-semibold text-hn-dark transition-all duration-300 hover:bg-[#ff9ec2] hover:shadow-[0_0_20px_rgba(255,186,222,0.4)] hover:-translate-y-0.5"
+                        className="group flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-hn-primary px-6 py-3 font-semibold text-hn-dark transition-all duration-300 hover:bg-hn-secondary hover:shadow-lg hover:shadow-hn-primary/30 hover:-translate-y-0.5"
                     >
                         <svg
                             className="h-5 w-5 transition-transform group-hover:scale-110"

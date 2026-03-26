@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSession, signOut } from "next-auth/react";
-import Swal from "sweetalert2";
+import { swalToast } from "@/lib/swal";
 
 // ─── Base useLocalStorage (unchanged) ──────────────────────────────
 
@@ -156,14 +156,10 @@ export function useSavedAnime() {
                                 setDbSavedIds((prev) => prev.filter((id) => id !== anime.slug));
                                 
                                 if (data.message) {
-                                    Swal.fire({
+                                    swalToast({
                                         icon: "error",
                                         title: "Save Failed",
                                         text: data.message,
-                                        toast: true,
-                                        position: "bottom-end",
-                                        showConfirmButton: false,
-                                        timer: 3000,
                                     });
                                     if (data.message.toLowerCase().includes("log in") || data.message.toLowerCase().includes("log out")) {
                                         signOut();

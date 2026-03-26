@@ -4,6 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import SyncOnLogin from "@/components/SyncOnLogin";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { ThemeProvider } from "@/hooks/useTheme";
 import "./globals.css";
 
 const inter = Inter({
@@ -40,10 +41,12 @@ export default function RootLayout({
         className={`${inter.variable} font-sans antialiased`}
       >
         <SessionProvider>
-          <SyncOnLogin />
-          <Navbar />
-          <main className="min-h-screen pt-[60px]">{children}</main>
-          <Footer />
+          <ThemeProvider>
+            <SyncOnLogin />
+            <Navbar />
+            <main className="min-h-screen pt-[60px]">{children}</main>
+            <Footer />
+          </ThemeProvider>
         </SessionProvider>
       </body>
     </html>

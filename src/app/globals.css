@@ -1,24 +1,172 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
-/* ─── Hacker / Matrix Dark-Green Theme ──────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════
+   Theme System — CSS Variable Indirection
+   
+   @theme inline registers CSS @property rules with initial-value,
+   which CANNOT be overridden by [data-theme] selectors.
+   
+   Fix: define raw variables on :root (overridable), then reference
+   them from @theme inline via var(). Tailwind generates utilities
+   from @theme, but the runtime values come from :root/:data-theme.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ─── Default Theme (Purple / Sakura) ─ applied to :root ────────── */
+:root {
+  --hn-body: #201f31;
+  --hn-dark: #191826;
+  --hn-card: #27263a;
+  --hn-card-hover: #2f2e45;
+  --hn-primary: #ffbade;
+  --hn-secondary: #cae962;
+  --hn-green: #b0e3af;
+  --hn-orange: #f8b84e;
+  --hn-blue: #89c4f4;
+  --hn-text: #ffffff;
+  --hn-text-muted: #9c9c9c;
+  --hn-border: rgba(255, 186, 222, 0.08);
+
+  /* Scrollbar / glass / gradient raw values */
+  --hn-scrollbar-hover: #ff9ec2;
+  --hn-scrollbar-thin: rgba(255, 186, 222, 0.3);
+  --hn-glass-bg: rgba(25, 24, 38, 0.88);
+  --hn-glass-border: rgba(255, 186, 222, 0.06);
+  --hn-hero-r-start: rgba(32, 31, 49, 0.95);
+  --hn-hero-r-mid: rgba(32, 31, 49, 0.7);
+}
+
+/* ─── Blue Theme Override ───────────────────────────────────────── */
+[data-theme="blue"] {
+  --hn-body: #0b1121;
+  --hn-dark: #060913;
+  --hn-card: #151e32;
+  --hn-card-hover: #1e2943;
+  --hn-primary: #3b82f6;
+  --hn-secondary: #8b5cf6;
+  --hn-green: #10b981;
+  --hn-orange: #f59e0b;
+  --hn-blue: #60a5fa;
+  --hn-text: #f8fafc;
+  --hn-text-muted: #94a3b8;
+  --hn-border: rgba(59, 130, 246, 0.08);
+
+  --hn-scrollbar-hover: #60a5fa;
+  --hn-scrollbar-thin: rgba(59, 130, 246, 0.4);
+  --hn-glass-bg: rgba(6, 9, 19, 0.88);
+  --hn-glass-border: rgba(59, 130, 246, 0.06);
+  --hn-hero-r-start: rgba(11, 17, 33, 0.95);
+  --hn-hero-r-mid: rgba(11, 17, 33, 0.7);
+}
+
+/* ─── Green / Emerald Theme Override ────────────────────────────── */
+[data-theme="green"] {
+  --hn-body: #0a0f0d;
+  --hn-dark: #060b08;
+  --hn-card: #0f1a14;
+  --hn-card-hover: #162a1e;
+  --hn-primary: #00ff88;
+  --hn-secondary: #00cc6a;
+  --hn-green: #34d399;
+  --hn-orange: #f59e0b;
+  --hn-blue: #3b82f6;
+  --hn-text: #e0f2e9;
+  --hn-text-muted: #5a8a6e;
+  --hn-border: rgba(0, 255, 136, 0.08);
+
+  --hn-scrollbar-hover: #33ffaa;
+  --hn-scrollbar-thin: rgba(0, 255, 136, 0.3);
+  --hn-glass-bg: rgba(6, 11, 8, 0.88);
+  --hn-glass-border: rgba(0, 255, 136, 0.06);
+  --hn-hero-r-start: rgba(10, 15, 13, 0.95);
+  --hn-hero-r-mid: rgba(10, 15, 13, 0.7);
+}
+
+/* ─── Orange / Sunset Theme Override ────────────────────────────── */
+[data-theme="orange"] {
+  --hn-body: #1a1311;
+  --hn-dark: #120d0b;
+  --hn-card: #241a17;
+  --hn-card-hover: #2b201d;
+  --hn-primary: #ff7300;
+  --hn-secondary: #ff3c00;
+  --hn-green: #10b981;
+  --hn-orange: #f59e0b;
+  --hn-blue: #3b82f6;
+  --hn-text: #fdfaf8;
+  --hn-text-muted: #a39590;
+  --hn-border: rgba(255, 115, 0, 0.08);
+
+  --hn-scrollbar-hover: #ff9d4d;
+  --hn-scrollbar-thin: rgba(255, 115, 0, 0.3);
+  --hn-glass-bg: rgba(18, 13, 11, 0.88);
+  --hn-glass-border: rgba(255, 115, 0, 0.06);
+  --hn-hero-r-start: rgba(26, 19, 17, 0.95);
+  --hn-hero-r-mid: rgba(26, 19, 17, 0.7);
+}
+
+/* ─── Red / Phantom Theme Override ──────────────────────────────── */
+[data-theme="red"] {
+  --hn-body: #0f0a0a;
+  --hn-dark: #0a0606;
+  --hn-card: #1a1010;
+  --hn-card-hover: #241616;
+  --hn-primary: #e60012;
+  --hn-secondary: #ff4d5a;
+  --hn-green: #10b981;
+  --hn-orange: #f59e0b;
+  --hn-blue: #3b82f6;
+  --hn-text: #fef2f2;
+  --hn-text-muted: #a08888;
+  --hn-border: rgba(230, 0, 18, 0.08);
+
+  --hn-scrollbar-hover: #ff4d5a;
+  --hn-scrollbar-thin: rgba(230, 0, 18, 0.3);
+  --hn-glass-bg: rgba(10, 6, 6, 0.88);
+  --hn-glass-border: rgba(230, 0, 18, 0.06);
+  --hn-hero-r-start: rgba(15, 10, 10, 0.95);
+  --hn-hero-r-mid: rgba(15, 10, 10, 0.7);
+}
+
+/* ─── White / Eclipse Theme Override ────────────────────────────── */
+[data-theme="white"] {
+  --hn-body: #0c0c0c;
+  --hn-dark: #060606;
+  --hn-card: #181818;
+  --hn-card-hover: #222222;
+  --hn-primary: #f8fafc;
+  --hn-secondary: #94a3b8;
+  --hn-green: #10b981;
+  --hn-orange: #f59e0b;
+  --hn-blue: #3b82f6;
+  --hn-text: #f1f5f9;
+  --hn-text-muted: #71717a;
+  --hn-border: rgba(248, 250, 252, 0.08);
+
+  --hn-scrollbar-hover: #cbd5e1;
+  --hn-scrollbar-thin: rgba(248, 250, 252, 0.25);
+  --hn-glass-bg: rgba(6, 6, 6, 0.88);
+  --hn-glass-border: rgba(248, 250, 252, 0.06);
+  --hn-hero-r-start: rgba(12, 12, 12, 0.95);
+  --hn-hero-r-mid: rgba(12, 12, 12, 0.7);
+}
+
+/* ─── Tailwind Theme — references the overridable vars above ───── */
 @theme inline {
-  /* Typography */
   --font-sans: 'Inter', var(--font-inter), system-ui, sans-serif;
 
-  /* ── Core palette ──────────────────────────────────────────────── */
-  --color-hn-body: #0a0f0d;
-  --color-hn-dark: #060b08;
-  --color-hn-card: #0f1a14;
-  --color-hn-card-hover: #162a1e;
-  --color-hn-primary: #00ff88;
-  --color-hn-secondary: #39ff14;
-  --color-hn-green: #00e676;
-  --color-hn-orange: #76ff03;
-  --color-hn-blue: #00e5ff;
-  --color-hn-text: #e0f2e9;
-  --color-hn-text-muted: #5a8a6e;
-  --color-hn-border: rgba(0, 255, 136, 0.08);
+  --color-hn-body: var(--hn-body);
+  --color-hn-dark: var(--hn-dark);
+  --color-hn-card: var(--hn-card);
+  --color-hn-card-hover: var(--hn-card-hover);
+  --color-hn-primary: var(--hn-primary);
+  --color-hn-secondary: var(--hn-secondary);
+  --color-hn-green: var(--hn-green);
+  --color-hn-orange: var(--hn-orange);
+  --color-hn-blue: var(--hn-blue);
+  --color-hn-text: var(--hn-text);
+  --color-hn-text-muted: var(--hn-text-muted);
+  --color-hn-border: var(--hn-border);
 }
 
 /* ─── Base ──────────────────────────────────────────────────────── */
@@ -27,8 +175,8 @@ html {
 }
 
 body {
-  background-color: var(--color-hn-body);
-  color: var(--color-hn-text);
+  background-color: var(--hn-body);
+  color: var(--hn-text);
   overflow-x: hidden;
 }
 
@@ -38,16 +186,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-hn-dark);
+  background: var(--hn-dark);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-hn-primary);
+  background: var(--hn-primary);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #33ffaa;
+  background: var(--hn-scrollbar-hover);
 }
 
 /* ─── Scrollbar for episode list ────────────────────────────────── */
@@ -61,7 +209,7 @@ body {
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: rgba(0, 255, 136, 0.3);
+  background: var(--hn-scrollbar-thin);
   border-radius: 9999px;
 }
 
@@ -88,9 +236,9 @@ body {
 
 .skeleton {
   background: linear-gradient(90deg,
-      var(--color-hn-dark) 0%,
-      var(--color-hn-card) 50%,
-      var(--color-hn-dark) 100%);
+      var(--hn-dark) 0%,
+      var(--hn-card) 50%,
+      var(--hn-dark) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
   border-radius: 0.5rem;
@@ -115,10 +263,10 @@ body {
 
 /* ─── Glass header ──────────────────────────────────────────────── */
 .header-glass {
-  background: rgba(6, 11, 8, 0.88);
+  background: var(--hn-glass-bg);
   backdrop-filter: blur(16px) saturate(150%);
   -webkit-backdrop-filter: blur(16px) saturate(150%);
-  border-bottom: 1px solid rgba(0, 255, 136, 0.06);
+  border-bottom: 1px solid var(--hn-glass-border);
 }
 
 /* ─── Dot separator ─────────────────────────────────────────────── */
@@ -134,11 +282,11 @@ body {
 
 /* ─── Hero gradient ─────────────────────────────────────────────── */
 .hero-gradient {
-  background: linear-gradient(0deg, var(--color-hn-body) 0%, transparent 100%);
+  background: linear-gradient(0deg, var(--hn-body) 0%, transparent 100%);
 }
 
 .hero-gradient-r {
-  background: linear-gradient(90deg, rgba(10, 15, 13, 0.95) 0%, rgba(10, 15, 13, 0.7) 40%, transparent 100%);
+  background: linear-gradient(90deg, var(--hn-hero-r-start) 0%, var(--hn-hero-r-mid) 40%, transparent 100%);
 }
 
 /* ─── Card hover overlay ────────────────────────────────────────── */
@@ -155,3 +303,4 @@ body {
 video::-webkit-media-controls-panel {
   background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
 }
+

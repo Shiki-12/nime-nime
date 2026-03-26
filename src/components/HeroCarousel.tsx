@@ -10,7 +10,7 @@ const slides = [
     title: (
       <>
         NimeNime is now on{" "}
-        <span className="bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">
+        <span className="bg-gradient-to-r from-hn-primary to-hn-secondary bg-clip-text text-transparent">
           Android!
         </span>
       </>
@@ -36,7 +36,7 @@ const slides = [
     title: (
       <>
         Watch Without{" "}
-        <span className="bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">
+        <span className="bg-gradient-to-r from-hn-primary to-hn-secondary bg-clip-text text-transparent">
           Interruptions
         </span>
       </>
@@ -66,7 +66,7 @@ const slides = [
     title: (
       <>
         Watch the Best{" "}
-        <span className="bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">
+        <span className="bg-gradient-to-r from-hn-primary to-hn-secondary bg-clip-text text-transparent">
           Anime
         </span>{" "}
         in HD
@@ -107,7 +107,7 @@ export default function HeroCarousel() {
 
   return (
     <section className="relative mx-auto mb-12 max-w-[1440px] overflow-hidden rounded-none px-0 sm:rounded-2xl sm:px-4 lg:px-6">
-      <div className="relative overflow-hidden rounded-none shadow-[0_0_40px_rgba(59,130,246,0.15)] ring-1 ring-blue-500/10 sm:rounded-2xl h-[240px] sm:h-[300px] md:h-[360px] lg:h-[400px]">
+      <div className="relative overflow-hidden rounded-none shadow-[0_0_40px_var(--hn-border)] ring-1 ring-hn-primary/10 sm:rounded-2xl h-[240px] sm:h-[300px] md:h-[360px] lg:h-[400px]">
         {slides.map((slide, index) => (
           <div
             key={slide.id}
@@ -125,14 +125,14 @@ export default function HeroCarousel() {
               sizes="100vw"
               className="object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-950/90 via-blue-900/60 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-hn-body via-transparent to-blue-950/30" />
-            <div className="absolute -left-20 top-1/2 h-60 w-60 -translate-y-1/2 rounded-full bg-blue-500/10 blur-[100px]" />
+            <div className="absolute inset-0 bg-gradient-to-r from-hn-dark/95 via-hn-dark/80 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-hn-body via-transparent to-hn-dark/30" />
+            <div className="absolute -left-20 top-1/2 h-60 w-60 -translate-y-1/2 rounded-full bg-hn-primary/10 blur-[100px]" />
 
             <div className="absolute inset-0 flex items-center">
               <div className="w-full max-w-xl px-8 sm:px-12 lg:px-14">
-                <span className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-blue-500/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-blue-300 ring-1 ring-blue-400/20 backdrop-blur-sm">
-                  <span className="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulse" />
+                <span className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-hn-primary/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-hn-primary ring-1 ring-hn-primary/20 backdrop-blur-sm">
+                  <span className="h-1.5 w-1.5 rounded-full bg-hn-primary animate-pulse" />
                   {slide.tag}
                 </span>
 
@@ -149,7 +149,7 @@ export default function HeroCarousel() {
                     href={slide.buttonHref}
                     target={slide.buttonHref.startsWith("http") ? "_blank" : undefined}
                     rel={slide.buttonHref.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="group inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition-all hover:bg-blue-500 hover:shadow-blue-500/30"
+                    className="group inline-flex items-center gap-2 rounded-full bg-hn-primary px-6 py-2.5 text-sm font-bold text-hn-dark shadow-lg shadow-hn-primary/25 transition-all hover:bg-hn-secondary hover:shadow-hn-primary/30"
                   >
                     {slide.icon}
                     {slide.buttonLabel}
@@ -171,7 +171,7 @@ export default function HeroCarousel() {
         {/* Navigation Arrows */}
         <button
           onClick={prevSlide}
-          className="absolute left-2 sm:left-4 top-1/2 z-20 -translate-y-1/2 flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm transition-all hover:bg-blue-600/80 hover:scale-110"
+          className="absolute left-2 sm:left-4 top-1/2 z-20 -translate-y-1/2 flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm transition-all hover:bg-hn-primary hover:text-hn-dark hover:scale-110"
           aria-label="Previous Slide"
         >
           <svg
@@ -190,7 +190,7 @@ export default function HeroCarousel() {
         </button>
         <button
           onClick={nextSlide}
-          className="absolute right-2 sm:right-4 top-1/2 z-20 -translate-y-1/2 flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm transition-all hover:bg-blue-600/80 hover:scale-110"
+          className="absolute right-2 sm:right-4 top-1/2 z-20 -translate-y-1/2 flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm transition-all hover:bg-hn-primary hover:text-hn-dark hover:scale-110"
           aria-label="Next Slide"
         >
           <svg
@@ -216,7 +216,7 @@ export default function HeroCarousel() {
               onClick={() => setCurrentSlide(index)}
               className={`h-1.5 rounded-full transition-all ${
                 currentSlide === index
-                  ? "w-6 bg-blue-500"
+                  ? "w-6 bg-hn-primary"
                   : "w-1.5 bg-white/30 hover:bg-white/50"
               }`}
               aria-label={`Go to slide ${index + 1}`}
@@ -224,7 +224,7 @@ export default function HeroCarousel() {
           ))}
         </div>
 
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-blue-500/40 to-transparent z-20 pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-hn-primary/40 to-transparent z-20 pointer-events-none" />
       </div>
     </section>
   );
