@@ -5,7 +5,6 @@ import {
   fetchHentaiRssFeed,
   groupHentaiBySeries,
   fetchHentaiDetail,
-  scrapeHentaiCover,
 } from "@/lib/hentaiApi";
 import type { Metadata } from "next";
 
@@ -49,15 +48,15 @@ export default async function SeriesDetailPage({
   if (!series) return notFound();
 
   // Fetch detail metadata from the first episode for description/genres
-  const [detail, scrapedCover] = await Promise.all([
-    fetchHentaiDetail(series.episodes[0].slug),
-    scrapeHentaiCover(series.episodes[0].slug),
-  ]);
+  // Fetch detail metadata from the first episode for description/genres/cover
+  const detail = await fetchHentaiDetail(series.episodes[0].slug);
   const info = detail?.info?.[0] ?? null;
   const genres = detail?.genres ?? [];
 
-  // Use scraped hi-res cover, fallback to RSS thumbnail
-  const coverImage = scrapedCover || series.coverImage;
+  // Use native high-res cover, fallback to RSS thumbnail
+  const coverImage = info?.coverimg
+    ? `https://hentaiocean.com/assets/cover/${info.coverimg}`
+    : series.coverImage;
 
   const description = info?.description
     ?.replace(/\\r\\n/g, "\n")

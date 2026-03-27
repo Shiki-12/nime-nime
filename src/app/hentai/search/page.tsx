@@ -3,7 +3,7 @@ import Link from "next/link";
 import {
   fetchHentaiRssFeed,
   groupHentaiBySeries,
-  scrapeHentaiCover,
+  fetchHentaiDetail,
 } from "@/lib/hentaiApi";
 import type { HentaiSeries } from "@/types/hentai";
 import type { Metadata } from "next";
@@ -50,8 +50,12 @@ export default async function HentaiSearchPage({
         paginatedSeries = await Promise.all(
           paginatedSeries.map(async (series) => {
             try {
-              const scrapedUrl = await scrapeHentaiCover(series.episodes[0].slug);
-              if (scrapedUrl) return { ...series, coverImage: scrapedUrl };
+              const detail = await fetchHentaiDetail(series.episodes[0].slug);
+              const coverimg = detail?.info?.[0]?.coverimg;
+              if (coverimg) {
+                const highResCover = `https://hentaiocean.com/assets/cover/${coverimg}`;
+                return { ...series, coverImage: highResCover };
+              }
             } catch {}
             return series;
           })

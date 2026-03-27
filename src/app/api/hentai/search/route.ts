@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import {
   fetchHentaiRssFeed,
   groupHentaiBySeries,
-  scrapeHentaiCover,
+  fetchHentaiDetail,
 } from "@/lib/hentaiApi";
 
 export async function GET(request: Request) {
@@ -27,8 +27,11 @@ export async function GET(request: Request) {
       filtered.map(async (s) => {
         let cover = s.coverImage;
         try {
-          const scraped = await scrapeHentaiCover(s.episodes[0].slug);
-          if (scraped) cover = scraped;
+          const detail = await fetchHentaiDetail(s.episodes[0].slug);
+          const coverimg = detail?.info?.[0]?.coverimg;
+          if (coverimg) {
+            cover = `https://hentaiocean.com/assets/cover/${coverimg}`;
+          }
         } catch {
           // Fallback to RSS thumbnail
         }

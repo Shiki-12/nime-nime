@@ -4,7 +4,6 @@ import {
   fetchHentaiRssFeed,
   groupHentaiBySeries,
   fetchHentaiDetail,
-  scrapeHentaiCover,
 } from "@/lib/hentaiApi";
 import type { HentaiSeries } from "@/types/hentai";
 import type { Metadata } from "next";
@@ -82,13 +81,17 @@ export default async function HentaiGenreDetailPage({
   const startIndex = (safePage - 1) * ITEMS_PER_PAGE;
   let paginatedSeries = matchingSeries.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  // Parallel scrape high-res covers ONLY for the paginated slice
+  // Parallel native API fetch high-res covers ONLY for the paginated slice
   if (paginatedSeries.length > 0) {
     paginatedSeries = await Promise.all(
       paginatedSeries.map(async (series) => {
         try {
-          const scrapedUrl = await scrapeHentaiCover(series.episodes[0].slug);
-          if (scrapedUrl) return { ...series, coverImage: scrapedUrl };
+          const detail = await fetchHentaiDetail(series.episodes[0].slug);
+          const coverimg = detail?.info?.[0]?.coverimg;
+          if (coverimg) {
+            const highResCover = `https://hentaiocean.com/assets/cover/${coverimg}`;
+            return { ...series, coverImage: highResCover };
+          }
         } catch {}
         return series;
       })
