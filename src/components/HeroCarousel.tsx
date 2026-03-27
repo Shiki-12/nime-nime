@@ -6,28 +6,28 @@ import Link from "next/link";
 
 const slides = [
   {
-    id: "apk",
+    id: "create-account",
     title: (
       <>
-        NimeNime is now on{" "}
+        Join NimeNime{" "}
         <span className="bg-gradient-to-r from-hn-primary to-hn-secondary bg-clip-text text-transparent">
-          Android!
+          Today!
         </span>
       </>
     ),
     subtitle:
-      "Experience faster streaming, smart watch history, and a sleek mobile UI. Take your favorite anime anywhere you go.",
-    image: "/images/banner_download.png",
-    buttonLabel: "Download APK",
-    buttonHref: "/download",
-    tag: "Available Now",
+      "Create an account to unlock exclusive features, save your favorite anime, track your watch history, and access the premium 18+ section.",
+    image: "/images/banner_account.png",
+    buttonLabel: "Sign Up / Log In",
+    buttonHref: "/login",
+    tag: "Get Started",
     icon: (
       <svg
-        className="h-4 w-4 transition-transform group-hover:-translate-y-0.5"
-        viewBox="0 0 24 24"
+        className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
         fill="currentColor"
+        viewBox="0 0 20 20"
       >
-        <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.4158.4158 0 0 0-.1521-.5676.416.416 0 0 0-.5676.1521l-2.0223 3.503C15.5902 8.244 13.8533 7.8546 12 7.8546c-1.8533 0-3.5902.3894-5.1368 1.0954L4.841 5.4468a.417.417 0 0 0-.5676-.1521.4157.4157 0 0 0-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396" />
+        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
       </svg>
     ),
   },
@@ -85,6 +85,32 @@ const slides = [
         viewBox="0 0 20 20"
       >
         <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
+      </svg>
+    ),
+  },
+  {
+    id: "apk",
+    title: (
+      <>
+        NimeNime is now on{" "}
+        <span className="bg-gradient-to-r from-hn-primary to-hn-secondary bg-clip-text text-transparent">
+          Android!
+        </span>
+      </>
+    ),
+    subtitle:
+      "Experience faster streaming, smart watch history, and a sleek mobile UI. Take your favorite anime anywhere you go.",
+    image: "/images/banner_download.png",
+    buttonLabel: "Download APK",
+    buttonHref: "/download",
+    tag: "Available Now",
+    icon: (
+      <svg
+        className="h-4 w-4 transition-transform group-hover:-translate-y-0.5"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+      >
+        <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.4158.4158 0 0 0-.1521-.5676.416.416 0 0 0-.5676.1521l-2.0223 3.503C15.5902 8.244 13.8533 7.8546 12 7.8546c-1.8533 0-3.5902.3894-5.1368 1.0954L4.841 5.4468a.417.417 0 0 0-.5676-.1521.4157.4157 0 0 0-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396" />
       </svg>
     ),
   },

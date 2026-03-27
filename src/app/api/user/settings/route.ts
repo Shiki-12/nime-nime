@@ -207,3 +207,29 @@ export const PUT = withAuthAndValidation(async (req: NextRequest) => {
             user: updatedUser,
         });
 });
+
+// ─── NSFW Toggle (separate lightweight endpoint) ────────────────
+
+export async function PATCH(req: NextRequest) {
+    const session = await auth();
+    if (!session?.user?.id) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    try {
+        const body = await req.json();
+        const nsfwEnabled = Boolean(body.nsfwEnabled);
+
+        await prisma.user.update({
+            where: { id: session.user.id },
+            data: { nsfwEnabled },
+        });
+
+        return NextResponse.json({ nsfwEnabled });
+    } catch {
+        return NextResponse.json(
+            { error: "Failed to update NSFW setting." },
+            { status: 500 }
+        );
+    }
+}

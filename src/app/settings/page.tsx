@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { swalDestructive, swalToast } from "@/lib/swal";
 
 export default function SettingsPage() {
     const { data: session, status, update } = useSession();
@@ -16,6 +17,9 @@ export default function SettingsPage() {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [loading, setLoading] = useState(false);
+    const [isNsfwEnabled, setIsNsfwEnabled] = useState(
+        !!session?.user?.nsfwEnabled
+    );
     const [message, setMessage] = useState<{
         type: "success" | "error";
         text: string;
@@ -23,7 +27,7 @@ export default function SettingsPage() {
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
 
-    // Pre-fill form when session loads
+    // Pre-fill form fields when session loads (NSFW state is NOT synced here)
     useEffect(() => {
         if (session?.user) {
             setName(session.user.name ?? "");
@@ -125,6 +129,60 @@ export default function SettingsPage() {
             });
         } finally {
             setLoading(false);
+        }
+    };
+
+    // ── NSFW Toggle Handler (Strict Optimistic UI) ────────────────
+    const handleNsfwToggle = async () => {
+        const intendedState = !isNsfwEnabled;
+
+        // 1. Optimistic flip — visually instant
+        setIsNsfwEnabled(intendedState);
+
+        // 2. If turning ON, confirm with themed SweetAlert
+        if (intendedState) {
+            const result = await swalDestructive.fire({
+                title: "Warning: 18+ Content",
+                text: "This section contains explicit adult material. You must be at least 18 years old to proceed. By confirming, you acknowledge that you are of legal age.",
+                icon: "warning",
+                confirmButtonText: "I am 18 or older",
+                cancelButtonText: "Cancel",
+            });
+
+            if (!result.isConfirmed) {
+                // Cancelled → revert instantly
+                setIsNsfwEnabled(false);
+                return;
+            }
+        }
+
+        // 3. Persist to database
+        try {
+            const res = await fetch("/api/user/settings", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nsfwEnabled: intendedState }),
+            });
+
+            if (!res.ok) {
+                // API failed → revert
+                setIsNsfwEnabled(!intendedState);
+                swalToast({ title: "Failed to update setting.", icon: "error" });
+                return;
+            }
+
+            // 4. Sync JWT + server components (Navbar)
+            await update({ nsfwEnabled: intendedState });
+            router.refresh();
+
+            swalToast({
+                title: intendedState ? "18+ Content Enabled" : "18+ Content Disabled",
+                icon: intendedState ? "success" : "info",
+            });
+        } catch {
+            // Network error → revert
+            setIsNsfwEnabled(!intendedState);
+            swalToast({ title: "Network error. Please try again.", icon: "error" });
         }
     };
 
@@ -312,6 +370,46 @@ export default function SettingsPage() {
                                 </div>
                             </div>
                         </>
+                    )}
+                </div>
+
+                {/* ── Content Preferences (NSFW Toggle) ──────────── */}
+                <div className="rounded-2xl border border-white/[0.06] bg-hn-card p-6">
+                    <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white/30">
+                        Content Preferences
+                    </h2>
+                    <div className="flex items-center justify-between gap-4">
+                        <div className="flex-1">
+                            <p className="text-sm font-medium text-white/80">
+                                Enable 18+ Content
+                            </p>
+                            <p className="mt-0.5 text-xs text-white/30">
+                                Unlock the adult anime section. You must be 18 years or older.
+                            </p>
+                        </div>
+                        <button
+                            type="button"
+                            role="switch"
+                            aria-checked={isNsfwEnabled}
+                            aria-label="Toggle 18+ content"
+                            onClick={handleNsfwToggle}
+                            className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-hn-dark ${
+                                isNsfwEnabled
+                                    ? "bg-red-500 focus:ring-red-500"
+                                    : "bg-white/10 focus:ring-white/20"
+                            }`}
+                        >
+                            <span
+                                className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-300 ${
+                                    isNsfwEnabled ? "translate-x-6" : "translate-x-1"
+                                }`}
+                            />
+                        </button>
+                    </div>
+                    {isNsfwEnabled && (
+                        <div className="mt-3 rounded-lg bg-red-500/10 px-3 py-2 text-xs text-red-400/80">
+                            The 18+ section is accessible from your profile dropdown menu.
+                        </div>
                     )}
                 </div>
 

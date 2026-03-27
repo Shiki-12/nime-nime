@@ -15,6 +15,7 @@ model User {
   image             String?
   password          String?
   isVerified        Boolean   @default(false)
+  nsfwEnabled       Boolean   @default(false)
   verifyToken       String?
   verifyTokenExpiry DateTime?
   createdAt         DateTime  @default(now())

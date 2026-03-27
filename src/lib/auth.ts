@@ -65,7 +65,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }),
     ],
     callbacks: {
-        async jwt({ token, user, trigger }) {
+        async jwt({ token, user, trigger, session }) {
             // 1. Pas pertama kali Sign In: masukin data dari user/DB ke token
             if (user) {
                 token.id = user.id;
@@ -74,20 +74,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 // Tarik data terbaru dari DB buat ngecek password & image
                 const dbUser = await prisma.user.findUnique({
                     where: { id: user.id as string },
-                    select: { image: true, password: true },
+                    select: { image: true, password: true, nsfwEnabled: true },
                 });
                 
                 // PENTING: Prioritasin image dari DB, kalau kosong baru ambil bawaan Google (user.image)
                 token.image = dbUser?.image ?? user.image ?? null;
                 token.hasPassword = !!dbUser?.password;
+                token.nsfwEnabled = dbUser?.nsfwEnabled ?? false;
             } 
             
             // 2. Pas fungsi update() dipanggil dari frontend (Settings Page)
             if (trigger === "update" && token.id) {
-                // Tarik ulang dari DB biar datanya fresh
+                // Merge payload langsung dari client (e.g. nsfwEnabled)
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const payload = session as Record<string, any> | undefined;
+                if (payload?.nsfwEnabled !== undefined) {
+                    token.nsfwEnabled = Boolean(payload.nsfwEnabled);
+                }
+
+                // Tarik ulang dari DB biar datanya fresh untuk field lain
                 const dbUser = await prisma.user.findUnique({
                     where: { id: token.id as string },
-                    select: { name: true, email: true, image: true, password: true },
+                    select: { name: true, email: true, image: true, password: true, nsfwEnabled: true },
                 });
                 
                 if (dbUser) {
@@ -95,6 +103,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     token.email = dbUser.email;
                     token.image = dbUser.image ?? null;
                     token.hasPassword = !!dbUser.password;
+                    // Only override from DB if client didn't send it
+                    if (payload?.nsfwEnabled === undefined) {
+                        token.nsfwEnabled = dbUser.nsfwEnabled;
+                    }
                 }
             }
 
@@ -108,6 +120,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 session.user.name = token.name as string;
                 session.user.image = (token.image as string | null) ?? null;
                 session.user.hasPassword = (token.hasPassword as boolean) ?? false;
+                session.user.nsfwEnabled = (token.nsfwEnabled as boolean) ?? false;
             }
             return session;
         },

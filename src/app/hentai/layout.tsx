@@ -1,4 +1,5 @@
 import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import HentaiNavbar from "./HentaiNavbar";
 import type { Metadata } from "next";
@@ -17,9 +18,19 @@ export default async function HentaiLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Auth guard: if not logged in, pretend the page doesn't exist
+  // Auth guard: must be logged in
   const session = await auth();
-  if (!session?.user) {
+  if (!session?.user?.id) {
+    return notFound();
+  }
+
+  // NSFW guard: read directly from DB to prevent stale-token bypass
+  const dbUser = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { nsfwEnabled: true },
+  });
+
+  if (!dbUser?.nsfwEnabled) {
     return notFound();
   }
 
@@ -29,4 +40,4 @@ export default async function HentaiLayout({
       {children}
     </>
   );
-}
+}
