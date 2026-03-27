@@ -1,9 +1,9 @@
-import FallbackImage from "@/components/FallbackImage";
+import Image from "next/image";
 import Link from "next/link";
 import {
   fetchHentaiRssFeed,
   groupHentaiBySeries,
-  fetchHentaiDetail,
+  scrapeHentaiCover,
 } from "@/lib/hentaiApi";
 import type { HentaiSeries } from "@/types/hentai";
 import type { Metadata } from "next";
@@ -37,9 +37,8 @@ function SeriesCard({ series }: { series: HentaiSeries }) {
     >
       {/* Cover image */}
       <div className="relative aspect-[3/4.2] w-full overflow-hidden">
-        <FallbackImage
-          src={series.highResCover || series.coverImage}
-          fallbackSrc={series.fallbackCover || series.coverImage}
+        <Image
+          src={series.coverImage}
           alt={series.seriesTitle}
           fill
           sizes="(max-width:640px) 50vw, (max-width:1024px) 25vw, 16vw"
@@ -119,20 +118,14 @@ export default async function HentaiPage({ searchParams }: HentaiPageProps) {
     startIndex + ITEMS_PER_PAGE
   );
 
-  // ── High-res thumbnail upgrade (parallel fetch for 10 items only) ──
+  // ── Cheerio cover scrape (parallel for 10 paginated items only) ──
   if (paginatedSeries.length > 0) {
     const upgraded = await Promise.all(
       paginatedSeries.map(async (series) => {
         try {
-          const detail = await fetchHentaiDetail(series.episodes[0].slug);
-          if (detail?.info?.[0]?.coverimg) {
-            return {
-              ...series,
-              fallbackCover: series.coverImage,
-              highResCover: detail.info[0].coverimg.startsWith("http")
-                ? detail.info[0].coverimg
-                : `https://hentaiocean.com/cover/${detail.info[0].coverimg}`,
-            };
+          const scrapedUrl = await scrapeHentaiCover(series.episodes[0].slug);
+          if (scrapedUrl) {
+            return { ...series, coverImage: scrapedUrl };
           }
         } catch {
           // Fallback to RSS thumbnail

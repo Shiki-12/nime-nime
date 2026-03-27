@@ -12,8 +12,6 @@ export interface HentaiSeries {
   baseSlug: string;
   seriesTitle: string;
   coverImage: string;
-  highResCover?: string;
-  fallbackCover?: string;
   latestDate: string;
   episodeCount: number;
   episodes: HentaiRssItem[];

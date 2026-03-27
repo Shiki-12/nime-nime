@@ -5,6 +5,7 @@ import {
   fetchHentaiRssFeed,
   groupHentaiBySeries,
   fetchHentaiDetail,
+  scrapeHentaiCover,
 } from "@/lib/hentaiApi";
 import type { Metadata } from "next";
 
@@ -48,9 +49,15 @@ export default async function SeriesDetailPage({
   if (!series) return notFound();
 
   // Fetch detail metadata from the first episode for description/genres
-  const detail = await fetchHentaiDetail(series.episodes[0].slug);
+  const [detail, scrapedCover] = await Promise.all([
+    fetchHentaiDetail(series.episodes[0].slug),
+    scrapeHentaiCover(series.episodes[0].slug),
+  ]);
   const info = detail?.info?.[0] ?? null;
   const genres = detail?.genres ?? [];
+
+  // Use scraped hi-res cover, fallback to RSS thumbnail
+  const coverImage = scrapedCover || series.coverImage;
 
   const description = info?.description
     ?.replace(/\\r\\n/g, "\n")
@@ -78,7 +85,7 @@ export default async function SeriesDetailPage({
         {/* Background blur cover */}
         <div className="absolute inset-0 overflow-hidden">
           <Image
-            src={series.coverImage}
+            src={coverImage}
             alt=""
             fill
             className="object-cover blur-2xl opacity-20 scale-110"
@@ -112,7 +119,7 @@ export default async function SeriesDetailPage({
             <div className="hidden shrink-0 sm:block">
               <div className="relative aspect-[3/4.2] w-40 overflow-hidden rounded-lg shadow-xl shadow-black/40 md:w-48">
                 <Image
-                  src={series.coverImage}
+                  src={coverImage}
                   alt={series.seriesTitle}
                   fill
                   className="object-cover"

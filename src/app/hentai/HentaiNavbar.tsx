@@ -24,7 +24,7 @@ export default function HentaiNavbar({ userName }: HentaiNavbarProps) {
         {/* Hamburger (mobile) */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-white/70 transition-all duration-200 hover:bg-white/5 hover:text-white lg:hidden"
+          className="flex h-9 w-9 items-center justify-center rounded-lg text-hn-text/70 transition-all duration-200 hover:bg-hn-text/5 hover:text-hn-text lg:hidden"
           aria-label="Toggle menu"
         >
           <svg
@@ -66,7 +66,7 @@ export default function HentaiNavbar({ userName }: HentaiNavbarProps) {
                 className={`relative rounded-lg px-3 py-1.5 text-[13px] font-medium transition-all duration-200 ${
                   isActive
                     ? "text-hn-primary"
-                    : "text-white/60 hover:bg-white/5 hover:text-white"
+                    : "text-hn-text/60 hover:bg-hn-text/5 hover:text-hn-text"
                 }`}
               >
                 {link.label}
@@ -91,7 +91,7 @@ export default function HentaiNavbar({ userName }: HentaiNavbarProps) {
           {/* Back to main site */}
           <Link
             href="/"
-            className="hidden h-9 items-center gap-1.5 rounded-lg px-3 text-[12px] font-medium text-white/50 transition-all duration-200 hover:bg-white/5 hover:text-white sm:flex"
+            className="hidden h-9 items-center gap-1.5 rounded-lg px-3 text-[12px] font-medium text-hn-text/50 transition-all duration-200 hover:bg-hn-text/5 hover:text-hn-text sm:flex"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
@@ -111,7 +111,7 @@ export default function HentaiNavbar({ userName }: HentaiNavbarProps) {
 
       {/* Mobile drawer */}
       {mobileOpen && (
-        <div className="border-t border-white/5 bg-hn-dark px-5 pb-6 pt-4 lg:hidden">
+        <div className="border-t border-hn-text/5 bg-hn-dark px-5 pb-6 pt-4 lg:hidden">
           {/* Mobile search */}
           <div className="mb-3">
             <HentaiSearchAutocomplete />
@@ -131,7 +131,7 @@ export default function HentaiNavbar({ userName }: HentaiNavbarProps) {
                   className={`rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
                     isActive
                       ? "bg-hn-primary/10 text-hn-primary"
-                      : "text-white/60 hover:bg-white/5 hover:text-white"
+                      : "text-hn-text/60 hover:bg-hn-text/5 hover:text-hn-text"
                   }`}
                 >
                   {link.label}
@@ -143,7 +143,7 @@ export default function HentaiNavbar({ userName }: HentaiNavbarProps) {
             <Link
               href="/"
               onClick={() => setMobileOpen(false)}
-              className="rounded-lg px-3 py-2.5 text-sm font-medium text-white/40 transition-all duration-200 hover:bg-white/5 hover:text-white"
+              className="rounded-lg px-3 py-2.5 text-sm font-medium text-hn-text/40 transition-all duration-200 hover:bg-hn-text/5 hover:text-hn-text"
             >
               ← Back to Main NimeNime
             </Link>

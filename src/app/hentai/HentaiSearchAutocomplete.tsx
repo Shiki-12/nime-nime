@@ -37,7 +37,7 @@ export default function HentaiSearchAutocomplete() {
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
     const q = query.trim();
-    if (q.length < 1) {
+    if (q.length < 2) {
       setResults([]);
       setIsOpen(false);
       return;
@@ -56,7 +56,7 @@ export default function HentaiSearchAutocomplete() {
       } finally {
         setLoading(false);
       }
-    }, 250);
+    }, 300);
 
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -76,9 +76,9 @@ export default function HentaiSearchAutocomplete() {
   return (
     <div ref={wrapperRef} className="relative w-full">
       <form onSubmit={handleSubmit}>
-        <div className="flex items-center rounded-lg bg-white/[0.06] transition-all duration-200 focus-within:bg-white/[0.1] focus-within:ring-1 focus-within:ring-hn-primary/30">
+        <div className="flex items-center rounded-lg bg-hn-text/[0.06] transition-all duration-200 focus-within:bg-hn-text/[0.1] focus-within:ring-1 focus-within:ring-hn-primary/30">
           <svg
-            className="ml-3 h-4 w-4 shrink-0 text-white/30"
+            className="ml-3 h-4 w-4 shrink-0 text-hn-text/30"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={2}
@@ -92,14 +92,14 @@ export default function HentaiSearchAutocomplete() {
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => results.length > 0 && setIsOpen(true)}
             placeholder="Search hentai..."
-            className="w-full bg-transparent px-3 py-2 text-sm text-white placeholder-white/30 outline-none"
+            className="w-full bg-transparent px-3 py-2 text-sm text-hn-text placeholder-hn-text-muted outline-none"
           />
           {loading && (
-            <div className="mr-2 h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-white/10 border-t-hn-primary" />
+            <div className="mr-2 h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-hn-text/10 border-t-hn-primary" />
           )}
           <button
             type="submit"
-            className="mr-1 rounded-md bg-white/[0.08] px-3 py-1 text-xs font-medium text-white/50 transition-colors hover:bg-white/[0.15] hover:text-white"
+            className="mr-1 rounded-md bg-hn-text/[0.08] px-3 py-1 text-xs font-medium text-hn-text/50 transition-colors hover:bg-hn-text/[0.15] hover:text-hn-text"
           >
             Enter
           </button>
@@ -108,7 +108,7 @@ export default function HentaiSearchAutocomplete() {
 
       {/* Autocomplete dropdown */}
       {isOpen && results.length > 0 && (
-        <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-[200] overflow-hidden rounded-xl border border-white/[0.08] bg-hn-card shadow-2xl shadow-black/60">
+        <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-[200] overflow-hidden rounded-xl border border-hn-text/[0.08] bg-hn-card shadow-2xl shadow-black/60">
           {results.map((item) => (
             <Link
               key={item.baseSlug}
@@ -117,7 +117,7 @@ export default function HentaiSearchAutocomplete() {
                 setIsOpen(false);
                 setQuery("");
               }}
-              className="flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-white/[0.06]"
+              className="flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-hn-text/[0.06]"
             >
               {/* Thumbnail */}
               <div className="relative h-12 w-9 shrink-0 overflow-hidden rounded">
@@ -131,15 +131,15 @@ export default function HentaiSearchAutocomplete() {
               </div>
               {/* Info */}
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-white/90">
+                <p className="truncate text-sm font-medium text-hn-text/90">
                   {item.title}
                 </p>
-                <p className="text-[11px] text-white/40">
+                <p className="text-[11px] text-hn-text/40">
                   {item.episodeCount} episode{item.episodeCount > 1 ? "s" : ""}
                 </p>
               </div>
               {/* Arrow */}
-              <svg className="h-4 w-4 shrink-0 text-white/20" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <svg className="h-4 w-4 shrink-0 text-hn-text/20" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
               </svg>
             </Link>
@@ -152,7 +152,7 @@ export default function HentaiSearchAutocomplete() {
               if (q) router.push(`/hentai/search?q=${encodeURIComponent(q)}`);
               setQuery("");
             }}
-            className="flex w-full items-center justify-center gap-1.5 border-t border-white/[0.06] px-3 py-2.5 text-xs font-medium text-hn-primary/70 transition-colors hover:bg-white/[0.04] hover:text-hn-primary"
+            className="flex w-full items-center justify-center gap-1.5 border-t border-hn-text/[0.06] px-3 py-2.5 text-xs font-medium text-hn-primary/70 transition-colors hover:bg-hn-text/[0.04] hover:text-hn-primary"
           >
             View all results →
           </button>
