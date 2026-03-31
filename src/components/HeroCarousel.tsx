@@ -1,223 +1,402 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+/* ═══════════════════════════════════════════════════════════════════
+   Slide Data
+   ═══════════════════════════════════════════════════════════════════ */
 const slides = [
   {
     id: "create-account",
-    title: (
-      <>
-        Join NimeNime{" "}
-        <span className="bg-gradient-to-r from-hn-primary to-hn-secondary bg-clip-text text-transparent">
-          Today!
-        </span>
-      </>
-    ),
-    subtitle:
-      "Create an account to unlock exclusive features, save your favorite anime, track your watch history, and access the premium 18+ section.",
+    title: "Join NimeNime Today!",
+    synopsis:
+      "Create an account to unlock exclusive features, save your favorite anime, track your watch history, and get personalized recommendations based on your taste. Your journey starts here.",
     image: "/images/banner_account.png",
-    buttonLabel: "Sign Up / Log In",
-    buttonHref: "/login",
-    tag: "Get Started",
-    icon: (
-      <svg
-        className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-        fill="currentColor"
-        viewBox="0 0 20 20"
-      >
-        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-      </svg>
-    ),
+    primaryLabel: "Sign Up / Log In",
+    primaryHref: "/login",
+    secondaryLabel: "Learn More",
+    secondaryHref: "/terms",
+    mediaType: "Platform",
+    duration: null,
+    releaseDate: "2025",
+    quality: "HD",
+    hasCC: true,
+    hasDub: false,
+    ccCount: null,
+    dubCount: null,
   },
   {
     id: "adblock-tip",
-    title: (
-      <>
-        Watch Without{" "}
-        <span className="bg-gradient-to-r from-hn-primary to-hn-secondary bg-clip-text text-transparent">
-          Interruptions
-        </span>
-      </>
-    ),
-    subtitle:
-      "For a safer, ad-free experience, we recommend Brave Browser or uBlock Origin.",
+    title: "Watch Without Interruptions",
+    synopsis:
+      "For a safer, ad-free streaming experience, we recommend using Brave Browser or installing uBlock Origin. Protect yourself from malicious ads and enjoy your anime without distractions.",
     image: "/images/banner_adblock.jpg",
-    buttonLabel: "Get uBlock Origin",
-    buttonHref: "https://ublockorigin.com/",
-    tag: "Pro Tip",
-    icon: (
-      <svg
-        className="h-4 w-4 transition-transform group-hover:-translate-y-0.5"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      </svg>
-    ),
+    primaryLabel: "Get uBlock Origin",
+    primaryHref: "https://ublockorigin.com/",
+    secondaryLabel: "Detail",
+    secondaryHref: "/terms",
+    mediaType: "Tip",
+    duration: null,
+    releaseDate: null,
+    quality: null,
+    hasCC: false,
+    hasDub: false,
+    ccCount: null,
+    dubCount: null,
   },
   {
     id: "default",
-    title: (
-      <>
-        Watch the Best{" "}
-        <span className="bg-gradient-to-r from-hn-primary to-hn-secondary bg-clip-text text-transparent">
-          Anime
-        </span>{" "}
-        in HD
-      </>
-    ),
-    subtitle:
-      "Stream thousands of episodes — from legendary series to the latest seasonal hits. No ads, no interruptions.",
+    title: "Watch the Best Anime in HD",
+    synopsis:
+      "Stream thousands of episodes — from legendary series to the latest seasonal hits. No ads, no interruptions. Enjoy premium anime streaming with subtitles in multiple languages, all in high definition quality.",
     image: "/images/banner.png",
-    buttonLabel: "Explore Now",
-    buttonHref: "/popular",
-    tag: "Streaming Now",
-    icon: (
-      <svg
-        className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-        fill="currentColor"
-        viewBox="0 0 20 20"
-      >
-        <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
-      </svg>
-    ),
+    primaryLabel: "Watch Now",
+    primaryHref: "/popular",
+    secondaryLabel: "Browse Genres",
+    secondaryHref: "/genres",
+    mediaType: "TV",
+    duration: "24m",
+    releaseDate: "2025",
+    quality: "HD",
+    hasCC: true,
+    hasDub: true,
+    ccCount: 1155,
+    dubCount: 1155,
   },
   {
     id: "apk",
-    title: (
-      <>
-        NimeNime is now on{" "}
-        <span className="bg-gradient-to-r from-hn-primary to-hn-secondary bg-clip-text text-transparent">
-          Android!
-        </span>
-      </>
-    ),
-    subtitle:
-      "Experience faster streaming, smart watch history, and a sleek mobile UI. Take your favorite anime anywhere you go.",
+    title: "NimeNime is Now on Android!",
+    synopsis:
+      "Experience faster streaming, smart watch history, and a sleek mobile UI. Take your favorite anime anywhere you go with our dedicated Android application. Download now and never miss an episode.",
     image: "/images/banner_download.png",
-    buttonLabel: "Download APK",
-    buttonHref: "/download",
-    tag: "Available Now",
-    icon: (
-      <svg
-        className="h-4 w-4 transition-transform group-hover:-translate-y-0.5"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-      >
-        <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.4158.4158 0 0 0-.1521-.5676.416.416 0 0 0-.5676.1521l-2.0223 3.503C15.5902 8.244 13.8533 7.8546 12 7.8546c-1.8533 0-3.5902.3894-5.1368 1.0954L4.841 5.4468a.417.417 0 0 0-.5676-.1521.4157.4157 0 0 0-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396" />
-      </svg>
-    ),
+    primaryLabel: "Download APK",
+    primaryHref: "/download",
+    secondaryLabel: "Detail",
+    secondaryHref: "/download",
+    mediaType: "App",
+    duration: null,
+    releaseDate: "2025",
+    quality: null,
+    hasCC: false,
+    hasDub: false,
+    ccCount: null,
+    dubCount: null,
   },
 ];
 
+/* ═══════════════════════════════════════════════════════════════════
+   Component
+   ═══════════════════════════════════════════════════════════════════ */
 export default function HeroCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Auto-play switch every 5 seconds
+  const goToSlide = useCallback(
+    (index: number) => {
+      if (isTransitioning) return;
+      setIsTransitioning(true);
+      setCurrentSlide(index);
+      setTimeout(() => setIsTransitioning(false), 800);
+    },
+    [isTransitioning]
+  );
+
+  const nextSlide = useCallback(
+    () => goToSlide((currentSlide + 1) % slides.length),
+    [currentSlide, goToSlide]
+  );
+
+  const prevSlide = useCallback(
+    () => goToSlide((currentSlide - 1 + slides.length) % slides.length),
+    [currentSlide, goToSlide]
+  );
+
+  // Auto-play every 6s — resets on manual navigation
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(timer);
-  }, [currentSlide]); // resetting the timer when currentSlide changes
-
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
-  const prevSlide = () =>
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  }, [currentSlide]);
 
   return (
-    <section className="relative mx-auto mb-12 max-w-[1440px] overflow-hidden rounded-none px-0 sm:rounded-2xl sm:px-4 lg:px-6">
-      <div className="relative overflow-hidden rounded-none shadow-[0_0_40px_var(--hn-border)] ring-1 ring-hn-primary/10 sm:rounded-2xl h-[240px] sm:h-[300px] md:h-[360px] lg:h-[400px]">
+    <section
+      className="relative w-full overflow-hidden"
+      aria-roledescription="carousel"
+      aria-label="Featured Anime Spotlight"
+    >
+      {/* ── Slide container ── */}
+      <div className="relative w-full min-h-[55vh] sm:min-h-[60vh] md:min-h-[65vh] lg:min-h-[70vh]">
         {slides.map((slide, index) => (
           <div
             key={slide.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`${index + 1} of ${slides.length}: ${slide.title}`}
+            aria-hidden={index !== currentSlide}
+            className={`absolute inset-0 transition-all duration-[800ms] ease-in-out ${
               index === currentSlide
-                ? "opacity-100 z-10"
-                : "opacity-0 z-0 pointer-events-none"
+                ? "opacity-100 z-10 scale-100"
+                : "opacity-0 z-0 scale-[1.03] pointer-events-none"
             }`}
           >
+            {/* Background image */}
             <Image
               src={slide.image}
               alt=""
               fill
               priority={index === 0}
               sizes="100vw"
-              className="object-cover"
+              className="object-cover object-center"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-hn-dark/95 via-hn-dark/80 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-hn-body via-transparent to-hn-dark/30" />
-            <div className="absolute -left-20 top-1/2 h-60 w-60 -translate-y-1/2 rounded-full bg-hn-primary/10 blur-[100px]" />
 
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full max-w-xl px-8 sm:px-12 lg:px-14">
-                <span className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-hn-primary/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-hn-primary ring-1 ring-hn-primary/20 backdrop-blur-sm">
-                  <span className="h-1.5 w-1.5 rounded-full bg-hn-primary animate-pulse" />
-                  {slide.tag}
-                </span>
+            {/* ── Multi-layer gradient overlays ── */}
+            {/* Heavy left-to-right gradient for text legibility */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: `linear-gradient(
+                  90deg,
+                  var(--hn-dark) 0%,
+                  rgba(0,0,0,0.85) 15%,
+                  rgba(0,0,0,0.6) 40%,
+                  rgba(0,0,0,0.2) 65%,
+                  transparent 85%
+                )`,
+              }}
+            />
 
-                <h2 className="text-2xl font-extrabold leading-tight text-white sm:text-3xl md:text-4xl lg:text-[42px]">
+            {/* Bottom fade into body color */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: `linear-gradient(
+                  0deg,
+                  var(--hn-body) 0%,
+                  var(--hn-body) 2%,
+                  rgba(0,0,0,0.4) 20%,
+                  transparent 50%
+                )`,
+              }}
+            />
+
+            {/* Subtle top vignette */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 30%)",
+              }}
+            />
+
+            {/* Ambient glow */}
+            <div className="absolute -left-24 top-1/3 h-72 w-72 rounded-full bg-hn-primary/8 blur-[120px] pointer-events-none" />
+
+            {/* ── Content overlay ── */}
+            <div className="absolute inset-0 flex items-end pb-16 sm:pb-20 md:items-center md:pb-0">
+              <div className="w-full max-w-3xl px-6 sm:px-10 md:px-14 lg:px-20">
+                {/* Spotlight label */}
+                <div
+                  className={`mb-3 transition-all duration-700 ${
+                    index === currentSlide
+                      ? "opacity-100 translate-y-0 delay-200"
+                      : "opacity-0 translate-y-3"
+                  }`}
+                >
+                  <span className="text-sm font-bold tracking-wide text-hn-primary">
+                    #{index + 1} Spotlight
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h2
+                  className={`text-3xl font-extrabold leading-[1.1] text-white sm:text-4xl md:text-5xl lg:text-6xl transition-all duration-700 ${
+                    index === currentSlide
+                      ? "opacity-100 translate-y-0 delay-300"
+                      : "opacity-0 translate-y-4"
+                  }`}
+                >
                   {slide.title}
                 </h2>
 
-                <p className="mt-3 max-w-sm text-[13px] leading-relaxed text-white/50 sm:text-sm">
-                  {slide.subtitle}
+                {/* Metadata badges */}
+                <div
+                  className={`mt-4 flex flex-wrap items-center gap-2 text-sm text-white/70 transition-all duration-700 ${
+                    index === currentSlide
+                      ? "opacity-100 translate-y-0 delay-[400ms]"
+                      : "opacity-0 translate-y-4"
+                  }`}
+                >
+                  {slide.mediaType && (
+                    <span className="inline-flex items-center gap-1">
+                      <svg
+                        className="h-3.5 w-3.5 text-white/50"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                        />
+                      </svg>
+                      {slide.mediaType}
+                    </span>
+                  )}
+
+                  {slide.duration && (
+                    <>
+                      <span className="dot-sep" />
+                      <span className="inline-flex items-center gap-1">
+                        <svg
+                          className="h-3.5 w-3.5 text-white/50"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        {slide.duration}
+                      </span>
+                    </>
+                  )}
+
+                  {slide.releaseDate && (
+                    <>
+                      <span className="dot-sep" />
+                      <span className="inline-flex items-center gap-1">
+                        <svg
+                          className="h-3.5 w-3.5 text-white/50"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                        {slide.releaseDate}
+                      </span>
+                    </>
+                  )}
+
+                  {/* Quality badge */}
+                  {slide.quality && (
+                    <>
+                      <span className="dot-sep" />
+                      <span className="rounded-[3px] border border-hn-primary/60 bg-hn-primary/15 px-2 py-0.5 text-[11px] font-bold text-hn-primary">
+                        {slide.quality}
+                      </span>
+                    </>
+                  )}
+
+                  {/* CC badge */}
+                  {slide.hasCC && (
+                    <span className="rounded-[3px] border border-hn-secondary/60 bg-hn-secondary/15 px-2 py-0.5 text-[11px] font-bold text-hn-secondary">
+                      {slide.ccCount ? `CC ${slide.ccCount}` : "CC"}
+                    </span>
+                  )}
+
+                  {/* Dub badge */}
+                  {slide.hasDub && (
+                    <span className="rounded-[3px] border border-hn-blue/60 bg-hn-blue/15 px-2 py-0.5 text-[11px] font-bold text-hn-blue">
+                      {slide.dubCount ? `MIC ${slide.dubCount}` : "DUB"}
+                    </span>
+                  )}
+                </div>
+
+                {/* Synopsis */}
+                <p
+                  className={`mt-4 max-w-2xl text-sm leading-relaxed text-white/50 line-clamp-3 md:text-[15px] md:line-clamp-4 transition-all duration-700 ${
+                    index === currentSlide
+                      ? "opacity-100 translate-y-0 delay-500"
+                      : "opacity-0 translate-y-4"
+                  }`}
+                >
+                  {slide.synopsis}
                 </p>
 
-                <div className="mt-5 flex items-center gap-3">
+                {/* CTA Buttons */}
+                <div
+                  className={`mt-6 flex items-center gap-3 transition-all duration-700 ${
+                    index === currentSlide
+                      ? "opacity-100 translate-y-0 delay-[600ms]"
+                      : "opacity-0 translate-y-4"
+                  }`}
+                >
+                  {/* Primary button — Watch Now */}
                   <Link
-                    href={slide.buttonHref}
-                    target={slide.buttonHref.startsWith("http") ? "_blank" : undefined}
-                    rel={slide.buttonHref.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="group inline-flex items-center gap-2 rounded-full bg-hn-primary px-6 py-2.5 text-sm font-bold text-hn-dark shadow-lg shadow-hn-primary/25 transition-all hover:bg-hn-secondary hover:shadow-hn-primary/30"
+                    href={slide.primaryHref}
+                    target={
+                      slide.primaryHref.startsWith("http")
+                        ? "_blank"
+                        : undefined
+                    }
+                    rel={
+                      slide.primaryHref.startsWith("http")
+                        ? "noopener noreferrer"
+                        : undefined
+                    }
+                    className="hero-btn-primary group inline-flex items-center gap-2 rounded-full bg-hn-primary px-6 py-2.5 text-sm font-bold text-hn-dark shadow-lg shadow-hn-primary/20 transition-all duration-300 hover:brightness-110 hover:shadow-hn-primary/30 hover:scale-[1.03] active:scale-[0.98]"
                   >
-                    {slide.icon}
-                    {slide.buttonLabel}
-                  </Link>
-                  {slide.id === "default" && (
-                    <Link
-                      href="/genres"
-                      className="hidden sm:inline-flex rounded-full bg-white/[0.06] px-5 py-2.5 text-sm font-medium text-white/70 ring-1 ring-white/10 transition-all hover:bg-white/10 hover:text-white"
+                    {/* Play icon */}
+                    <svg
+                      className="h-4 w-4 transition-transform duration-300 group-hover:scale-110"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
                     >
-                      Browse Genres
-                    </Link>
-                  )}
+                      <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
+                    </svg>
+                    {slide.primaryLabel}
+                  </Link>
+
+                  {/* Secondary button — Detail */}
+                  <Link
+                    href={slide.secondaryHref}
+                    className="hero-btn-secondary group inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] px-6 py-2.5 text-sm font-semibold text-white/80 ring-1 ring-white/10 backdrop-blur-sm transition-all duration-300 hover:bg-white/[0.14] hover:text-white hover:ring-white/20 active:scale-[0.98]"
+                  >
+                    {slide.secondaryLabel}
+                    {/* Chevron right */}
+                    <svg
+                      className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </Link>
                 </div>
               </div>
             </div>
           </div>
         ))}
+      </div>
 
-        {/* Navigation Arrows */}
+      {/* ── Right-side vertical navigation ── */}
+      <div className="absolute right-4 sm:right-6 lg:right-10 top-1/2 z-20 -translate-y-1/2 flex flex-col gap-1">
         <button
           onClick={prevSlide}
-          className="absolute left-2 sm:left-4 top-1/2 z-20 -translate-y-1/2 flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm transition-all hover:bg-hn-primary hover:text-hn-dark hover:scale-110"
-          aria-label="Previous Slide"
-        >
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
-        <button
-          onClick={nextSlide}
-          className="absolute right-2 sm:right-4 top-1/2 z-20 -translate-y-1/2 flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm transition-all hover:bg-hn-primary hover:text-hn-dark hover:scale-110"
-          aria-label="Next Slide"
+          disabled={isTransitioning}
+          className="hero-nav-btn flex h-10 w-10 items-center justify-center rounded-md bg-black/40 text-white/70 backdrop-blur-md transition-all duration-300 hover:bg-black/60 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-label="Previous slide"
         >
           <svg
             className="h-5 w-5"
@@ -233,25 +412,30 @@ export default function HeroCarousel() {
             />
           </svg>
         </button>
-
-        {/* Dot Indicators */}
-        <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`h-1.5 rounded-full transition-all ${
-                currentSlide === index
-                  ? "w-6 bg-hn-primary"
-                  : "w-1.5 bg-white/30 hover:bg-white/50"
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
+        <button
+          onClick={nextSlide}
+          disabled={isTransitioning}
+          className="hero-nav-btn flex h-10 w-10 items-center justify-center rounded-md bg-black/40 text-white/70 backdrop-blur-md transition-all duration-300 hover:bg-black/60 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-label="Next slide"
+        >
+          <svg
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15 19l-7-7 7-7"
             />
-          ))}
-        </div>
-
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-hn-primary/40 to-transparent z-20 pointer-events-none" />
+          </svg>
+        </button>
       </div>
+
+      {/* ── Bottom seamless transition line ── */}
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-hn-primary/20 to-transparent z-20 pointer-events-none" />
     </section>
   );
 }

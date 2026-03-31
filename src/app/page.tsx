@@ -36,7 +36,7 @@ export default async function Home({ searchParams }: HomeProps) {
     }
 
     return (
-      <div className="mx-auto max-w-[1440px] px-4 pb-16 pt-24 lg:px-6">
+      <div className="w-full px-4 pb-16 pt-24 sm:px-6 lg:px-10">
         {/* Header */}
         <div className="mb-6 flex items-center gap-2.5">
           <div className="h-6 w-1 rounded-full bg-hn-primary" />
@@ -69,7 +69,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
         {/* Grid */}
         {animeList.length > 0 && (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5">
             {animeList.map((anime) => (
               <AnimeCard key={anime.slug} anime={anime} />
             ))}
@@ -77,24 +77,33 @@ export default async function Home({ searchParams }: HomeProps) {
         )}
 
         {/* Pagination */}
-        <div className="mt-10 flex items-center justify-center gap-2">
-          {pagination.hasPrev && (
+        <div className="mt-8 flex items-center justify-center gap-4">
+          {currentPage > 1 && (
             <Link
               href={`/?tab=ongoing&page=${currentPage - 1}`}
-              className="rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-hn-card-hover"
+              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
             >
               ← Previous
             </Link>
           )}
-          <span className="rounded-full bg-hn-primary/15 px-4 py-2 text-sm font-bold text-hn-primary">
+
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-hn-primary text-sm font-bold text-hn-dark shadow-md">
             {currentPage}
           </span>
-          {pagination.hasNext && (
+
+          {currentPage < 12 ? (
             <Link
               href={`/?tab=ongoing&page=${currentPage + 1}`}
-              className="rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-hn-card-hover"
+              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
             >
               Next →
+            </Link>
+          ) : (
+            <Link
+              href="/"
+              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
+            >
+              Back to Home
             </Link>
           )}
         </div>
@@ -122,7 +131,7 @@ export default async function Home({ searchParams }: HomeProps) {
     }
 
     return (
-      <div className="mx-auto max-w-[1440px] px-4 pb-16 pt-24 lg:px-6">
+      <div className="w-full px-4 pb-16 pt-24 sm:px-6 lg:px-10">
         {/* Header */}
         <div className="mb-6 flex items-center gap-2.5">
           <div className="h-6 w-1 rounded-full bg-hn-secondary" />
@@ -155,7 +164,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
         {/* Grid */}
         {animeList.length > 0 && (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5">
             {animeList.map((anime) => (
               <AnimeCard key={anime.slug} anime={anime} />
             ))}
@@ -163,24 +172,33 @@ export default async function Home({ searchParams }: HomeProps) {
         )}
 
         {/* Pagination */}
-        <div className="mt-10 flex items-center justify-center gap-2">
-          {pagination.hasPrev && (
+        <div className="mt-8 flex items-center justify-center gap-4">
+          {currentPage > 1 && (
             <Link
               href={`/?tab=completed&page=${currentPage - 1}`}
-              className="rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-hn-card-hover"
+              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
             >
               ← Previous
             </Link>
           )}
-          <span className="rounded-full bg-hn-primary/15 px-4 py-2 text-sm font-bold text-hn-primary">
+
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-hn-primary text-sm font-bold text-hn-dark shadow-md">
             {currentPage}
           </span>
-          {pagination.hasNext && (
+
+          {currentPage < 12 ? (
             <Link
               href={`/?tab=completed&page=${currentPage + 1}`}
-              className="rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-hn-card-hover"
+              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
             >
               Next →
+            </Link>
+          ) : (
+            <Link
+              href="/"
+              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
+            >
+              Back to Home
             </Link>
           )}
         </div>
@@ -210,7 +228,7 @@ export default async function Home({ searchParams }: HomeProps) {
       {/* Hero Carousel */}
       <HeroCarousel />
 
-      <div className="mx-auto max-w-[1440px] px-4 pb-16 lg:px-6">
+      <div className="w-full px-4 pb-16 sm:px-6 lg:px-10">
         {/* Error */}
         {fetchError && (
           <div className="mx-auto mb-10 max-w-xl rounded-xl border border-red-500/20 bg-red-500/5 p-6 text-center">
@@ -230,20 +248,25 @@ export default async function Home({ searchParams }: HomeProps) {
 
         {/* ── Ongoing Anime section ─────────────────────────────── */}
         {ongoingList.length > 0 && (
-          <section className="mb-16">
-            <div className="mb-7 flex items-center gap-2.5">
-              <div className="h-5 w-1 rounded-full bg-hn-primary" />
-              <h2 className="text-lg font-bold text-white">Ongoing Anime</h2>
+          <section className="mb-14">
+            <div className="mb-6 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-6 w-1 rounded-full bg-hn-primary" />
+                <h2 className="text-xl font-bold text-hn-primary">Ongoing Anime</h2>
+              </div>
               <Link
                 href="/?tab=ongoing"
-                className="ml-auto text-xs font-semibold text-hn-primary/70 transition-colors hover:text-hn-primary"
+                className="flex items-center gap-1 text-xs font-semibold text-white/40 transition-colors hover:text-hn-primary"
               >
-                View all Ongoing →
+                View more
+                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                </svg>
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-              {ongoingList.map((anime) => (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] xl:grid-cols-8">
+              {ongoingList.slice(0, 8).map((anime) => (
                 <AnimeCard key={anime.slug} anime={anime} />
               ))}
             </div>
@@ -253,19 +276,24 @@ export default async function Home({ searchParams }: HomeProps) {
         {/* ── Completed Anime section ───────────────────────────── */}
         {completedList.length > 0 && (
           <section>
-            <div className="mb-7 flex items-center gap-2.5">
-              <div className="h-5 w-1 rounded-full bg-hn-secondary" />
-              <h2 className="text-lg font-bold text-white">Completed Anime</h2>
+            <div className="mb-6 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-6 w-1 rounded-full bg-hn-secondary" />
+                <h2 className="text-xl font-bold text-hn-secondary">Completed Anime</h2>
+              </div>
               <Link
                 href="/?tab=completed"
-                className="ml-auto text-xs font-semibold text-hn-primary/70 transition-colors hover:text-hn-primary"
+                className="flex items-center gap-1 text-xs font-semibold text-white/40 transition-colors hover:text-hn-primary"
               >
-                View all Completed →
+                View more
+                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                </svg>
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-              {completedList.map((anime) => (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] xl:grid-cols-8">
+              {completedList.slice(0, 8).map((anime) => (
                 <AnimeCard key={anime.slug} anime={anime} />
               ))}
             </div>

@@ -276,11 +276,12 @@ body {
 }
 
 /* ─── Glass header ──────────────────────────────────────────────── */
-.header-glass {
-  background: var(--hn-glass-bg);
-  backdrop-filter: blur(16px) saturate(150%);
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
-  border-bottom: 1px solid var(--hn-glass-border);
+.header-glass,
+.navbar-glass {
+  background: var(--hn-dark);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 /* ─── Dot separator ─────────────────────────────────────────────── */
@@ -316,5 +317,29 @@ body {
 /* ─── Video player fixes ────────────────────────────────────────── */
 video::-webkit-media-controls-panel {
   background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+}
+
+/* ─── Hero carousel nav buttons ────────────────────────────────── */
+.hero-nav-btn {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hero-nav-btn:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ─── Line clamp utilities ─────────────────────────────────────── */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 

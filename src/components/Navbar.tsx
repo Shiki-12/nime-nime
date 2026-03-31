@@ -157,38 +157,41 @@ export default function Navbar() {
   if (pathname.startsWith("/hentai")) return null;
 
   return (
-    <header className="header-glass fixed left-0 right-0 top-0 z-50">
-      <div className="mx-auto flex h-14 md:h-[60px] max-w-[1440px] items-center gap-4 px-4 lg:px-8">
-        {/* Hamburger (mobile) */}
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-white/70 transition-all duration-200 hover:bg-white/5 hover:text-white lg:hidden"
-          aria-label="Toggle menu"
-        >
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
+    <header className="navbar-glass fixed left-0 right-0 top-0 z-50 w-full">
+      <div className="flex h-14 md:h-[60px] w-full items-center gap-3 px-4 sm:px-6 lg:px-10">
+        {/* ── Left zone: Hamburger + Logo ── */}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Hamburger — visible on all sizes for aniwatch style, functional on mobile */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-white/60 transition-all duration-200 hover:bg-white/5 hover:text-white lg:hidden"
+            aria-label="Toggle menu"
           >
-            {mobileOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            )}
-          </svg>
-        </button>
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+            >
+              {mobileOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              )}
+            </svg>
+          </button>
 
-        {/* Logo */}
-        <Link href="/" className="group flex items-center gap-1.5 shrink-0">
-          <span className="text-xl font-extrabold tracking-tight text-white">
-            Nime<span className="text-hn-primary">Nime</span>
-          </span>
-        </Link>
+          {/* Logo */}
+          <Link href="/" className="group flex items-center gap-1.5 shrink-0">
+            <span className="text-xl font-extrabold tracking-tight text-white">
+              Nime<span className="text-hn-primary">Nime</span>
+            </span>
+          </Link>
+        </div>
 
-        {/* Desktop Nav Links */}
-        <nav className="hidden items-center gap-1 pl-8 lg:flex">
+        {/* ── Center zone: Desktop Nav Links ── */}
+        <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Main navigation">
           {NAV_LINKS.map((link) => {
             const isActive =
               link.href === "/"
@@ -201,11 +204,11 @@ export default function Navbar() {
                 className={`relative rounded-lg px-3 py-1.5 text-[13px] font-medium transition-all duration-200 ${
                   isActive
                     ? "text-hn-primary"
-                    : "text-white/60 hover:bg-white/5 hover:text-white"
+                    : "text-white/60 hover:bg-white/[0.04] hover:text-white"
                 }`}
               >
                 {link.label}
-                {/* Active indicator dot */}
+                {/* Active indicator underline */}
                 {isActive && (
                   <span className="absolute bottom-0 left-1/2 h-[2px] w-4 -translate-x-1/2 rounded-full bg-hn-primary" />
                 )}
@@ -214,16 +217,16 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Spacer */}
+        {/* ── Spacer ── */}
         <div className="flex-1" />
 
-        {/* Search */}
-        <div className="hidden w-full max-w-[320px] md:block">
-          <SearchBar />
-        </div>
-
-        {/* Right side icons */}
+        {/* ── Right zone: Search + Actions ── */}
         <div className="flex items-center gap-2">
+          {/* Desktop search */}
+          <div className="hidden w-full max-w-[320px] md:block">
+            <SearchBar />
+          </div>
+
           {/* Mobile search toggle */}
           <button
             onClick={() => {
@@ -234,6 +237,7 @@ export default function Navbar() {
               }, 100);
             }}
             className="flex h-9 w-9 items-center justify-center rounded-lg text-white/60 transition-all duration-200 hover:bg-white/5 hover:text-white md:hidden"
+            aria-label="Search"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
@@ -243,7 +247,8 @@ export default function Navbar() {
           {/* Random button */}
           <a
             href="/api/random"
-            className="hidden h-9 items-center gap-1.5 rounded-lg px-3 text-[12px] font-medium text-white/50 transition-all duration-200 hover:bg-white/5 hover:text-white sm:flex"
+            className="hidden h-9 items-center gap-1.5 rounded-lg px-3 text-[12px] font-medium text-white/50 transition-all duration-200 hover:bg-white/[0.04] hover:text-white sm:flex"
+            aria-label="Random anime"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3" />
@@ -256,13 +261,17 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile drawer */}
-      {mobileOpen && (
-        <div className="border-t border-white/5 bg-hn-dark px-5 pb-6 pt-4 lg:hidden">
-          <div className="mb-3 md:hidden">
+      {/* ── Mobile drawer ── */}
+      <div
+        className={`overflow-hidden transition-all duration-300 ease-in-out lg:hidden ${
+          mobileOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="border-t border-white/[0.06] bg-hn-dark/95 backdrop-blur-xl px-5 pb-6 pt-4">
+          <div className="mb-4 md:hidden">
             <SearchBar />
           </div>
-          <nav className="flex flex-col gap-0.5">
+          <nav className="flex flex-col gap-0.5" aria-label="Mobile navigation">
             {NAV_LINKS.map((link) => {
               const isActive =
                 link.href === "/"
@@ -285,7 +294,7 @@ export default function Navbar() {
             })}
           </nav>
         </div>
-      )}
+      </div>
     </header>
   );
 }
