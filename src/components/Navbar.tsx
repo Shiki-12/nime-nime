@@ -70,6 +70,7 @@ function UserMenu() {
         aria-label="User menu"
       >
         {session.user.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={session.user.image}
             alt={session.user.name ?? "Avatar"}

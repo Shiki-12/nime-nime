@@ -28,6 +28,46 @@ const slides = [
     dubCount: null,
   },
   {
+    id: "public-discuss",
+    title: (
+      <>
+        Join the Global{" "}
+        <span className="bg-gradient-to-r from-hn-primary to-hn-secondary bg-clip-text text-transparent">
+          Discussion
+        </span>
+      </>
+    ),
+    synopsis:
+      "Connect with others in real-time! Share your top 5 anime recommendations, join the live chat, and discover what everyone is watching.",
+    image: "/images/banner_public.png",
+    primaryLabel: "Enter Community Hub",
+    primaryHref: "/discuss",
+    secondaryLabel: "Read Rules",
+    secondaryHref: "/rules",
+    tag: "New Feature",
+    icon: (
+      <svg
+        className="h-4 w-4 transition-transform group-hover:-translate-y-0.5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </svg>
+    ),
+    mediaType: "Community",
+    duration: null,
+    releaseDate: "2025",
+    quality: null,
+    hasCC: false,
+    hasDub: false,
+    ccCount: null,
+    dubCount: null,
+  },
+  {
     id: "adblock-tip",
     title: "Watch Without Interruptions",
     synopsis:
@@ -136,11 +176,10 @@ export default function HeroCarousel() {
             aria-roledescription="slide"
             aria-label={`${index + 1} of ${slides.length}: ${slide.title}`}
             aria-hidden={index !== currentSlide}
-            className={`absolute inset-0 transition-all duration-[800ms] ease-in-out ${
-              index === currentSlide
-                ? "opacity-100 z-10 scale-100"
-                : "opacity-0 z-0 scale-[1.03] pointer-events-none"
-            }`}
+            className={`absolute inset-0 transition-all duration-[800ms] ease-in-out ${index === currentSlide
+              ? "opacity-100 z-10 scale-100"
+              : "opacity-0 z-0 scale-[1.03] pointer-events-none"
+              }`}
           >
             {/* Background image */}
             <Image
@@ -199,11 +238,10 @@ export default function HeroCarousel() {
               <div className="w-full max-w-3xl px-6 sm:px-10 md:px-14 lg:px-20">
                 {/* Spotlight label */}
                 <div
-                  className={`mb-3 transition-all duration-700 ${
-                    index === currentSlide
-                      ? "opacity-100 translate-y-0 delay-200"
-                      : "opacity-0 translate-y-3"
-                  }`}
+                  className={`mb-3 transition-all duration-700 ${index === currentSlide
+                    ? "opacity-100 translate-y-0 delay-200"
+                    : "opacity-0 translate-y-3"
+                    }`}
                 >
                   <span className="text-sm font-bold tracking-wide text-hn-primary">
                     #{index + 1} Spotlight
@@ -212,22 +250,20 @@ export default function HeroCarousel() {
 
                 {/* Title */}
                 <h2
-                  className={`text-3xl font-extrabold leading-[1.1] text-white sm:text-4xl md:text-5xl lg:text-6xl transition-all duration-700 ${
-                    index === currentSlide
-                      ? "opacity-100 translate-y-0 delay-300"
-                      : "opacity-0 translate-y-4"
-                  }`}
+                  className={`text-3xl font-extrabold leading-[1.1] text-white sm:text-4xl md:text-5xl lg:text-6xl transition-all duration-700 ${index === currentSlide
+                    ? "opacity-100 translate-y-0 delay-300"
+                    : "opacity-0 translate-y-4"
+                    }`}
                 >
                   {slide.title}
                 </h2>
 
                 {/* Metadata badges */}
                 <div
-                  className={`mt-4 flex flex-wrap items-center gap-2 text-sm text-white/70 transition-all duration-700 ${
-                    index === currentSlide
-                      ? "opacity-100 translate-y-0 delay-[400ms]"
-                      : "opacity-0 translate-y-4"
-                  }`}
+                  className={`mt-4 flex flex-wrap items-center gap-2 text-sm text-white/70 transition-all duration-700 ${index === currentSlide
+                    ? "opacity-100 translate-y-0 delay-[400ms]"
+                    : "opacity-0 translate-y-4"
+                    }`}
                 >
                   {slide.mediaType && (
                     <span className="inline-flex items-center gap-1">
@@ -319,22 +355,20 @@ export default function HeroCarousel() {
 
                 {/* Synopsis */}
                 <p
-                  className={`mt-4 max-w-2xl text-sm leading-relaxed text-white/50 line-clamp-3 md:text-[15px] md:line-clamp-4 transition-all duration-700 ${
-                    index === currentSlide
-                      ? "opacity-100 translate-y-0 delay-500"
-                      : "opacity-0 translate-y-4"
-                  }`}
+                  className={`mt-4 max-w-2xl text-sm leading-relaxed text-white/50 line-clamp-3 md:text-[15px] md:line-clamp-4 transition-all duration-700 ${index === currentSlide
+                    ? "opacity-100 translate-y-0 delay-500"
+                    : "opacity-0 translate-y-4"
+                    }`}
                 >
                   {slide.synopsis}
                 </p>
 
                 {/* CTA Buttons */}
                 <div
-                  className={`mt-6 flex items-center gap-3 transition-all duration-700 ${
-                    index === currentSlide
-                      ? "opacity-100 translate-y-0 delay-[600ms]"
-                      : "opacity-0 translate-y-4"
-                  }`}
+                  className={`mt-6 flex items-center gap-3 transition-all duration-700 ${index === currentSlide
+                    ? "opacity-100 translate-y-0 delay-[600ms]"
+                    : "opacity-0 translate-y-4"
+                    }`}
                 >
                   {/* Primary button — Watch Now */}
                   <Link
@@ -408,7 +442,7 @@ export default function HeroCarousel() {
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              d="M9 5l7 7-7 7"
+              d="M15 19l-7-7 7-7"
             />
           </svg>
         </button>
@@ -428,7 +462,7 @@ export default function HeroCarousel() {
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              d="M15 19l-7-7 7-7"
+              d="M9 5l7 7-7 7"
             />
           </svg>
         </button>

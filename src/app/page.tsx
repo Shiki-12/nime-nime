@@ -2,7 +2,7 @@ import { getOngoingAnime, getCompletedAnime } from "@/lib/api";
 import AnimeCard from "@/components/AnimeCard";
 import HeroCarousel from "@/components/HeroCarousel";
 import Link from "next/link";
-import type { OngoingAnime, Pagination } from "@/types/anime";
+import type { OngoingAnime } from "@/types/anime";
 
 // Tier 3: Frequently Updated — ongoing/completed feeds update hourly
 export const revalidate = 3600; // 1 hour
@@ -19,17 +19,11 @@ export default async function Home({ searchParams }: HomeProps) {
   // ─── Dedicated "Ongoing" view ────────────────────────────────────
   if (tab === "ongoing") {
     let animeList: OngoingAnime[] = [];
-    let pagination: Pagination = {
-      hasNext: false,
-      hasPrev: false,
-      currentPage,
-    };
     let fetchError: string | null = null;
 
     try {
       const res = await getOngoingAnime(currentPage);
       animeList = res.animes ?? [];
-      pagination = res.pagination;
     } catch (err) {
       fetchError =
         err instanceof Error ? err.message : "Failed to fetch anime data.";
@@ -114,17 +108,11 @@ export default async function Home({ searchParams }: HomeProps) {
   // ─── Dedicated "Completed" view ──────────────────────────────────
   if (tab === "completed") {
     let animeList: OngoingAnime[] = [];
-    let pagination: Pagination = {
-      hasNext: false,
-      hasPrev: false,
-      currentPage,
-    };
     let fetchError: string | null = null;
 
     try {
       const res = await getCompletedAnime(currentPage);
       animeList = res.animes ?? [];
-      pagination = res.pagination;
     } catch (err) {
       fetchError =
         err instanceof Error ? err.message : "Failed to fetch anime data.";
