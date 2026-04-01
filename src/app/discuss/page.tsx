@@ -157,7 +157,6 @@ export default function DiscussPage() {
     const [sending, setSending] = useState(false);
     const chatEndRef = useRef<HTMLDivElement>(null);
     const chatContainerRef = useRef<HTMLDivElement>(null);
-    const shouldAutoScroll = useRef(true);
 
     // ── Comments State ──────────────────────────────────────────────
     const [comments, setComments] = useState<Comment[]>([]);
@@ -236,21 +235,6 @@ export default function DiscussPage() {
         return () => clearInterval(interval);
     }, [status, fetchChat]);
 
-    // Auto-scroll chat
-    useEffect(() => {
-        if (shouldAutoScroll.current) {
-            chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-        }
-    }, [messages]);
-
-    // Track scroll position to decide auto-scroll
-    const handleChatScroll = () => {
-        const el = chatContainerRef.current;
-        if (!el) return;
-        const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
-        shouldAutoScroll.current = distanceFromBottom < 80;
-    };
-
     // ── Send message ────────────────────────────────────────────────
     const handleSend = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -267,7 +251,6 @@ export default function DiscussPage() {
                 body: JSON.stringify({ message: trimmed }),
             });
             if (res.ok) {
-                shouldAutoScroll.current = true;
                 await fetchChat();
             }
         } catch {
@@ -410,7 +393,6 @@ export default function DiscussPage() {
                     {/* Chat messages */}
                     <div
                         ref={chatContainerRef}
-                        onScroll={handleChatScroll}
                         className="scrollbar-thin flex-1 overflow-y-auto"
                         style={{ height: "calc(100vh - 340px)", minHeight: 320 }}
                     >

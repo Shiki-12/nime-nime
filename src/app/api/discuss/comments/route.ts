@@ -6,7 +6,7 @@ import { withAuthAndValidation } from "@/lib/api-wrapper";
 export const GET = withAuthAndValidation(async () => {
     const comments = await prisma.comment.findMany({
         orderBy: { createdAt: "desc" },
-        take: 20,
+        take: 5,
         include: {
             user: {
                 select: { name: true, image: true, email: true },
