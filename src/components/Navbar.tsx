@@ -15,6 +15,7 @@ const NAV_LINKS = [
   { label: "Schedule", href: "/schedule" },
   { label: "Saved", href: "/saved" },
   { label: "History", href: "/history" },
+  { label: "Discuss", href: "/discuss" },
 ];
 
 // ─── User Avatar Dropdown ──────────────────────────────────────────

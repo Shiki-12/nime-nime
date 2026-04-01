@@ -21,10 +21,13 @@ model User {
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
-  accounts     Account[]
-  sessions     Session[]
-  savedAnime   SavedAnime[]
-  watchHistory WatchHistory[]
+  accounts        Account[]
+  sessions        Session[]
+  savedAnime      SavedAnime[]
+  watchHistory    WatchHistory[]
+  comments        Comment[]
+  publicMessages  PublicMessage[]
+  recommendations Recommendation[]
 
   @@map("users")
 }
@@ -100,4 +103,45 @@ model WatchHistory {
 
   @@unique([userId, animeId, episodeId])
   @@map("watch_history")
+}
+
+// ─── Public Discuss Models ──────────────────────────────────────────
+
+model Comment {
+  id          String   @id @default(cuid())
+  userId      String
+  text        String
+  episodeSlug String
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@map("comments")
+}
+
+model PublicMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  message   String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@map("public_messages")
+}
+
+model Recommendation {
+  id         String   @id @default(cuid())
+  userId     String
+  animeSlug  String
+  animeTitle String
+  coverImage String
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@map("recommendations")
 }
