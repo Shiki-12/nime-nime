@@ -3,7 +3,7 @@ import { getEpisodeData, getAnimeDetail } from "@/lib/api";
 import WatchHistoryTracker from "@/components/WatchHistoryTracker";
 import EpisodeList from "@/components/EpisodeList";
 import SidebarEpisodeList from "@/components/SidebarEpisodeList";
-import DisqusWrapper from "@/components/DisqusWrapper";
+import EpisodeComments from "@/components/EpisodeComments";
 import type { EpisodeItem } from "@/types/anime";
 import VideoPlayer from "@/components/VideoPlayer";
 
@@ -128,16 +128,8 @@ export default async function StreamingPage({
             </Link>
           </div>
 
-          {/* Disqus Comments - Episode-Specific Thread */}
-          {animeSlug && (
-            <div>
-              <DisqusWrapper
-                animeSlug={animeSlug}
-                episodeSlug={episodeSlug}
-                episodeTitle={episode.title}
-              />
-            </div>
-          )}
+          {/* Episode Comments */}
+          <EpisodeComments episodeSlug={episodeSlug} />
         </div>
 
         {/* Right Sidebar: Episode List (desktop) */}

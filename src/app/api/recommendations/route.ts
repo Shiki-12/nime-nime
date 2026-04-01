@@ -25,24 +25,29 @@ export const GET = withAuthAndValidation(async () => {
     return NextResponse.json(recommendations);
 });
 
-// ─── POST: Create a new recommendation (max 5 per user) ─────────────
+// ─── POST: Create a new recommendation (max 2 per user, admin unlimited) ────
+const ADMIN_EMAIL = "uknowndonp@gmail.com";
+
 export const POST = withAuthAndValidation(async (req: NextRequest) => {
     const session = await auth();
     const userId = session!.user!.id;
+    const userEmail = session!.user!.email;
 
     const body = await req.json();
     const { animeSlug, animeTitle, coverImage } = body;
 
-    // Enforce the 5-recommendation hard limit
-    const existingCount = await prisma.recommendation.count({
-        where: { userId },
-    });
+    // Admin bypasses the 2-recommendation limit
+    if (userEmail !== ADMIN_EMAIL) {
+        const existingCount = await prisma.recommendation.count({
+            where: { userId },
+        });
 
-    if (existingCount >= 5) {
-        return NextResponse.json(
-            { error: "You can only recommend up to 5 anime." },
-            { status: 400 }
-        );
+        if (existingCount >= 2) {
+            return NextResponse.json(
+                { error: "You can only recommend up to 2 anime." },
+                { status: 400 }
+            );
+        }
     }
 
     const created = await prisma.recommendation.create({
@@ -61,3 +66,47 @@ export const POST = withAuthAndValidation(async (req: NextRequest) => {
 
     return NextResponse.json(created, { status: 201 });
 }, CreateRecommendationSchema);
+
+// ─── DELETE: Remove a recommendation (Admin or Owner) ───────────────
+export const DELETE = withAuthAndValidation(async (req: NextRequest) => {
+    const session = await auth();
+    const userId = session!.user!.id;
+    const userEmail = session!.user!.email;
+
+    const { searchParams } = new URL(req.url);
+    const recommendationId = searchParams.get("id");
+
+    if (!recommendationId) {
+        return NextResponse.json(
+            { error: "Recommendation ID is required." },
+            { status: 400 }
+        );
+    }
+
+    const recommendation = await prisma.recommendation.findUnique({
+        where: { id: recommendationId },
+    });
+
+    if (!recommendation) {
+        return NextResponse.json(
+            { error: "Recommendation not found." },
+            { status: 404 }
+        );
+    }
+
+    const isAdmin = userEmail === ADMIN_EMAIL;
+    const isOwner = recommendation.userId === userId;
+
+    if (!isAdmin && !isOwner) {
+        return NextResponse.json(
+            { error: "You do not have permission to delete this recommendation." },
+            { status: 403 }
+        );
+    }
+
+    await prisma.recommendation.delete({
+        where: { id: recommendationId },
+    });
+
+    return NextResponse.json({ success: true });
+});

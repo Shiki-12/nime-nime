@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useDebounce } from "@/hooks/useDebounce";
-import { swalToast } from "@/lib/swal";
+import { swalToast, swalConfirm } from "@/lib/swal";
 import type { OngoingAnime } from "@/types/anime";
 
 // ─── Types ──────────────────────────────────────────────────────────
@@ -37,6 +37,8 @@ interface Recommendation {
     createdAt: string;
     user: { name: string; image: string | null; email: string | null };
 }
+
+const ADMIN_EMAIL = "uknowndonp@gmail.com";
 
 // ─── Helpers ────────────────────────────────────────────────────────
 
@@ -127,7 +129,7 @@ function CommentSkeleton() {
 function RecommendationSkeleton() {
     return (
         <div className="grid grid-cols-2 gap-2.5 p-4 sm:grid-cols-3 lg:grid-cols-2">
-            {Array.from({ length: 4 }).map((_, i) => (
+            {Array.from({ length: 2 }).map((_, i) => (
                 <div key={i} className="space-y-2">
                     <div className="skeleton aspect-[3/4] w-full rounded-lg" />
                     <div className="skeleton h-3 w-3/4 rounded" />
@@ -155,6 +157,7 @@ export default function DiscussPage() {
     const [chatLoading, setChatLoading] = useState(true);
     const [chatInput, setChatInput] = useState("");
     const [sending, setSending] = useState(false);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
     const chatEndRef = useRef<HTMLDivElement>(null);
     const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -235,6 +238,18 @@ export default function DiscussPage() {
         return () => clearInterval(interval);
     }, [status, fetchChat]);
 
+    // Auto-scroll chat to bottom
+    const scrollToBottom = () => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop =
+                chatContainerRef.current.scrollHeight;
+        }
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
     // ── Send message ────────────────────────────────────────────────
     const handleSend = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -252,11 +267,55 @@ export default function DiscussPage() {
             });
             if (res.ok) {
                 await fetchChat();
+            } else if (res.status === 429) {
+                const data = await res.json();
+                swalToast({
+                    title: data.error || "You are sending messages too fast.",
+                    icon: "warning",
+                    timer: 5000,
+                });
             }
         } catch {
             /* silent */
         } finally {
             setSending(false);
+        }
+    };
+
+    // ── Delete message ──────────────────────────────────────────────
+    const handleDelete = async (messageId: string) => {
+        const result = await swalConfirm.fire({
+            title: "Delete message?",
+            text: "This action cannot be undone.",
+            confirmButtonText: "Yes, delete",
+        });
+
+        if (!result.isConfirmed) return;
+
+        setDeletingId(messageId);
+        try {
+            const res = await fetch(
+                `/api/discuss/chat?messageId=${messageId}`,
+                {
+                    method: "DELETE",
+                }
+            );
+            if (res.ok) {
+                setMessages((prev) =>
+                    prev.filter((m) => m.id !== messageId)
+                );
+                swalToast({ title: "Message deleted", icon: "success" });
+            } else {
+                const data = await res.json();
+                swalToast({
+                    title: data.error || "Failed to delete message",
+                    icon: "error",
+                });
+            }
+        } catch {
+            swalToast({ title: "Network error", icon: "error" });
+        } finally {
+            setDeletingId(null);
         }
     };
 
@@ -279,7 +338,11 @@ export default function DiscussPage() {
                     setSearchResults(data.animes ?? []);
                 }
             } catch (err: unknown) {
-                if (err instanceof DOMException && err.name === "AbortError") return;
+                if (
+                    err instanceof DOMException &&
+                    err.name === "AbortError"
+                )
+                    return;
                 setSearchResults([]);
             } finally {
                 setIsSearching(false);
@@ -326,20 +389,31 @@ export default function DiscussPage() {
 
             if (res.ok) {
                 setIsModalOpen(false);
-                swalToast({ title: "Recommendation added!", icon: "success" });
+                swalToast({
+                    title: "Recommendation added!",
+                    icon: "success",
+                });
                 fetchRecommendations();
             } else if (res.status === 400) {
                 const data = await res.json();
                 swalToast({
-                    title: data.error || "You can only recommend up to 5 anime.",
+                    title:
+                        data.error ||
+                        "You can only recommend up to 2 anime.",
                     icon: "warning",
                     timer: 4000,
                 });
             } else {
-                swalToast({ title: "Something went wrong.", icon: "error" });
+                swalToast({
+                    title: "Something went wrong.",
+                    icon: "error",
+                });
             }
         } catch {
-            swalToast({ title: "Network error. Please try again.", icon: "error" });
+            swalToast({
+                title: "Network error. Please try again.",
+                icon: "error",
+            });
         } finally {
             setSubmittingSlug(null);
         }
@@ -362,7 +436,8 @@ export default function DiscussPage() {
             {/* ── Page Header ─────────────────────────────────────── */}
             <div className="mb-8">
                 <h1 className="text-2xl font-bold sm:text-3xl">
-                    <span className="text-hn-primary">💬</span> Public Discuss
+                    <span className="text-hn-primary">💬</span> Public
+                    Discuss
                 </h1>
                 <p className="mt-1 text-sm text-white/40">
                     Chat with the community, see the latest comments, and
@@ -371,11 +446,11 @@ export default function DiscussPage() {
             </div>
 
             {/* ── Grid Layout ─────────────────────────────────────── */}
-            <div className="grid gap-6 lg:grid-cols-3">
+            <div className="grid gap-6 lg:grid-cols-5">
                 {/* ════════════════════════════════════════════════════
-                    LEFT COLUMN — Live Chat (lg:col-span-2)
+                    LEFT COLUMN — Live Chat (lg:col-span-3)
                     ════════════════════════════════════════════════════ */}
-                <section className="flex flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-hn-card/60 lg:col-span-2">
+                <section className="flex flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-hn-card/60 lg:col-span-3">
                     {/* Chat header */}
                     <div className="flex items-center gap-3 border-b border-white/[0.06] px-5 py-3.5">
                         <span className="relative flex h-2.5 w-2.5">
@@ -393,8 +468,7 @@ export default function DiscussPage() {
                     {/* Chat messages */}
                     <div
                         ref={chatContainerRef}
-                        className="scrollbar-thin flex-1 overflow-y-auto"
-                        style={{ height: "calc(100vh - 340px)", minHeight: 320 }}
+                        className="scrollbar-thin overflow-y-auto h-[600px]"
                     >
                         {chatLoading ? (
                             <ChatSkeleton />
@@ -447,10 +521,11 @@ export default function DiscussPage() {
                                                         }`}
                                                     >
                                                         {msg.user.name}
-                                                        {msg.user.email === 'uknowndonp@gmail.com' && (
-                                                          <span className="flex items-center rounded-sm bg-red-500/20 px-1 py-[1px] text-[8px] font-bold uppercase tracking-wider text-red-500 ring-1 ring-inset ring-red-500/50">
-                                                            Admin
-                                                          </span>
+                                                        {msg.user.email ===
+                                                            ADMIN_EMAIL && (
+                                                            <span className="flex items-center rounded-sm bg-red-500/20 px-1 py-[1px] text-[8px] font-bold uppercase tracking-wider text-red-500 ring-1 ring-inset ring-red-500/50">
+                                                                Admin
+                                                            </span>
                                                         )}
                                                         {isOwn && (
                                                             <span className="text-[10px] font-normal text-hn-primary/50">
@@ -464,10 +539,45 @@ export default function DiscussPage() {
                                                         )}
                                                     </span>
                                                 </div>
-                                                <p className="mt-0.5 break-words text-[13px] leading-relaxed text-white/60">
+                                                <p className="mt-0.5 break-words break-all whitespace-pre-wrap text-[13px] leading-relaxed text-white/60">
                                                     {msg.message}
                                                 </p>
                                             </div>
+
+                                            {/* Delete Button (Owner or Admin) */}
+                                            {(isOwn ||
+                                                session?.user?.email ===
+                                                    ADMIN_EMAIL) && (
+                                                <button
+                                                    onClick={() =>
+                                                        handleDelete(msg.id)
+                                                    }
+                                                    disabled={
+                                                        deletingId === msg.id
+                                                    }
+                                                    className="shrink-0 rounded-lg p-1.5 text-red-500/0 opacity-0 transition-all hover:bg-red-500/10 hover:text-red-400 group-hover/msg:text-red-500/40 group-hover/msg:opacity-100 disabled:opacity-50"
+                                                    aria-label="Delete message"
+                                                >
+                                                    {deletingId ===
+                                                    msg.id ? (
+                                                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-red-500 border-t-transparent" />
+                                                    ) : (
+                                                        <svg
+                                                            className="h-4 w-4"
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            strokeWidth={2}
+                                                            stroke="currentColor"
+                                                        >
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                                                            />
+                                                        </svg>
+                                                    )}
+                                                </button>
+                                            )}
                                         </div>
                                     );
                                 })}
@@ -521,9 +631,9 @@ export default function DiscussPage() {
                 </section>
 
                 {/* ════════════════════════════════════════════════════
-                    RIGHT COLUMN — Comments + Recommendations
+                    RIGHT COLUMN — Comments + Recommendations (lg:col-span-2)
                     ════════════════════════════════════════════════════ */}
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-6 lg:col-span-2">
                     {/* ── Global Comments Feed ─────────────────────── */}
                     <section className="flex flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-hn-card/60">
                         <div className="flex items-center gap-2.5 border-b border-white/[0.06] px-5 py-3.5">
@@ -575,7 +685,7 @@ export default function DiscussPage() {
                                     {comments.map((comment) => (
                                         <Link
                                             key={comment.id}
-                                            href={`/hentai/series/${comment.episodeSlug}`}
+                                            href={`/anime/watch/${comment.episodeSlug}`}
                                             className="group/comment flex items-start gap-2.5 rounded-xl px-3 py-2.5 transition-colors hover:bg-white/[0.04]"
                                         >
                                             <UserAvatar
@@ -587,10 +697,12 @@ export default function DiscussPage() {
                                                 <div className="flex items-baseline gap-2">
                                                     <span className="flex items-center gap-1.5 text-xs font-semibold text-white/70 group-hover/comment:text-hn-primary">
                                                         {comment.user.name}
-                                                        {comment.user.email === 'uknowndonp@gmail.com' && (
-                                                          <span className="flex items-center rounded-sm bg-red-500/20 px-1 py-[1px] text-[8px] font-bold uppercase tracking-wider text-red-500 ring-1 ring-inset ring-red-500/50">
-                                                            Admin
-                                                          </span>
+                                                        {comment.user
+                                                            .email ===
+                                                            ADMIN_EMAIL && (
+                                                            <span className="flex items-center rounded-sm bg-red-500/20 px-1 py-[1px] text-[8px] font-bold uppercase tracking-wider text-red-500 ring-1 ring-inset ring-red-500/50">
+                                                                Admin
+                                                            </span>
                                                         )}
                                                     </span>
                                                     <span className="text-[10px] text-white/20">
@@ -600,7 +712,8 @@ export default function DiscussPage() {
                                                     </span>
                                                 </div>
                                                 <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-white/40">
-                                                    &ldquo;{comment.text}&rdquo;
+                                                    &ldquo;{comment.text}
+                                                    &rdquo;
                                                 </p>
                                                 <span className="mt-1 inline-flex items-center gap-1 text-[10px] text-hn-primary/50 group-hover/comment:text-hn-primary/80">
                                                     <svg
@@ -645,15 +758,33 @@ export default function DiscussPage() {
                             <h2 className="text-sm font-semibold tracking-wide uppercase text-white/70">
                                 Top Picks
                             </h2>
-                            <button
-                                onClick={() => setIsModalOpen(true)}
-                                className="ml-auto flex items-center gap-1 rounded-lg bg-hn-primary/10 px-2.5 py-1 text-[11px] font-semibold text-hn-primary transition-all hover:bg-hn-primary/20 hover:shadow-sm hover:shadow-hn-primary/10"
-                            >
-                                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                                </svg>
-                                Recommend
-                            </button>
+                            <div className="ml-auto flex items-center gap-2">
+                                <Link
+                                    href="/recommendations"
+                                    className="text-[11px] font-medium text-white/30 transition-colors hover:text-hn-primary"
+                                >
+                                    See All →
+                                </Link>
+                                <button
+                                    onClick={() => setIsModalOpen(true)}
+                                    className="flex items-center gap-1 rounded-lg bg-hn-primary/10 px-2.5 py-1 text-[11px] font-semibold text-hn-primary transition-all hover:bg-hn-primary/20 hover:shadow-sm hover:shadow-hn-primary/10"
+                                >
+                                    <svg
+                                        className="h-3 w-3"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={2.5}
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M12 4.5v15m7.5-7.5h-15"
+                                        />
+                                    </svg>
+                                    Recommend
+                                </button>
+                            </div>
                         </div>
 
                         <div
@@ -683,50 +814,61 @@ export default function DiscussPage() {
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-2 gap-3 p-4">
-                                    {recommendations.map((rec) => (
-                                        <Link
-                                            key={rec.id}
-                                            href={`/anime/${rec.animeSlug}`}
-                                            className="group/rec flex flex-col overflow-hidden rounded-xl border border-white/[0.04] bg-white/[0.02] transition-all hover:border-hn-primary/20 hover:bg-white/[0.05]"
-                                        >
-                                            {/* Cover */}
-                                            <div className="relative aspect-[3/4] w-full overflow-hidden">
-                                                <Image
-                                                    src={rec.coverImage}
-                                                    alt={rec.animeTitle}
-                                                    fill
-                                                    sizes="(max-width: 1024px) 50vw, 180px"
-                                                    className="object-cover transition-transform duration-300 group-hover/rec:scale-105"
-                                                />
-                                                {/* Gradient overlay */}
-                                                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent" />
-                                                {/* Recommender badge */}
-                                                <div className="absolute bottom-2 left-2 flex items-center gap-1.5 rounded-full bg-black/60 px-2 py-1 backdrop-blur-sm">
-                                                    <UserAvatar
-                                                        src={rec.user.image}
-                                                        name={rec.user.name}
-                                                        size={16}
+                                    {recommendations
+                                        .slice(0, 2)
+                                        .map((rec) => (
+                                            <Link
+                                                key={rec.id}
+                                                href={`/anime/${rec.animeSlug}`}
+                                                className="group/rec flex flex-col overflow-hidden rounded-xl border border-white/[0.04] bg-white/[0.02] transition-all hover:border-hn-primary/20 hover:bg-white/[0.05]"
+                                            >
+                                                {/* Cover */}
+                                                <div className="relative aspect-[3/4] w-full overflow-hidden">
+                                                    <Image
+                                                        src={rec.coverImage}
+                                                        alt={rec.animeTitle}
+                                                        fill
+                                                        sizes="(max-width: 1024px) 50vw, 180px"
+                                                        className="object-cover transition-transform duration-300 group-hover/rec:scale-105"
                                                     />
-                                                    <div className="flex items-center gap-1">
-                                                        <span className="max-w-[70px] truncate text-[10px] font-medium text-white/70">
-                                                            {rec.user.name}
-                                                        </span>
-                                                        {rec.user.email === 'uknowndonp@gmail.com' && (
-                                                          <span className="flex items-center rounded-sm bg-red-500/20 px-0.5 py-[1px] text-[8px] font-bold uppercase tracking-wider text-red-500 ring-1 ring-inset ring-red-500/50">
-                                                            Admin
-                                                          </span>
-                                                        )}
+                                                    {/* Gradient overlay */}
+                                                    <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent" />
+                                                    {/* Recommender badge */}
+                                                    <div className="absolute bottom-2 left-2 flex items-center gap-1.5 rounded-full bg-black/60 px-2 py-1 backdrop-blur-sm">
+                                                        <UserAvatar
+                                                            src={
+                                                                rec.user.image
+                                                            }
+                                                            name={
+                                                                rec.user.name
+                                                            }
+                                                            size={16}
+                                                        />
+                                                        <div className="flex items-center gap-1">
+                                                            <span className="max-w-[70px] truncate text-[10px] font-medium text-white/70">
+                                                                {
+                                                                    rec.user
+                                                                        .name
+                                                                }
+                                                            </span>
+                                                            {rec.user
+                                                                .email ===
+                                                                ADMIN_EMAIL && (
+                                                                <span className="flex items-center rounded-sm bg-red-500/20 px-0.5 py-[1px] text-[8px] font-bold uppercase tracking-wider text-red-500 ring-1 ring-inset ring-red-500/50">
+                                                                    Admin
+                                                                </span>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            {/* Title */}
-                                            <div className="px-2.5 py-2">
-                                                <h3 className="line-clamp-2 text-xs font-semibold leading-snug text-white/80 group-hover/rec:text-hn-primary">
-                                                    {rec.animeTitle}
-                                                </h3>
-                                            </div>
-                                        </Link>
-                                    ))}
+                                                {/* Title */}
+                                                <div className="px-2.5 py-2">
+                                                    <h3 className="line-clamp-2 text-xs font-semibold leading-snug text-white/80 group-hover/rec:text-hn-primary">
+                                                        {rec.animeTitle}
+                                                    </h3>
+                                                </div>
+                                            </Link>
+                                        ))}
                                 </div>
                             )}
                         </div>
@@ -741,7 +883,12 @@ export default function DiscussPage() {
                 <div
                     className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
                     onClick={(e) => {
-                        if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+                        if (
+                            modalRef.current &&
+                            !modalRef.current.contains(
+                                e.target as Node
+                            )
+                        ) {
                             setIsModalOpen(false);
                         }
                     }}
@@ -758,15 +905,26 @@ export default function DiscussPage() {
                                     Add Recommendation
                                 </h3>
                                 <p className="mt-0.5 text-xs text-white/30">
-                                    Search and pick an anime to recommend (max 5)
+                                    Search and pick an anime to recommend
+                                    (max 2)
                                 </p>
                             </div>
                             <button
                                 onClick={() => setIsModalOpen(false)}
                                 className="flex h-8 w-8 items-center justify-center rounded-lg text-white/40 transition-colors hover:bg-white/10 hover:text-white"
                             >
-                                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                <svg
+                                    className="h-5 w-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={2}
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M6 18 18 6M6 6l12 12"
+                                    />
                                 </svg>
                             </button>
                         </div>
@@ -777,14 +935,26 @@ export default function DiscussPage() {
                                 {isSearching ? (
                                     <div className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-hn-primary border-t-transparent" />
                                 ) : (
-                                    <svg className="h-4 w-4 shrink-0 text-white/40" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                                    <svg
+                                        className="h-4 w-4 shrink-0 text-white/40"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={2}
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                                        />
                                     </svg>
                                 )}
                                 <input
                                     type="text"
                                     value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    onChange={(e) =>
+                                        setSearchQuery(e.target.value)
+                                    }
                                     placeholder="Search anime title..."
                                     autoFocus
                                     className="w-full bg-transparent text-sm text-white placeholder-white/25 outline-none"
@@ -798,8 +968,18 @@ export default function DiscussPage() {
                                         }}
                                         className="shrink-0 text-white/30 transition-colors hover:text-white"
                                     >
-                                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                        <svg
+                                            className="h-3.5 w-3.5"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth={2}
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M6 18 18 6M6 6l12 12"
+                                            />
                                         </svg>
                                     </button>
                                 )}
@@ -809,104 +989,167 @@ export default function DiscussPage() {
                         {/* Search Results */}
                         <div className="scrollbar-thin flex-1 overflow-y-auto">
                             {/* Empty state — no query */}
-                            {!debouncedSearch && searchResults.length === 0 && !isSearching && (
-                                <div className="flex flex-col items-center justify-center gap-2 py-14 text-center">
-                                    <svg className="h-10 w-10 text-white/10" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                                    </svg>
-                                    <p className="text-xs text-white/25">
-                                        Type a title to search...
-                                    </p>
-                                </div>
-                            )}
+                            {!debouncedSearch &&
+                                searchResults.length === 0 &&
+                                !isSearching && (
+                                    <div className="flex flex-col items-center justify-center gap-2 py-14 text-center">
+                                        <svg
+                                            className="h-10 w-10 text-white/10"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth={1}
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                                            />
+                                        </svg>
+                                        <p className="text-xs text-white/25">
+                                            Type a title to search...
+                                        </p>
+                                    </div>
+                                )}
 
                             {/* No results */}
-                            {debouncedSearch && !isSearching && searchResults.length === 0 && (
-                                <div className="flex flex-col items-center justify-center gap-2 py-14 text-center">
-                                    <svg className="h-10 w-10 text-white/10" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 16.318A4.486 4.486 0 0 0 12.016 15a4.486 4.486 0 0 0-3.198 1.318M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
-                                    </svg>
-                                    <p className="text-xs text-white/25">
-                                        No results for &ldquo;{debouncedSearch}&rdquo;
-                                    </p>
-                                </div>
-                            )}
+                            {debouncedSearch &&
+                                !isSearching &&
+                                searchResults.length === 0 && (
+                                    <div className="flex flex-col items-center justify-center gap-2 py-14 text-center">
+                                        <svg
+                                            className="h-10 w-10 text-white/10"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth={1}
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M15.182 16.318A4.486 4.486 0 0 0 12.016 15a4.486 4.486 0 0 0-3.198 1.318M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z"
+                                            />
+                                        </svg>
+                                        <p className="text-xs text-white/25">
+                                            No results for &ldquo;
+                                            {debouncedSearch}&rdquo;
+                                        </p>
+                                    </div>
+                                )}
 
                             {/* Loading skeleton */}
                             {isSearching && (
                                 <div className="flex flex-col gap-1 p-2">
-                                    {Array.from({ length: 4 }).map((_, i) => (
-                                        <div key={i} className="flex items-center gap-3 rounded-xl px-3 py-2.5">
-                                            <div className="skeleton h-14 w-10 shrink-0 rounded-md" />
-                                            <div className="flex-1 space-y-1.5">
-                                                <div className="skeleton h-3.5 w-3/4 rounded" />
-                                                <div className="skeleton h-3 w-1/3 rounded" />
+                                    {Array.from({ length: 4 }).map(
+                                        (_, i) => (
+                                            <div
+                                                key={i}
+                                                className="flex items-center gap-3 rounded-xl px-3 py-2.5"
+                                            >
+                                                <div className="skeleton h-14 w-10 shrink-0 rounded-md" />
+                                                <div className="flex-1 space-y-1.5">
+                                                    <div className="skeleton h-3.5 w-3/4 rounded" />
+                                                    <div className="skeleton h-3 w-1/3 rounded" />
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        )
+                                    )}
                                 </div>
                             )}
 
                             {/* Results list */}
-                            {searchResults.length > 0 && !isSearching && (
-                                <ul className="flex flex-col gap-0.5 p-2">
-                                    {searchResults.slice(0, 10).map((anime) => {
-                                        const isSubmitting = submittingSlug === anime.slug;
-                                        return (
-                                            <li key={anime.slug}>
-                                                <button
-                                                    type="button"
-                                                    disabled={!!submittingSlug}
-                                                    onClick={() => handleRecommend(anime)}
-                                                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-white/[0.04] disabled:opacity-50"
-                                                >
-                                                    {/* Thumbnail */}
-                                                    <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-md bg-white/5">
-                                                        <Image
-                                                            src={anime.poster}
-                                                            alt={anime.title}
-                                                            fill
-                                                            sizes="40px"
-                                                            unoptimized
-                                                            className="object-cover"
-                                                        />
-                                                    </div>
+                            {searchResults.length > 0 &&
+                                !isSearching && (
+                                    <ul className="flex flex-col gap-0.5 p-2">
+                                        {searchResults
+                                            .slice(0, 10)
+                                            .map((anime) => {
+                                                const isSubmitting =
+                                                    submittingSlug ===
+                                                    anime.slug;
+                                                return (
+                                                    <li key={anime.slug}>
+                                                        <button
+                                                            type="button"
+                                                            disabled={
+                                                                !!submittingSlug
+                                                            }
+                                                            onClick={() =>
+                                                                handleRecommend(
+                                                                    anime
+                                                                )
+                                                            }
+                                                            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-white/[0.04] disabled:opacity-50"
+                                                        >
+                                                            {/* Thumbnail */}
+                                                            <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-md bg-white/5">
+                                                                <Image
+                                                                    src={
+                                                                        anime.poster
+                                                                    }
+                                                                    alt={
+                                                                        anime.title
+                                                                    }
+                                                                    fill
+                                                                    sizes="40px"
+                                                                    unoptimized
+                                                                    className="object-cover"
+                                                                />
+                                                            </div>
 
-                                                    {/* Info */}
-                                                    <div className="min-w-0 flex-1">
-                                                        <p className="truncate text-[13px] font-semibold text-white">
-                                                            {anime.title}
-                                                        </p>
-                                                        <div className="mt-0.5 flex items-center gap-2">
-                                                            {anime.type && (
-                                                                <span className="rounded bg-hn-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-hn-primary">
-                                                                    {anime.type}
-                                                                </span>
-                                                            )}
-                                                            {anime.status_or_day && (
-                                                                <span className="text-[11px] text-white/40">
-                                                                    {anime.status_or_day}
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                    </div>
+                                                            {/* Info */}
+                                                            <div className="min-w-0 flex-1">
+                                                                <p className="truncate text-[13px] font-semibold text-white">
+                                                                    {
+                                                                        anime.title
+                                                                    }
+                                                                </p>
+                                                                <div className="mt-0.5 flex items-center gap-2">
+                                                                    {anime.type && (
+                                                                        <span className="rounded bg-hn-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-hn-primary">
+                                                                            {
+                                                                                anime.type
+                                                                            }
+                                                                        </span>
+                                                                    )}
+                                                                    {anime.status_or_day && (
+                                                                        <span className="text-[11px] text-white/40">
+                                                                            {
+                                                                                anime.status_or_day
+                                                                            }
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            </div>
 
-                                                    {/* Action indicator */}
-                                                    <div className="shrink-0">
-                                                        {isSubmitting ? (
-                                                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-hn-primary border-t-transparent" />
-                                                        ) : (
-                                                            <svg className="h-4 w-4 text-hn-primary/40" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                                                            </svg>
-                                                        )}
-                                                    </div>
-                                                </button>
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                            )}
+                                                            {/* Action indicator */}
+                                                            <div className="shrink-0">
+                                                                {isSubmitting ? (
+                                                                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-hn-primary border-t-transparent" />
+                                                                ) : (
+                                                                    <svg
+                                                                        className="h-4 w-4 text-hn-primary/40"
+                                                                        fill="none"
+                                                                        viewBox="0 0 24 24"
+                                                                        strokeWidth={
+                                                                            2
+                                                                        }
+                                                                        stroke="currentColor"
+                                                                    >
+                                                                        <path
+                                                                            strokeLinecap="round"
+                                                                            strokeLinejoin="round"
+                                                                            d="M12 4.5v15m7.5-7.5h-15"
+                                                                        />
+                                                                    </svg>
+                                                                )}
+                                                            </div>
+                                                        </button>
+                                                    </li>
+                                                );
+                                            })}
+                                    </ul>
+                                )}
                         </div>
                     </div>
                 </div>
