@@ -150,6 +150,225 @@ function UserMenu() {
   );
 }
 
+// ─── Notification Bell Dropdown ────────────────────────────────────
+interface InboxNotification {
+  id: string;
+  type: string;
+  title: string;
+  message: string;
+  link: string | null;
+  isRead: boolean;
+  createdAt: string;
+}
+
+function notifTimeAgo(dateStr: string): string {
+  const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+  if (seconds < 60) return "just now";
+  const m = Math.floor(seconds / 60);
+  if (m < 60) return `${m}m`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h`;
+  const d = Math.floor(h / 24);
+  if (d < 7) return `${d}d`;
+  return new Date(dateStr).toLocaleDateString();
+}
+
+function NotificationBell() {
+  const { data: session } = useSession();
+  const [open, setOpen] = useState(false);
+  const [notifications, setNotifications] = useState<InboxNotification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const bellRef = useRef<HTMLDivElement>(null);
+
+  // Close on click outside
+  useEffect(() => {
+    if (!open) return;
+    function handleClick(e: MouseEvent) {
+      if (bellRef.current && !bellRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [open]);
+
+  // Fetch notifications
+  useEffect(() => {
+    if (!session?.user) return;
+
+    async function fetchNotifications() {
+      try {
+        const res = await fetch("/api/inbox");
+        if (res.ok) {
+          const data: InboxNotification[] = await res.json();
+          setNotifications(data);
+          setUnreadCount(data.filter((n) => !n.isRead).length);
+        }
+      } catch {
+        /* silent */
+      }
+    }
+
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 30000);
+    return () => clearInterval(interval);
+  }, [session?.user]);
+
+  // Mark single as read
+  const markAsRead = async (id: string) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+    );
+    setUnreadCount((c) => Math.max(0, c - 1));
+    try {
+      await fetch(`/api/inbox/read?id=${id}`, { method: "PATCH" });
+    } catch { /* silent */ }
+  };
+
+  if (!session?.user) return null;
+
+  const displayNotifs = notifications.slice(0, 12);
+
+  return (
+    <div ref={bellRef} className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="relative flex h-9 w-9 items-center justify-center rounded-lg text-white/50 transition-all duration-200 hover:bg-white/[0.06] hover:text-white"
+        aria-label="Notifications"
+      >
+        <svg className="h-[18px] w-[18px]" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+        </svg>
+        {unreadCount > 0 && (
+          <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white shadow-lg shadow-red-500/30">
+            {unreadCount > 99 ? "99+" : unreadCount}
+          </span>
+        )}
+      </button>
+
+      {/* Dropdown */}
+      {open && (
+        <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-80 overflow-hidden rounded-xl border border-white/[0.06] bg-hn-card shadow-2xl shadow-black/40">
+          {/* Header */}
+          <div className="flex items-center justify-between border-b border-white/[0.06] px-4 py-3">
+            <h3 className="text-sm font-semibold text-white">Notifications</h3>
+            {unreadCount > 0 && (
+              <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-[10px] font-bold text-red-400">
+                {unreadCount} new
+              </span>
+            )}
+          </div>
+
+          {/* Notification List */}
+          <div className="max-h-[400px] overflow-y-auto scrollbar-thin">
+            {displayNotifs.length === 0 ? (
+              <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
+                <svg className="h-8 w-8 text-white/10" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+                </svg>
+                <p className="text-xs text-white/25">No notifications</p>
+              </div>
+            ) : (
+              <div className="py-1">
+                {displayNotifs.map((notif) => {
+                  const typeColor =
+                    notif.type === "REPLY"
+                      ? "bg-sky-500/20 text-sky-400"
+                      : notif.type === "NEW_EPISODE"
+                        ? "bg-hn-primary/20 text-hn-primary"
+                        : "bg-amber-500/20 text-amber-400";
+
+                  const inner = (
+                    <div
+                      className={`flex items-start gap-3 px-4 py-2.5 transition-colors ${
+                        notif.isRead
+                          ? "hover:bg-white/[0.03]"
+                          : "bg-hn-primary/[0.03] hover:bg-hn-primary/[0.06]"
+                      }`}
+                    >
+                      {/* Type icon dot */}
+                      <div className={`mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-md ${typeColor}`}>
+                        {notif.type === "REPLY" ? (
+                          <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+                          </svg>
+                        ) : notif.type === "NEW_EPISODE" ? (
+                          <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                          </svg>
+                        ) : (
+                          <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+                          </svg>
+                        )}
+                      </div>
+
+                      {/* Content */}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <p className={`truncate text-[13px] font-semibold leading-tight ${notif.isRead ? "text-white/50" : "text-white/90"}`}>
+                            {notif.title}
+                          </p>
+                          {!notif.isRead && (
+                            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-hn-primary" />
+                          )}
+                        </div>
+                        <p className={`mt-0.5 line-clamp-1 text-[12px] ${notif.isRead ? "text-white/25" : "text-white/40"}`}>
+                          {notif.message}
+                        </p>
+                        <span className="mt-0.5 text-[10px] text-white/20">
+                          {notifTimeAgo(notif.createdAt)}
+                        </span>
+                      </div>
+                    </div>
+                  );
+
+                  if (notif.link) {
+                    return (
+                      <Link
+                        key={notif.id}
+                        href={notif.link}
+                        onClick={() => {
+                          if (!notif.isRead) markAsRead(notif.id);
+                          setOpen(false);
+                        }}
+                      >
+                        {inner}
+                      </Link>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={notif.id}
+                      onClick={() => { if (!notif.isRead) markAsRead(notif.id); }}
+                      className="cursor-default"
+                    >
+                      {inner}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Footer */}
+          <Link
+            href="/inbox"
+            onClick={() => setOpen(false)}
+            className="flex items-center justify-center gap-1.5 border-t border-white/[0.06] px-4 py-2.5 text-xs font-semibold text-hn-primary transition-colors hover:bg-white/[0.03]"
+          >
+            View all in Inbox
+            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main Navbar ───────────────────────────────────────────────────
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -257,6 +476,9 @@ export default function Navbar() {
             </svg>
             Random
           </a>
+
+          {/* Notification bell */}
+          <NotificationBell />
 
           {/* User menu (auth-aware) */}
           <UserMenu />

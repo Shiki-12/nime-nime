@@ -22,6 +22,7 @@ export default function SidebarEpisodeList({
     animeType,
 }: SidebarEpisodeListProps) {
     const { isEpisodeWatched, toggleEpisodeWatched } = useWatchHistory();
+    const safeCurrentSlug = decodeURIComponent(currentEpisodeSlug);
 
     return (
         <aside className="hidden lg:block">
@@ -34,7 +35,7 @@ export default function SidebarEpisodeList({
                 </div>
                 <div className="max-h-[calc(100vh-180px)] space-y-1 overflow-y-auto pr-1 scrollbar-thin">
                     {episodes.map((ep) => {
-                        const isActive = ep.slug === currentEpisodeSlug;
+                        const isActive = decodeURIComponent(ep.slug) === safeCurrentSlug;
                         const watched =
                             !isActive &&
                             animeSlug != null &&

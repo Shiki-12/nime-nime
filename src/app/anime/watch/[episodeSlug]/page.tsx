@@ -129,7 +129,7 @@ export default async function StreamingPage({
           </div>
 
           {/* Episode Comments */}
-          <EpisodeComments episodeSlug={episodeSlug} />
+          <EpisodeComments episodeSlug={episodeSlug} animeSlug={animeSlug} />
         </div>
 
         {/* Right Sidebar: Episode List (desktop) */}

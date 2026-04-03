@@ -11,10 +11,18 @@ import type { OngoingAnime } from "@/types/anime";
 
 // ─── Types ──────────────────────────────────────────────────────────
 
+interface ChatParentRef {
+    id: string;
+    message: string;
+    user: { name: string };
+}
+
 interface ChatMessage {
     id: string;
     userId: string;
     message: string;
+    parentId: string | null;
+    parent: ChatParentRef | null;
     createdAt: string;
     user: { name: string; image: string | null; email: string | null };
 }
@@ -24,6 +32,7 @@ interface Comment {
     userId: string;
     text: string;
     episodeSlug: string;
+    animeSlug: string | null;
     createdAt: string;
     user: { name: string; image: string | null; email: string | null };
 }
@@ -161,6 +170,13 @@ export default function DiscussPage() {
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const chatEndRef = useRef<HTMLDivElement>(null);
     const chatContainerRef = useRef<HTMLDivElement>(null);
+    const chatInputRef = useRef<HTMLInputElement>(null);
+
+    // ── Chat Reply State ─────────────────────────────────────────────
+    const [chatReplyingTo, setChatReplyingTo] = useState<{
+        id: string;
+        userName: string;
+    } | null>(null);
 
     // ── Comments State ──────────────────────────────────────────────
     const [comments, setComments] = useState<Comment[]>([]);
@@ -260,11 +276,14 @@ export default function DiscussPage() {
         setSending(true);
         setChatInput("");
 
+        const parentId = chatReplyingTo?.id;
+        setChatReplyingTo(null);
+
         try {
             const res = await fetch("/api/discuss/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: trimmed }),
+                body: JSON.stringify({ message: trimmed, parentId }),
             });
             if (res.ok) {
                 await fetchChat();
@@ -501,12 +520,39 @@ export default function DiscussPage() {
                                     return (
                                         <div
                                             key={msg.id}
-                                            className={`group/msg flex items-start gap-3 rounded-xl px-3 py-2 transition-colors hover:bg-white/[0.03] ${
+                                            id={`msg-${msg.id}`}
+                                            className={`group/msg rounded-xl px-3 py-2 transition-colors hover:bg-white/[0.03] ${
                                                 isOwn
                                                     ? "bg-hn-primary/[0.04]"
                                                     : ""
                                             }`}
                                         >
+                                            {/* Discord-style parent reference */}
+                                            {msg.parent && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const el = document.getElementById(`msg-${msg.parent!.id}`);
+                                                        if (el) {
+                                                            el.scrollIntoView({ behavior: "smooth", block: "center" });
+                                                            el.classList.add("ring-1", "ring-hn-primary/40");
+                                                            setTimeout(() => el.classList.remove("ring-1", "ring-hn-primary/40"), 2000);
+                                                        }
+                                                    }}
+                                                    className="mb-1 flex items-center gap-1.5 rounded-md px-2 py-0.5 transition-colors hover:bg-white/[0.04]"
+                                                >
+                                                    <svg className="h-3.5 w-3.5 shrink-0 text-white/20" viewBox="0 0 20 20" fill="none">
+                                                        <path d="M4 4v8c0 2.21 1.79 4 4 4h8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                                                    </svg>
+                                                    <span className="truncate text-[11px] text-white/30">
+                                                        <span className="font-semibold text-white/40">@{msg.parent.user.name}</span>
+                                                        {" "}
+                                                        {msg.parent.message}
+                                                    </span>
+                                                </button>
+                                            )}
+
+                                            <div className="flex items-start gap-3">
                                             <UserAvatar
                                                 src={msg.user.image}
                                                 name={msg.user.name}
@@ -543,6 +589,21 @@ export default function DiscussPage() {
                                                 <p className="mt-0.5 break-words break-all whitespace-pre-wrap text-[13px] leading-relaxed text-white/60">
                                                     {msg.message}
                                                 </p>
+
+                                                {/* Reply button */}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setChatReplyingTo({ id: msg.id, userName: msg.user.name });
+                                                        chatInputRef.current?.focus();
+                                                    }}
+                                                    className="mt-0.5 flex items-center gap-1 text-[11px] font-medium text-white/20 transition-colors hover:text-hn-primary opacity-0 group-hover/msg:opacity-100"
+                                                >
+                                                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                                                    </svg>
+                                                    Reply
+                                                </button>
                                             </div>
 
                                             {/* Delete Button (Owner or Admin) */}
@@ -580,8 +641,9 @@ export default function DiscussPage() {
                                                 </button>
                                             )}
                                         </div>
-                                    );
-                                })}
+                                    </div>
+                                );
+                            })}
                                 <div ref={chatEndRef} />
                             </div>
                         )}
@@ -590,18 +652,43 @@ export default function DiscussPage() {
                     {/* Chat input */}
                     <form
                         onSubmit={handleSend}
-                        className="flex items-center gap-3 border-t border-white/[0.06] px-4 py-3"
+                        className="border-t border-white/[0.06]"
                     >
+                        {/* Replying-to indicator */}
+                        {chatReplyingTo && (
+                            <div className="flex items-center gap-2 px-4 pt-2.5">
+                                <div className="flex flex-1 items-center gap-2 rounded-lg bg-sky-500/[0.08] px-3 py-1.5">
+                                    <svg className="h-3 w-3 shrink-0 text-sky-400" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                                    </svg>
+                                    <span className="flex-1 truncate text-xs text-sky-300">
+                                        Replying to <span className="font-semibold">@{chatReplyingTo.userName}</span>
+                                    </span>
+                                    <button
+                                        type="button"
+                                        onClick={() => setChatReplyingTo(null)}
+                                        className="shrink-0 rounded p-0.5 text-sky-400/60 transition-colors hover:bg-sky-500/20 hover:text-sky-300"
+                                    >
+                                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="flex items-center gap-3 px-4 py-3">
                         <UserAvatar
                             src={session?.user?.image ?? null}
                             name={session?.user?.name ?? ""}
                             size={28}
                         />
                         <input
+                            ref={chatInputRef}
                             type="text"
                             value={chatInput}
                             onChange={(e) => setChatInput(e.target.value)}
-                            placeholder="Type a message..."
+                            placeholder={chatReplyingTo ? `Reply to @${chatReplyingTo.userName}...` : "Type a message..."}
                             maxLength={500}
                             className="flex-1 rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-2 text-sm text-white placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40 focus:bg-white/[0.06]"
                         />
@@ -628,6 +715,7 @@ export default function DiscussPage() {
                                 </svg>
                             )}
                         </button>
+                        </div>
                     </form>
                 </section>
 
@@ -686,7 +774,7 @@ export default function DiscussPage() {
                                     {comments.map((comment) => (
                                         <Link
                                             key={comment.id}
-                                            href={`/anime/watch/${comment.episodeSlug}`}
+                                            href={`/anime/watch/${comment.episodeSlug}${comment.animeSlug ? `?anime=${comment.animeSlug}` : ""}`}
                                             className="group/comment flex items-start gap-2.5 rounded-xl px-3 py-2.5 transition-colors hover:bg-white/[0.04]"
                                         >
                                             <UserAvatar

@@ -23,12 +23,16 @@ export default function EpisodeList({
 }: EpisodeListProps) {
     const { isEpisodeWatched, toggleEpisodeWatched } = useWatchHistory();
 
+    const safeCurrentSlug = decodeURIComponent(currentEpisodeSlug);
     const currentIdx = episodes.findIndex(
-        (ep) => ep.slug === currentEpisodeSlug
+        (ep) => decodeURIComponent(ep.slug) === safeCurrentSlug
     );
 
-    const prevEp = currentIdx < episodes.length - 1 ? episodes[currentIdx + 1] : null;
-    const nextEp = currentIdx > 0 ? episodes[currentIdx - 1] : null;
+    const hasPrev = currentIdx !== -1 && currentIdx < episodes.length - 1;
+    const hasNext = currentIdx !== -1 && currentIdx > 0;
+
+    const prevEp = hasPrev ? episodes[currentIdx + 1] : null;
+    const nextEp = hasNext ? episodes[currentIdx - 1] : null;
 
     const buildHref = (slug: string) =>
         animeSlug
@@ -82,7 +86,7 @@ export default function EpisodeList({
                 <div className="max-h-[280px] overflow-y-auto rounded-lg bg-hn-card p-2 scrollbar-thin">
                     <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 md:grid-cols-4">
                         {episodes.map((ep) => {
-                            const isActive = ep.slug === currentEpisodeSlug;
+                            const isActive = decodeURIComponent(ep.slug) === safeCurrentSlug;
                             const watched =
                                 !isActive &&
                                 animeSlug != null &&

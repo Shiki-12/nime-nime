@@ -28,6 +28,7 @@ model User {
   comments        Comment[]
   publicMessages  PublicMessage[]
   recommendations Recommendation[]
+  notifications   Notification[]
 
   @@map("users")
 }
@@ -112,9 +113,13 @@ model Comment {
   userId      String
   text        String
   episodeSlug String
+  animeSlug   String?
+  parentId    String?
   createdAt   DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent  Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: SetNull)
+  replies Comment[] @relation("CommentReplies")
 
   @@index([createdAt])
   @@map("comments")
@@ -124,9 +129,12 @@ model PublicMessage {
   id        String   @id @default(cuid())
   userId    String
   message   String
+  parentId  String?
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent  PublicMessage? @relation("MessageReplies", fields: [parentId], references: [id], onDelete: SetNull)
+  replies PublicMessage[] @relation("MessageReplies")
 
   @@index([createdAt])
   @@map("public_messages")
@@ -144,4 +152,21 @@ model Recommendation {
 
   @@index([createdAt])
   @@map("recommendations")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // 'REPLY', 'NEW_EPISODE', 'SYSTEM'
+  title     String
+  message   String
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@index([createdAt])
+  @@map("notifications")
 }

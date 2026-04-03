@@ -6,6 +6,8 @@ import { withAuthAndValidation } from "@/lib/api-wrapper";
 
 const CreateCommentSchema = z.object({
     episodeSlug: z.string().min(1),
+    animeSlug: z.string().optional(),
+    parentId: z.string().optional(),
     text: z.string().min(1).max(1000),
 });
 
@@ -29,6 +31,13 @@ export const GET = withAuthAndValidation(async (req: NextRequest) => {
             user: {
                 select: { name: true, image: true, email: true },
             },
+            parent: {
+                select: {
+                    id: true,
+                    text: true,
+                    user: { select: { name: true } },
+                },
+            },
         },
     });
 
@@ -39,22 +48,62 @@ export const GET = withAuthAndValidation(async (req: NextRequest) => {
 export const POST = withAuthAndValidation(async (req: NextRequest) => {
     const session = await auth();
     const userId = session!.user!.id;
+    const userName = session!.user!.name ?? "Someone";
 
     const body = await req.json();
-    const { episodeSlug, text } = body;
+    const { episodeSlug, animeSlug, parentId, text } = body;
 
     const created = await prisma.comment.create({
         data: {
             userId,
             episodeSlug,
+            animeSlug,
+            parentId,
             text,
         },
         include: {
             user: {
                 select: { name: true, image: true, email: true },
             },
+            parent: {
+                select: {
+                    id: true,
+                    text: true,
+                    user: { select: { name: true } },
+                },
+            },
         },
     });
+
+    // ── Create notification for the parent comment's author ─────────
+    if (parentId) {
+        try {
+            const parentComment = await prisma.comment.findUnique({
+                where: { id: parentId },
+                select: { userId: true, episodeSlug: true },
+            });
+
+            // Only notify if the parent author is NOT the current user
+            if (parentComment && parentComment.userId !== userId) {
+                const watchLink = animeSlug
+                    ? `/anime/watch/${episodeSlug}?anime=${animeSlug}#comment-${created.id}`
+                    : `/anime/watch/${episodeSlug}#comment-${created.id}`;
+
+                await prisma.notification.create({
+                    data: {
+                        userId: parentComment.userId,
+                        type: "REPLY",
+                        title: "New Reply",
+                        message: `${userName} replied to your comment.`,
+                        link: watchLink,
+                    },
+                });
+            }
+        } catch {
+            // Notification failure should not block comment creation
+            console.error("[NOTIFICATION_CREATE_ERROR] Failed to create reply notification");
+        }
+    }
 
     return NextResponse.json(created, { status: 201 });
 }, CreateCommentSchema);

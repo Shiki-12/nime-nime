@@ -6,6 +6,7 @@ import { withAuthAndValidation } from "@/lib/api-wrapper";
 
 const SendMessageSchema = z.object({
     message: z.string().min(1).max(500),
+    parentId: z.string().optional(),
 });
 
 // ─── Anti-Spam Rate Limiter (in-memory) ─────────────────────────────
@@ -68,6 +69,13 @@ export const GET = withAuthAndValidation(async () => {
             user: {
                 select: { name: true, image: true, email: true },
             },
+            parent: {
+                select: {
+                    id: true,
+                    message: true,
+                    user: { select: { name: true } },
+                },
+            },
         },
     });
 
@@ -98,16 +106,24 @@ export const POST = withAuthAndValidation(async (req: NextRequest) => {
     }
 
     const body = await req.json();
-    const { message } = body;
+    const { message, parentId } = body;
 
     const created = await prisma.publicMessage.create({
         data: {
             userId,
             message,
+            parentId,
         },
         include: {
             user: {
                 select: { name: true, image: true, email: true },
+            },
+            parent: {
+                select: {
+                    id: true,
+                    message: true,
+                    user: { select: { name: true } },
+                },
             },
         },
     });
