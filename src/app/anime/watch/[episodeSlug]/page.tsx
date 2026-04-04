@@ -66,18 +66,27 @@ export default async function StreamingPage({
       <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
         {/* Left: Player + Navigation */}
         <div>
-          {/* Compact reload notice */}
-          <div className="mb-4 flex items-center gap-2 rounded-lg border border-white/5 bg-hn-card/40 px-3 py-2 text-xs text-white/40">
-            <svg className="h-3.5 w-3.5 shrink-0 text-white/30" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182" />
-            </svg>
-            <span>Video not loading?</span>
-            <a
-              href={`/anime/watch/${episodeSlug}${animeSlug ? `?anime=${animeSlug}` : ""}`}
-              className="font-semibold text-hn-primary transition-colors hover:text-hn-primary/80"
-            >
-              Reload
-            </a>
+          {/* Compact reload & fullscreen notices */}
+          <div className="mb-4 flex flex-col gap-2">
+            <div className="flex items-center gap-2 rounded-lg border border-white/5 bg-hn-card/40 px-3 py-2 text-xs text-white/40">
+              <svg className="h-3.5 w-3.5 shrink-0 text-white/30" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182" />
+              </svg>
+              <span>Video not loading?</span>
+              <a
+                href={`/anime/watch/${episodeSlug}${animeSlug ? `?anime=${animeSlug}` : ""}`}
+                className="font-semibold text-hn-primary transition-colors hover:text-hn-primary/80"
+              >
+                Reload
+              </a>
+            </div>
+
+            <div className="flex items-center gap-2 rounded-lg border border-white/5 bg-hn-card/40 px-3 py-2 text-xs text-white/40">
+              <svg className="h-3.5 w-3.5 shrink-0 text-hn-primary" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+              </svg>
+              <span>Video tidak bisa Fullscreen? Gunakan tombol Expand di pojok kanan atas video.</span>
+            </div>
           </div>
 
           {/* Video Player with resolution/server selector */}
