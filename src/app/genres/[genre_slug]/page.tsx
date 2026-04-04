@@ -79,6 +79,8 @@ export default async function GenreFilterPage({ params, searchParams }: GenrePag
                     <PaginationNav
                         currentPage={currentPage}
                         totalPages={totalPages}
+                        hasNext={pagination.hasNext}
+                        hasPrev={pagination.hasPrev}
                         buildHref={(page) => `/genres/${genre_slug}?page=${page}`}
                     />
                 </>

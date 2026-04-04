@@ -84,6 +84,8 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
                     <PaginationNav
                         currentPage={currentPage}
                         totalPages={totalPages}
+                        hasNext={pagination.hasNext}
+                        hasPrev={pagination.hasPrev}
                         buildHref={(page) => `/search/${query}?page=${page}`}
                     />
                 </>
