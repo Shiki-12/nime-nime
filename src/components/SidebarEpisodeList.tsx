@@ -84,7 +84,7 @@ export default function SidebarEpisodeList({
                                             { slug: ep.slug, name: ep.name }
                                         );
                                     }}
-                                    className={`absolute right-1.5 top-1/2 -translate-y-1/2 flex h-5 w-5 items-center justify-center rounded-full transition-all duration-200 opacity-0 group-hover:opacity-100 ${
+                                    className={`absolute right-1.5 top-1/2 -translate-y-1/2 flex h-5 w-5 items-center justify-center rounded-full transition-all duration-200 opacity-100 md:opacity-0 md:group-hover:opacity-100 ${
                                         watched 
                                             ? "bg-hn-green text-hn-dark opacity-100" 
                                             : "bg-white/10 text-white/40 hover:bg-white/20 hover:text-white"

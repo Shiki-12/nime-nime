@@ -597,7 +597,7 @@ export default function DiscussPage() {
                                                         setChatReplyingTo({ id: msg.id, userName: msg.user.name });
                                                         chatInputRef.current?.focus();
                                                     }}
-                                                    className="mt-0.5 flex items-center gap-1 text-[11px] font-medium text-white/20 transition-colors hover:text-hn-primary opacity-0 group-hover/msg:opacity-100"
+                                                    className="mt-0.5 flex items-center gap-1 text-[11px] font-medium text-white/30 md:text-white/20 transition-colors active:text-hn-primary md:hover:text-hn-primary opacity-100 md:opacity-0 md:group-hover/msg:opacity-100"
                                                 >
                                                     <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
@@ -617,7 +617,7 @@ export default function DiscussPage() {
                                                     disabled={
                                                         deletingId === msg.id
                                                     }
-                                                    className="shrink-0 rounded-lg p-1.5 text-red-500/0 opacity-0 transition-all hover:bg-red-500/10 hover:text-red-400 group-hover/msg:text-red-500/40 group-hover/msg:opacity-100 disabled:opacity-50"
+                                                    className="shrink-0 rounded-lg p-1.5 text-red-500/40 md:text-red-500/0 opacity-100 md:opacity-0 transition-all active:bg-red-500/10 active:text-red-400 md:hover:bg-red-500/10 md:hover:text-red-400 md:group-hover/msg:text-red-500/40 md:group-hover/msg:opacity-100 disabled:opacity-50"
                                                     aria-label="Delete message"
                                                 >
                                                     {deletingId ===

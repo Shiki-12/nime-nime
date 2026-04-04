@@ -301,7 +301,7 @@ export default function RecommendationsPage() {
                                             disabled={
                                                 deletingId === rec.id
                                             }
-                                            className="absolute left-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-lg bg-red-500/0 text-red-500/0 opacity-0 backdrop-blur-sm transition-all hover:bg-red-500/20 hover:text-red-400 group-hover/rec:bg-black/50 group-hover/rec:text-red-500/70 group-hover/rec:opacity-100 disabled:opacity-50"
+                                            className="absolute left-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-lg bg-black/50 text-red-500/50 opacity-100 md:bg-red-500/0 md:text-red-500/0 md:opacity-0 backdrop-blur-sm transition-all md:hover:bg-red-500/20 md:hover:text-red-400 md:group-hover/rec:bg-black/50 md:group-hover/rec:text-red-500/70 md:group-hover/rec:opacity-100 disabled:opacity-50"
                                             aria-label="Delete recommendation"
                                         >
                                             {deletingId === rec.id ? (

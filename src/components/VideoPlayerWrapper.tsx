@@ -178,10 +178,9 @@ export default function VideoPlayerWrapper({
 
                     {/* Custom Fullscreen Button */}
                     <button
-                        type="button"
                         onClick={toggleFullscreen}
-                        aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-                        className="absolute right-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-lg bg-black/40 text-white/80 backdrop-blur-md transition-all duration-300 hover:bg-black/60 hover:text-white opacity-0 group-hover/wrapper:opacity-100"
+                        className="absolute right-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-lg bg-black/60 text-white/70 backdrop-blur-md transition-all duration-300 hover:bg-black/90 hover:text-hn-primary opacity-100"
+                        title="Fullscreen"
                     >
                         {isFullscreen ? (
                             /* Exit Fullscreen Icon */

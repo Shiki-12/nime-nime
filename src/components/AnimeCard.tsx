@@ -31,7 +31,7 @@ export default function AnimeCard({ anime }: AnimeCardProps) {
           aria-hidden="true"
         >
           {/* Play button — fades + scales in on hover */}
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 ring-2 ring-white/40 backdrop-blur-sm opacity-0 scale-50 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:scale-100">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 ring-2 ring-white/40 backdrop-blur-sm opacity-60 scale-100 md:opacity-0 md:scale-50 transition-all duration-300 ease-out md:group-hover:opacity-100 md:group-hover:scale-100">
             <svg
               className="h-5 w-5 text-white ml-0.5"
               fill="currentColor"

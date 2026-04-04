@@ -450,7 +450,7 @@ export default function EpisodeComments({ episodeSlug, animeSlug }: EpisodeComme
                                                 <button
                                                     type="button"
                                                     onClick={() => handleReply(comment.id, comment.user.name)}
-                                                    className="mt-1 flex items-center gap-1 text-[11px] font-medium text-white/20 transition-colors hover:text-hn-primary opacity-0 group-hover/comment:opacity-100"
+                                                    className="mt-1 flex items-center gap-1 text-[11px] font-medium text-white/30 md:text-white/20 transition-colors active:text-hn-primary md:hover:text-hn-primary opacity-100 md:opacity-0 md:group-hover/comment:opacity-100"
                                                 >
                                                     <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
@@ -469,7 +469,7 @@ export default function EpisodeComments({ episodeSlug, animeSlug }: EpisodeComme
                                                 disabled={
                                                     deletingId === comment.id
                                                 }
-                                                className="shrink-0 rounded-lg p-1.5 text-red-500/0 opacity-0 transition-all hover:bg-red-500/10 hover:text-red-400 group-hover/comment:text-red-500/40 group-hover/comment:opacity-100 disabled:opacity-50"
+                                                className="shrink-0 rounded-lg p-1.5 text-red-500/40 md:text-red-500/0 opacity-100 md:opacity-0 transition-all active:bg-red-500/10 active:text-red-400 md:hover:bg-red-500/10 md:hover:text-red-400 md:group-hover/comment:text-red-500/40 md:group-hover/comment:opacity-100 disabled:opacity-50"
                                                 aria-label="Delete comment"
                                             >
                                                 {deletingId === comment.id ? (

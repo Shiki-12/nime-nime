@@ -243,7 +243,7 @@ export default function SavedPage() {
                                                         e.stopPropagation();
                                                         setOpenMenuId(openMenuId === anime.slug ? null : anime.slug);
                                                     }}
-                                                    className={`flex h-7 w-7 items-center justify-center rounded-md backdrop-blur-sm transition-all ${openMenuId === anime.slug ? "bg-white/20 text-white" : "bg-black/50 text-white/70 hover:bg-white/20 hover:text-white opacity-0 group-hover:opacity-100"}`}
+                                                    className={`flex h-7 w-7 items-center justify-center rounded-md backdrop-blur-sm transition-all ${openMenuId === anime.slug ? "bg-white/20 text-white" : "bg-black/50 text-white/50 md:text-white/70 md:hover:bg-white/20 md:hover:text-white opacity-100 md:opacity-0 md:group-hover:opacity-100"}`}
                                                 >
                                                     <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                                                         <path d="M12 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4ZM12 10a2 2 0 1 1 0 4 2 2 0 0 1 0-4ZM12 17a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z" />
