@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
 
 // ─── Props ─────────────────────────────────────────────────────────
@@ -52,8 +52,10 @@ export default function VideoPlayerWrapper({
     const [hasStarted, setHasStarted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
+    const [isFullscreen, setIsFullscreen] = useState(false);
 
-    // Timeout ref for iframe load failure detection
+    // Refs
+    const wrapperRef = useRef<HTMLDivElement>(null);
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     // ── Play handler ───────────────────────────────────────────────
@@ -84,8 +86,36 @@ export default function VideoPlayerWrapper({
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
     }, []);
 
+    // ── Fullscreen Logic ───────────────────────────────────────────
+    const toggleFullscreen = useCallback(() => {
+        if (!document.fullscreenElement) {
+            wrapperRef.current?.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    }, []);
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+        document.addEventListener("fullscreenchange", handleFullscreenChange);
+        return () => {
+            document.removeEventListener("fullscreenchange", handleFullscreenChange);
+        };
+    }, []);
+
+    // ─── Sandbox Logic ──────────────────────────────────────────────
+    const strictSandbox = "allow-scripts allow-same-origin";
+
+    const isProblematicHost =
+        iframeSrc.includes("vidhide") || iframeSrc.includes("callistanise");
+        
+    // KUNCINYA DI SINI: Kalau host bandel, kita kasih undefined biar atribut sandbox-nya MENGHILANG dari DOM
+    const sandboxRules = isProblematicHost ? undefined : strictSandbox;
+
     return (
-        <div className="relative aspect-video w-full bg-hn-card">
+        <div ref={wrapperRef} className="group/wrapper relative aspect-video w-full overflow-hidden rounded-2xl bg-hn-card">
             {/* ── State 1: Thumbnail Overlay (Idle) ─────────────── */}
             {!hasStarted && !hasError && (
                 <>
@@ -121,7 +151,7 @@ export default function VideoPlayerWrapper({
                             </svg>
                         </div>
                     </button>
-
+                    
                     {/* Bagian overlay title yang bikin dobel udah dihapus dari sini */}
                 </>
             )}
@@ -138,11 +168,56 @@ export default function VideoPlayerWrapper({
                             setIsLoading(false);
                         }}
                         className="h-full w-full border-0 bg-black"
-                        allowFullScreen={true}
-                        webkitAllowFullScreen={true}
-                        mozAllowFullScreen={true}
-                    // PERHATIKAN: Atribut 'allow="..."' DIHAPUS TOTAL biar izinnya gak dibatasin!
+                        allowFullScreen
+                        allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                        {...({
+                            webkitallowfullscreen: "true",
+                            mozallowfullscreen: "true"
+                        } as any)}
                     />
+
+                    {/* Custom Fullscreen Button */}
+                    <button
+                        type="button"
+                        onClick={toggleFullscreen}
+                        aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+                        className="absolute right-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-lg bg-black/40 text-white/80 backdrop-blur-md transition-all duration-300 hover:bg-black/60 hover:text-white opacity-0 group-hover/wrapper:opacity-100"
+                    >
+                        {isFullscreen ? (
+                            /* Exit Fullscreen Icon */
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={2}
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5 5.25 5.25"
+                                />
+                            </svg>
+                        ) : (
+                            /* Enter Fullscreen Icon */
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={2}
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"
+                                />
+                            </svg>
+                        )}
+                    </button>
+
                     {/* Loading spinner overlay */}
                     {isLoading && <LoadingSpinner />}
                 </>
