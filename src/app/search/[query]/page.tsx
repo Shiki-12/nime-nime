@@ -1,5 +1,7 @@
 import { searchAnime } from "@/lib/api";
+import { fetchSearchTotalPages } from "@/lib/pagination-scraper";
 import AnimeCard from "@/components/AnimeCard";
+import PaginationNav from "@/components/PaginationNav";
 import Link from "next/link";
 import type { OngoingAnime, Pagination } from "@/types/anime";
 
@@ -21,12 +23,18 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
     let pagination: Pagination = { hasNext: false, hasPrev: false, currentPage };
     let fetchError: string | null = null;
 
-    try {
-        const res = await searchAnime(decodedQuery, currentPage);
-        animeList = res.animes;
-        pagination = res.pagination;
-    } catch (err) {
-        fetchError = err instanceof Error ? err.message : "Search failed.";
+    // Fetch anime results + totalPages in parallel
+    const [apiResult, totalPages] = await Promise.all([
+        searchAnime(decodedQuery, currentPage).catch((err) => {
+            fetchError = err instanceof Error ? err.message : "Search failed.";
+            return null;
+        }),
+        fetchSearchTotalPages(decodedQuery),
+    ]);
+
+    if (apiResult) {
+        animeList = apiResult.animes;
+        pagination = apiResult.pagination;
     }
 
     return (
@@ -42,6 +50,11 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
                 {!fetchError && (
                     <p className="mt-1 text-xs text-white/30">
                         {animeList.length} results found
+                        {totalPages > 1 && (
+                            <span className="ml-2">
+                                · Page {currentPage} of {totalPages}
+                            </span>
+                        )}
                     </p>
                 )}
             </div>
@@ -68,21 +81,11 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
                             <AnimeCard key={anime.slug} anime={anime} />
                         ))}
                     </div>
-                    <div className="mt-10 flex items-center justify-center gap-2">
-                        {pagination.hasPrev && (
-                            <Link href={`/search/${query}?page=${currentPage - 1}`} className="rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-white hover:bg-hn-card-hover">
-                                ← Previous
-                            </Link>
-                        )}
-                        <span className="rounded-full bg-hn-primary/15 px-4 py-2 text-sm font-bold text-hn-primary">
-                            {currentPage}
-                        </span>
-                        {pagination.hasNext && (
-                            <Link href={`/search/${query}?page=${currentPage + 1}`} className="rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-white hover:bg-hn-card-hover">
-                                Next →
-                            </Link>
-                        )}
-                    </div>
+                    <PaginationNav
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        buildHref={(page) => `/search/${query}?page=${page}`}
+                    />
                 </>
             )}
         </div>

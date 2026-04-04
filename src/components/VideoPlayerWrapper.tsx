@@ -152,7 +152,6 @@ export default function VideoPlayerWrapper({
                         </div>
                     </button>
                     
-                    {/* Bagian overlay title yang bikin dobel udah dihapus dari sini */}
                 </>
             )}
 

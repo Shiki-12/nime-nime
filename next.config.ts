@@ -21,6 +21,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "hentaiocean.com",
       },
+      {
+        protocol: 'https',
+        hostname: '**.bp.blogspot.com',
+      },
     ],
   },
 };

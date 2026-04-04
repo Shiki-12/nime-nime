@@ -12,6 +12,7 @@ export interface Pagination {
   hasNext: boolean;
   hasPrev: boolean;
   currentPage: number;
+  totalPages?: number;
 }
 
 export interface AnimeListResponse {

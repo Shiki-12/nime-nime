@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getAnimeByGenre } from "@/lib/api";
+import { fetchGenreTotalPages } from "@/lib/pagination-scraper";
 import AnimeCard from "@/components/AnimeCard";
+import PaginationNav from "@/components/PaginationNav";
 import type { OngoingAnime, Pagination } from "@/types/anime";
 
 // Tier 1: Highly Static — genre listings are stable
@@ -20,12 +22,18 @@ export default async function GenreFilterPage({ params, searchParams }: GenrePag
     let pagination: Pagination = { hasNext: false, hasPrev: false, currentPage };
     let fetchError: string | null = null;
 
-    try {
-        const res = await getAnimeByGenre(genre_slug, currentPage);
-        animeList = res.animes;
-        pagination = res.pagination;
-    } catch (err) {
-        fetchError = err instanceof Error ? err.message : "Failed to fetch data.";
+    // Fetch anime results + totalPages in parallel
+    const [apiResult, totalPages] = await Promise.all([
+        getAnimeByGenre(genre_slug, currentPage).catch((err) => {
+            fetchError = err instanceof Error ? err.message : "Failed to fetch data.";
+            return null;
+        }),
+        fetchGenreTotalPages(genre_slug),
+    ]);
+
+    if (apiResult) {
+        animeList = apiResult.animes;
+        pagination = apiResult.pagination;
     }
 
     const displayName = genre_slug
@@ -42,6 +50,11 @@ export default async function GenreFilterPage({ params, searchParams }: GenrePag
                 <h1 className="mt-2 text-xl font-extrabold text-white sm:text-2xl">
                     Genre: <span className="text-hn-primary">{displayName}</span>
                 </h1>
+                {totalPages > 1 && (
+                    <p className="mt-1 text-xs text-white/30">
+                        Page {currentPage} of {totalPages}
+                    </p>
+                )}
             </div>
 
             {fetchError && (
@@ -63,21 +76,11 @@ export default async function GenreFilterPage({ params, searchParams }: GenrePag
                             <AnimeCard key={anime.slug} anime={anime} />
                         ))}
                     </div>
-                    <div className="mt-10 flex items-center justify-center gap-2">
-                        {pagination.hasPrev && (
-                            <Link href={`/genres/${genre_slug}?page=${currentPage - 1}`} className="rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-white hover:bg-hn-card-hover">
-                                ← Previous
-                            </Link>
-                        )}
-                        <span className="rounded-full bg-hn-primary/15 px-4 py-2 text-sm font-bold text-hn-primary">
-                            {currentPage}
-                        </span>
-                        {pagination.hasNext && (
-                            <Link href={`/genres/${genre_slug}?page=${currentPage + 1}`} className="rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-white hover:bg-hn-card-hover">
-                                Next →
-                            </Link>
-                        )}
-                    </div>
+                    <PaginationNav
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        buildHref={(page) => `/genres/${genre_slug}?page=${page}`}
+                    />
                 </>
             )}
         </div>
