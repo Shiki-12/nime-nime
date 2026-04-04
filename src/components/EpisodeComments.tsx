@@ -403,9 +403,9 @@ export default function EpisodeComments({ episodeSlug, animeSlug }: EpisodeComme
                                             onClick={() => scrollToComment(comment.parent!.id)}
                                             className="mb-1.5 flex items-center gap-1.5 rounded-md px-2 py-1 transition-colors hover:bg-white/[0.04]"
                                         >
-                                            {/* Curved reply connector ╰ */}
+                                            {/* Curved reply connector ╭ */}
                                             <svg className="h-3.5 w-3.5 shrink-0 text-white/20" viewBox="0 0 20 20" fill="none">
-                                                <path d="M4 4v8c0 2.21 1.79 4 4 4h8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                                                <path d="M4 16V8c0-2.21 1.79-4 4-4h8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                                             </svg>
                                             <span className="truncate text-[11px] text-white/30">
                                                 <span className="font-semibold text-white/40">@{comment.parent.user.name}</span>

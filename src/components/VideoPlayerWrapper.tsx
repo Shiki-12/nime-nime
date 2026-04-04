@@ -84,17 +84,8 @@ export default function VideoPlayerWrapper({
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
     }, []);
 
-    // ─── Sandbox Logic ──────────────────────────────────────────────
-    const strictSandbox = "allow-scripts allow-same-origin";
-
-    const isProblematicHost =
-        iframeSrc.includes("vidhide") || iframeSrc.includes("callistanise");
-        
-    // KUNCINYA DI SINI: Kalau host bandel, kita kasih undefined biar atribut sandbox-nya MENGHILANG dari DOM
-    const sandboxRules = isProblematicHost ? undefined : strictSandbox;
-
     return (
-        <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-hn-card">
+        <div className="relative aspect-video w-full bg-hn-card">
             {/* ── State 1: Thumbnail Overlay (Idle) ─────────────── */}
             {!hasStarted && !hasError && (
                 <>
@@ -130,7 +121,7 @@ export default function VideoPlayerWrapper({
                             </svg>
                         </div>
                     </button>
-                    
+
                     {/* Bagian overlay title yang bikin dobel udah dihapus dari sini */}
                 </>
             )}
@@ -146,13 +137,12 @@ export default function VideoPlayerWrapper({
                             setHasError(true);
                             setIsLoading(false);
                         }}
-                        className="h-full w-full border-0"
-                        allowFullScreen
-                        allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-                        referrerPolicy="no-referrer"
-                        sandbox={sandboxRules}
+                        className="h-full w-full border-0 bg-black"
+                        allowFullScreen={true}
+                        webkitAllowFullScreen={true}
+                        mozAllowFullScreen={true}
+                    // PERHATIKAN: Atribut 'allow="..."' DIHAPUS TOTAL biar izinnya gak dibatasin!
                     />
-
                     {/* Loading spinner overlay */}
                     {isLoading && <LoadingSpinner />}
                 </>

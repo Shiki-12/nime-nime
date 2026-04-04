@@ -107,6 +107,7 @@ export const POST = withAuthAndValidation(async (req: NextRequest) => {
 
     const body = await req.json();
     const { message, parentId } = body;
+    const userName = session!.user!.name ?? "Someone";
 
     const created = await prisma.publicMessage.create({
         data: {
@@ -127,6 +128,32 @@ export const POST = withAuthAndValidation(async (req: NextRequest) => {
             },
         },
     });
+
+    // ── Create notification for the parent message's author ─────────
+    if (parentId) {
+        try {
+            const parentMessage = await prisma.publicMessage.findUnique({
+                where: { id: parentId },
+                select: { userId: true },
+            });
+
+            // Only notify if the parent author is NOT the current user
+            if (parentMessage && parentMessage.userId !== userId) {
+                await prisma.notification.create({
+                    data: {
+                        userId: parentMessage.userId,
+                        type: "REPLY",
+                        title: "Pesan Baru di Live Chat",
+                        message: `${userName} membalas pesan kamu di Live Chat.`,
+                        link: `/discuss#message-${created.id}`,
+                    },
+                });
+            }
+        } catch {
+            // Notification failure should not block message creation
+            console.error("[NOTIFICATION_CREATE_ERROR] Failed to create live chat reply notification");
+        }
+    }
 
     return NextResponse.json(created, { status: 201 });
 }, SendMessageSchema);
