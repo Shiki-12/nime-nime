@@ -3,15 +3,11 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
 
-// ─── Props ─────────────────────────────────────────────────────────
 interface VideoPlayerWrapperProps {
-    /** The URL of the video iframe */
     iframeSrc: string;
-    /** Anime/episode title for alt text */
     title: string;
 }
 
-// ─── Inline Spinner ────────────────────────────────────────────────
 function LoadingSpinner() {
     return (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-hn-dark/60">
@@ -35,16 +31,12 @@ function LoadingSpinner() {
                         d="M4 12a8 8 0 0 1 8-8V0C5.373 0 0 5.373 0 12h4Z"
                     />
                 </svg>
-                <p className="text-sm font-medium text-white/50">
-                    Loading video…
-                </p>
+                <p className="text-sm font-medium text-white/50">Loading video…</p>
             </div>
         </div>
     );
 }
 
-
-// ─── Main Component ────────────────────────────────────────────────
 export default function VideoPlayerWrapper({
     iframeSrc,
     title,
@@ -53,18 +45,67 @@ export default function VideoPlayerWrapper({
     const [isLoading, setIsLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const [showFsControls, setShowFsControls] = useState(false);
 
-    // Refs
     const wrapperRef = useRef<HTMLDivElement>(null);
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const controlsTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    // ── Play handler ───────────────────────────────────────────────
+    const strictSandbox = "allow-scripts allow-same-origin";
+    const isProblematicHost =
+        iframeSrc.includes("vidhide") || iframeSrc.includes("callistanise");
+    const sandboxRules = isProblematicHost ? undefined : strictSandbox;
+
+    const clearControlsTimer = useCallback(() => {
+        if (controlsTimeoutRef.current) {
+            clearTimeout(controlsTimeoutRef.current);
+            controlsTimeoutRef.current = null;
+        }
+    }, []);
+
+    const scheduleHideControls = useCallback(() => {
+        clearControlsTimer();
+        controlsTimeoutRef.current = setTimeout(() => {
+            setShowFsControls(false);
+        }, 2200);
+    }, [clearControlsTimer]);
+
+    const showFullscreenControls = useCallback(() => {
+        if (!document.fullscreenElement) return;
+        setShowFsControls(true);
+        scheduleHideControls();
+    }, [scheduleHideControls]);
+
+    const tryLockLandscape = useCallback(async () => {
+        try {
+            const orientation = screen.orientation as ScreenOrientation & {
+                lock?: (orientation: "landscape") => Promise<void>;
+            };
+
+            if (orientation?.lock) {
+                await orientation.lock("landscape");
+            }
+        } catch {
+            // Banyak browser mobile / iOS akan ignore ini
+        }
+    }, []);
+
+    const tryUnlockOrientation = useCallback(() => {
+        try {
+            const orientation = screen.orientation as ScreenOrientation & {
+                unlock?: () => void;
+            };
+            orientation?.unlock?.();
+        } catch {
+            // ignore
+        }
+    }, []);
+
     const handlePlay = useCallback(() => {
         setHasStarted(true);
         setIsLoading(true);
         setHasError(false);
 
-        // Timeout fallback: if iframe doesn't load within 20s, show error
         timeoutRef.current = setTimeout(() => {
             setIsLoading((prev) => {
                 if (prev) setHasError(true);
@@ -72,13 +113,12 @@ export default function VideoPlayerWrapper({
             });
         }, 20_000);
     }, []);
-    // ── Iframe loaded successfully ─────────────────────────────────
+
     const handleIframeLoad = useCallback(() => {
         setIsLoading(false);
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
     }, []);
 
-    // ── Retry from error state ─────────────────────────────────────
     const handleRetry = useCallback(() => {
         setHasStarted(false);
         setIsLoading(false);
@@ -86,40 +126,106 @@ export default function VideoPlayerWrapper({
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
     }, []);
 
-    // ── Fullscreen Logic ───────────────────────────────────────────
-    const toggleFullscreen = useCallback(() => {
-        if (!document.fullscreenElement) {
-            wrapperRef.current?.requestFullscreen();
-        } else {
-            document.exitFullscreen();
+    const enterFullscreen = useCallback(async () => {
+        try {
+            if (!wrapperRef.current) return;
+
+            await wrapperRef.current.requestFullscreen();
+            setShowFsControls(true);
+
+            const isTouchDevice =
+                typeof window !== "undefined" &&
+                (window.matchMedia("(pointer: coarse)").matches ||
+                    window.matchMedia("(max-width: 1024px)").matches);
+
+            if (isTouchDevice) {
+                await tryLockLandscape();
+            }
+
+            scheduleHideControls();
+        } catch {
+            // ignore
+        }
+    }, [scheduleHideControls, tryLockLandscape]);
+
+    const exitFullscreen = useCallback(async () => {
+        try {
+            if (document.fullscreenElement) {
+                await document.exitFullscreen();
+            }
+        } catch {
+            // ignore
         }
     }, []);
 
+    const toggleFullscreen = useCallback(async () => {
+        if (document.fullscreenElement) {
+            await exitFullscreen();
+        } else {
+            await enterFullscreen();
+        }
+    }, [enterFullscreen, exitFullscreen]);
+
     useEffect(() => {
         const handleFullscreenChange = () => {
-            setIsFullscreen(!!document.fullscreenElement);
+            const active = !!document.fullscreenElement;
+            setIsFullscreen(active);
+
+            if (active) {
+                setShowFsControls(true);
+                scheduleHideControls();
+            } else {
+                setShowFsControls(false);
+                clearControlsTimer();
+                tryUnlockOrientation();
+            }
         };
+
+        const externalToggle = () => {
+            toggleFullscreen();
+        };
+
         document.addEventListener("fullscreenchange", handleFullscreenChange);
+        window.addEventListener(
+            "video-player-toggle-fullscreen",
+            externalToggle as EventListener
+        );
+
         return () => {
             document.removeEventListener("fullscreenchange", handleFullscreenChange);
+            window.removeEventListener(
+                "video-player-toggle-fullscreen",
+                externalToggle as EventListener
+            );
         };
-    }, []);
+    }, [toggleFullscreen, scheduleHideControls, clearControlsTimer, tryUnlockOrientation]);
 
-    // ─── Sandbox Logic ──────────────────────────────────────────────
-    const strictSandbox = "allow-scripts allow-same-origin";
-
-    const isProblematicHost =
-        iframeSrc.includes("vidhide") || iframeSrc.includes("callistanise");
-        
-    // KUNCINYA DI SINI: Kalau host bandel, kita kasih undefined biar atribut sandbox-nya MENGHILANG dari DOM
-    const sandboxRules = isProblematicHost ? undefined : strictSandbox;
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+            clearControlsTimer();
+        };
+    }, [clearControlsTimer]);
 
     return (
-        <div ref={wrapperRef} className="group/wrapper relative aspect-video w-full overflow-hidden rounded-2xl bg-hn-card">
-            {/* ── State 1: Thumbnail Overlay (Idle) ─────────────── */}
+        <div
+            ref={wrapperRef}
+            className={[
+                "group/wrapper relative overflow-hidden bg-hn-card transition-all duration-300",
+                isFullscreen
+                    ? "h-[100dvh] w-screen rounded-none bg-black"
+                    : "aspect-video w-full rounded-2xl",
+            ].join(" ")}
+            onMouseMove={showFullscreenControls}
+            onMouseDown={showFullscreenControls}
+            onClick={showFullscreenControls}
+            onTouchStart={showFullscreenControls}
+            onTouchMove={showFullscreenControls}
+            onPointerMove={showFullscreenControls}
+            onPointerDown={showFullscreenControls}
+        >
             {!hasStarted && !hasError && (
                 <>
-                    {/* Background thumbnail */}
                     <Image
                         src="/images/banner_episode.png"
                         alt={title}
@@ -128,20 +234,16 @@ export default function VideoPlayerWrapper({
                         className="object-cover"
                     />
 
-                    {/* Dark overlay */}
                     <div className="absolute inset-0 bg-black/50" />
 
-                    {/* Play button */}
                     <button
                         type="button"
                         onClick={handlePlay}
                         aria-label={`Play ${title}`}
                         className="group absolute inset-0 z-10 flex items-center justify-center"
                     >
-                        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-hn-primary shadow-2xl shadow-hn-primary/30 transition-transform duration-200 group-hover:scale-110">
-                            {/* Pulse ring */}
+                        <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-hn-primary shadow-2xl shadow-hn-primary/30 transition-transform duration-200 group-hover:scale-110">
                             <span className="absolute h-20 w-20 animate-ping rounded-full bg-hn-primary/20" />
-                            {/* Play icon */}
                             <svg
                                 className="relative ml-1 h-8 w-8 text-hn-dark"
                                 fill="currentColor"
@@ -151,11 +253,9 @@ export default function VideoPlayerWrapper({
                             </svg>
                         </div>
                     </button>
-                    
                 </>
             )}
 
-            {/* ── State 2: Iframe Loading & Playing ─────────────── */}
             {hasStarted && !hasError && (
                 <>
                     <iframe
@@ -166,23 +266,34 @@ export default function VideoPlayerWrapper({
                             setHasError(true);
                             setIsLoading(false);
                         }}
-                        className="h-full w-full border-0 bg-black"
+                        className={[
+                            "border-0 bg-black",
+                            isFullscreen ? "h-[100dvh] w-screen" : "h-full w-full",
+                        ].join(" ")}
                         allowFullScreen
                         allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                        sandbox={sandboxRules}
                         {...({
                             webkitallowfullscreen: "true",
-                            mozallowfullscreen: "true"
+                            mozallowfullscreen: "true",
                         } as any)}
                     />
 
-                    {/* Custom Fullscreen Button */}
-                    <button
-                        onClick={toggleFullscreen}
-                        className="absolute right-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-lg bg-black/60 text-white/70 backdrop-blur-md transition-all duration-300 hover:bg-black/90 hover:text-hn-primary opacity-100"
-                        title="Fullscreen"
-                    >
-                        {isFullscreen ? (
-                            /* Exit Fullscreen Icon */
+                    {isFullscreen && (
+                        <button
+                            type="button"
+                            onClick={exitFullscreen}
+                            className={[
+                                "absolute right-3 top-3 z-50 flex h-11 w-11 items-center justify-center rounded-xl",
+                                "bg-black/60 text-white/90 backdrop-blur-md transition-all duration-300",
+                                "hover:bg-black/90 hover:text-hn-primary active:scale-95",
+                                showFsControls
+                                    ? "opacity-100 pointer-events-auto"
+                                    : "opacity-0 pointer-events-none",
+                            ].join(" ")}
+                            title="Exit fullscreen"
+                            aria-label="Exit fullscreen"
+                        >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="h-5 w-5"
@@ -197,34 +308,15 @@ export default function VideoPlayerWrapper({
                                     d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5 5.25 5.25"
                                 />
                             </svg>
-                        ) : (
-                            /* Enter Fullscreen Icon */
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-5 w-5"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={2}
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"
-                                />
-                            </svg>
-                        )}
-                    </button>
+                        </button>
+                    )}
 
-                    {/* Loading spinner overlay */}
                     {isLoading && <LoadingSpinner />}
                 </>
             )}
 
-            {/* ── State 3: Error & Reload ───────────────────────── */}
             {hasError && (
                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 bg-hn-dark/90">
-                    {/* Error icon */}
                     <svg
                         className="h-12 w-12 text-white/20"
                         fill="none"
@@ -246,7 +338,6 @@ export default function VideoPlayerWrapper({
                         The server may be down or the link could be broken.
                     </p>
 
-                    {/* Retry button */}
                     <button
                         type="button"
                         onClick={handleRetry}

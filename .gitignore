@@ -9,6 +9,10 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+package-lock.json
+
+# prisma
+/prisma
 
 # testing
 /coverage
