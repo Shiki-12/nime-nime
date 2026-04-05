@@ -42,6 +42,10 @@ Nime is a full-featured frontend application designed to deliver anime content t
 - **Web Scraping**: Cheerio-powered server-side scraping to extract high-resolution cover images directly from source HTML meta tags.
 - **Theme Inheritance**: Dynamic CSS variables seamlessly adapt the section's design language to match the user's active application theme.
 
+### Integrations & Utilities
+- **Telegram Broadcast Bot**: Standalone Node.js PM2 service using Telegraf that polls the API and automatically broadcasts new episode releases to the official Telegram channel, complete with admin remote control.
+- **Serverless Contact Form**: An integrated interactive contact page using the Web3Forms API for a seamless, backend-free user feedback experience.
+
 ---
 
 ## Technology Stack
@@ -54,6 +58,8 @@ Nime is a full-featured frontend application designed to deliver anime content t
 | **Tailwind CSS 4.x** | Styling and responsive design system |
 | **Cheerio** | Server-side HTML parsing and DOM manipulation |
 | **React Compiler** | Automated render optimization |
+| **Telegraf** | Telegram bot framework for Node.js |
+| **Web3Forms** | Backend-less serverless form API |
 
 ---
 
@@ -74,7 +80,7 @@ Nime is a full-featured frontend application designed to deliver anime content t
    ```bash
    cp .env.example .env
    ```
-   Provide your specific `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, and `RESEND_API_KEY`.
+   Provide your specific `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `RESEND_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHANNEL_ID`, and `OWNER_ID`.
 
 3. Synchronize the database schema with Prisma:
    ```bash
@@ -87,6 +93,11 @@ Nime is a full-featured frontend application designed to deliver anime content t
    npm run dev
    ```
    Access the application at `http://localhost:3000`.
+
+5. Start the Telegram broadcast bot (optional):
+   ```bash
+   npm run bot:pm2
+   ```
 
 ---
 
