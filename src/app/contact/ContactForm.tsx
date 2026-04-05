@@ -88,24 +88,6 @@ export default function ContactForm() {
         />
       </div>
 
-      {/* Subject */}
-      <div>
-        <label
-          htmlFor="contact-subject"
-          className="mb-1.5 block text-sm font-medium text-white/70"
-        >
-          Subject
-        </label>
-        <input
-          type="text"
-          id="contact-subject"
-          name="subject"
-          required
-          placeholder="What is this about?"
-          className="w-full rounded-lg border border-white/[0.06] bg-hn-card px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-hn-primary/50 focus:ring-1 focus:ring-hn-primary/30"
-        />
-      </div>
-
       {/* Message */}
       <div>
         <label
