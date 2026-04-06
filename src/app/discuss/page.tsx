@@ -470,7 +470,8 @@ export default function DiscussPage() {
                 {/* ════════════════════════════════════════════════════
                     LEFT COLUMN — Live Chat (lg:col-span-3)
                     ════════════════════════════════════════════════════ */}
-                <section className="flex flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-hn-card/60 lg:col-span-3">
+                <div className="relative h-[600px] lg:col-span-3 lg:h-auto">
+                    <section className="flex h-full flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-hn-card/60 lg:absolute lg:inset-0">
                     {/* Chat header */}
                     <div className="flex items-center gap-3 border-b border-white/[0.06] px-5 py-3.5">
                         <span className="relative flex h-2.5 w-2.5">
@@ -488,7 +489,7 @@ export default function DiscussPage() {
                     {/* Chat messages */}
                     <div
                         ref={chatContainerRef}
-                        className="scrollbar-thin overflow-y-auto h-[600px]"
+                        className="scrollbar-thin overflow-y-auto flex-1 min-h-0"
                     >
                         {chatLoading ? (
                             <ChatSkeleton />
@@ -716,7 +717,8 @@ export default function DiscussPage() {
                         </button>
                         </div>
                     </form>
-                </section>
+                    </section>
+                </div>
 
                 {/* ════════════════════════════════════════════════════
                     RIGHT COLUMN — Comments + Recommendations (lg:col-span-2)
@@ -744,8 +746,7 @@ export default function DiscussPage() {
                         </div>
 
                         <div
-                            className="scrollbar-thin overflow-y-auto"
-                            style={{ maxHeight: 380 }}
+                            className="scrollbar-thin overflow-y-auto h-[380px]"
                         >
                             {commentsLoading ? (
                                 <CommentSkeleton />
@@ -875,8 +876,7 @@ export default function DiscussPage() {
                         </div>
 
                         <div
-                            className="scrollbar-thin overflow-y-auto"
-                            style={{ maxHeight: 420 }}
+                            className="scrollbar-thin overflow-y-auto h-[420px]"
                         >
                             {recsLoading ? (
                                 <RecommendationSkeleton />
