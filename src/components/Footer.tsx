@@ -44,7 +44,7 @@ export default function Footer() {
   if (pathname.startsWith("/hentai")) return null;
 
   return (
-    <footer className="relative mt-16 overflow-hidden border-t border-white/[0.04] bg-hn-dark">
+    <footer className="relative overflow-hidden border-t border-white/[0.04] bg-hn-dark">
       {/* Gradient glow behind footer */}
       <div className="absolute -top-px left-1/2 h-px w-1/2 -translate-x-1/2 bg-gradient-to-r from-transparent via-hn-primary/40 to-transparent" />
 

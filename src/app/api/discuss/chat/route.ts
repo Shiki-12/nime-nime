@@ -10,7 +10,6 @@ const SendMessageSchema = z.object({
 });
 
 // ─── Anti-Spam Rate Limiter (in-memory) ─────────────────────────────
-const ADMIN_EMAIL = "uknowndonp@gmail.com";
 const RATE_LIMIT_WINDOW = 5_000;        // 5 seconds
 const RATE_LIMIT_MAX_MSGS = 5;          // max messages per window
 const RATE_LIMIT_LOCKOUT = 5 * 60_000;  // 5 minutes
@@ -67,7 +66,7 @@ export const GET = withAuthAndValidation(async () => {
         take: 50,
         include: {
             user: {
-                select: { name: true, image: true, email: true },
+                select: { name: true, image: true, email: true, role: true },
             },
             parent: {
                 select: {
@@ -89,10 +88,10 @@ export const GET = withAuthAndValidation(async () => {
 export const POST = withAuthAndValidation(async (req: NextRequest) => {
     const session = await auth();
     const userId = session!.user!.id;
-    const userEmail = session!.user!.email;
+    const userRole = session!.user!.role;
 
-    // Admin is exempt from rate limiting
-    if (userEmail !== ADMIN_EMAIL) {
+    // Admin/Owner is exempt from rate limiting
+    if (userRole !== "ADMIN" && userRole !== "OWNER") {
         const rateCheck = checkRateLimit(userId);
         if (rateCheck.blocked) {
             const minutesLeft = Math.ceil((rateCheck.retryAfterMs || 0) / 60_000);
@@ -117,7 +116,7 @@ export const POST = withAuthAndValidation(async (req: NextRequest) => {
         },
         include: {
             user: {
-                select: { name: true, image: true, email: true },
+                select: { name: true, image: true, email: true, role: true },
             },
             parent: {
                 select: {
@@ -162,7 +161,7 @@ export const POST = withAuthAndValidation(async (req: NextRequest) => {
 export const DELETE = withAuthAndValidation(async (req: NextRequest) => {
     const session = await auth();
     const userId = session!.user!.id;
-    const userEmail = session!.user!.email;
+    const userRole = session!.user!.role;
 
     const { searchParams } = new URL(req.url);
     const messageId = searchParams.get("messageId");
@@ -185,7 +184,7 @@ export const DELETE = withAuthAndValidation(async (req: NextRequest) => {
         );
     }
 
-    const isAdmin = userEmail === "uknowndonp@gmail.com";
+    const isAdmin = userRole === "ADMIN" || userRole === "OWNER";
     const isOwner = message.userId === userId;
 
     if (!isAdmin && !isOwner) {

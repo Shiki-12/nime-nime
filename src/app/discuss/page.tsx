@@ -24,7 +24,7 @@ interface ChatMessage {
     parentId: string | null;
     parent: ChatParentRef | null;
     createdAt: string;
-    user: { name: string; image: string | null; email: string | null };
+    user: { name: string; image: string | null; email: string | null; role?: string };
 }
 
 interface Comment {
@@ -34,7 +34,7 @@ interface Comment {
     episodeSlug: string;
     animeSlug: string | null;
     createdAt: string;
-    user: { name: string; image: string | null; email: string | null };
+    user: { name: string; image: string | null; email: string | null; role?: string };
 }
 
 interface Recommendation {
@@ -44,10 +44,10 @@ interface Recommendation {
     animeTitle: string;
     coverImage: string;
     createdAt: string;
-    user: { name: string; image: string | null; email: string | null };
+    user: { name: string; image: string | null; email: string | null; role?: string };
 }
 
-const ADMIN_EMAIL = "uknowndonp@gmail.com";
+
 
 // ─── Helpers ────────────────────────────────────────────────────────
 
@@ -568,10 +568,9 @@ export default function DiscussPage() {
                                                         }`}
                                                     >
                                                         {msg.user.name}
-                                                        {msg.user.email ===
-                                                            ADMIN_EMAIL && (
-                                                            <span className="flex items-center rounded-sm bg-red-500/20 px-1 py-[1px] text-[8px] font-bold uppercase tracking-wider text-red-500 ring-1 ring-inset ring-red-500/50">
-                                                                Admin
+                                                        {(msg.user.role === "ADMIN" || msg.user.role === "OWNER") && (
+                                                            <span className={`flex items-center rounded-sm px-1 py-[1px] text-[8px] font-bold uppercase tracking-wider ring-1 ring-inset ${msg.user.role === "OWNER" ? "bg-amber-500/20 text-amber-500 ring-amber-500/50" : "bg-red-500/20 text-red-500 ring-red-500/50"}`}>
+                                                                {msg.user.role === "OWNER" ? "Owner" : "Admin"}
                                                             </span>
                                                         )}
                                                         {isOwn && (
@@ -608,8 +607,8 @@ export default function DiscussPage() {
 
                                             {/* Delete Button (Owner or Admin) */}
                                             {(isOwn ||
-                                                session?.user?.email ===
-                                                    ADMIN_EMAIL) && (
+                                                session?.user?.role === "ADMIN" ||
+                                                session?.user?.role === "OWNER") && (
                                                 <button
                                                     onClick={() =>
                                                         handleDelete(msg.id)
@@ -786,11 +785,10 @@ export default function DiscussPage() {
                                                 <div className="flex items-baseline gap-2">
                                                     <span className="flex items-center gap-1.5 text-xs font-semibold text-white/70 group-hover/comment:text-hn-primary">
                                                         {comment.user.name}
-                                                        {comment.user
-                                                            .email ===
-                                                            ADMIN_EMAIL && (
-                                                            <span className="flex items-center rounded-sm bg-red-500/20 px-1 py-[1px] text-[8px] font-bold uppercase tracking-wider text-red-500 ring-1 ring-inset ring-red-500/50">
-                                                                Admin
+                                                        {(comment.user
+                                                            .role === "ADMIN" || comment.user.role === "OWNER") && (
+                                                            <span className={`flex items-center rounded-sm px-1 py-[1px] text-[8px] font-bold uppercase tracking-wider ring-1 ring-inset ${comment.user.role === "OWNER" ? "bg-amber-500/20 text-amber-500 ring-amber-500/50" : "bg-red-500/20 text-red-500 ring-red-500/50"}`}>
+                                                                {comment.user.role === "OWNER" ? "Owner" : "Admin"}
                                                             </span>
                                                         )}
                                                     </span>
@@ -940,11 +938,10 @@ export default function DiscussPage() {
                                                                         .name
                                                                 }
                                                             </span>
-                                                            {rec.user
-                                                                .email ===
-                                                                ADMIN_EMAIL && (
-                                                                <span className="flex items-center rounded-sm bg-red-500/20 px-0.5 py-[1px] text-[8px] font-bold uppercase tracking-wider text-red-500 ring-1 ring-inset ring-red-500/50">
-                                                                    Admin
+                                                            {(rec.user
+                                                                .role === "ADMIN" || rec.user.role === "OWNER") && (
+                                                                <span className={`flex items-center rounded-sm px-0.5 py-[1px] text-[8px] font-bold uppercase tracking-wider ring-1 ring-inset ${rec.user.role === "OWNER" ? "bg-amber-500/20 text-amber-500 ring-amber-500/50" : "bg-red-500/20 text-red-500 ring-red-500/50"}`}>
+                                                                    {rec.user.role === "OWNER" ? "Owner" : "Admin"}
                                                                 </span>
                                                             )}
                                                         </div>

@@ -44,7 +44,7 @@ export default function RootLayout({
           <ThemeProvider>
             <SyncOnLogin />
             <Navbar />
-            <main className="min-h-screen pt-[60px]">{children}</main>
+            <main className="pt-[60px]">{children}</main>
             <Footer />
           </ThemeProvider>
         </SessionProvider>

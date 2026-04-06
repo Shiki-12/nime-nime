@@ -32,7 +32,7 @@ if (!BOT_TOKEN || !CHANNEL_ID || !OWNER_ID) {
 }
 
 // ─── Constants ──────────────────────────────────────────────────────
-const API_BASE = "https://www.sankavollerei.com/anime/animasu";
+const API_BASE = (process.env.ANIME_API_URL || "https://www.sankavollerei.com/anime/animasu").replace(/\/+$/, "");
 const SITE_URL = "https://nime-nime.web.id";
 const CACHE_FILE = path.join(__dirname, "cache.json");
 const POLL_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes

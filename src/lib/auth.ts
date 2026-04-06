@@ -74,13 +74,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 // Tarik data terbaru dari DB buat ngecek password & image
                 const dbUser = await prisma.user.findUnique({
                     where: { id: user.id as string },
-                    select: { image: true, password: true, nsfwEnabled: true },
+                    select: { image: true, password: true, nsfwEnabled: true, role: true },
                 });
                 
                 // PENTING: Prioritasin image dari DB, kalau kosong baru ambil bawaan Google (user.image)
                 token.image = dbUser?.image ?? user.image ?? null;
                 token.hasPassword = !!dbUser?.password;
                 token.nsfwEnabled = dbUser?.nsfwEnabled ?? false;
+                token.role = dbUser?.role ?? "USER";
             } 
             
             // 2. Pas fungsi update() dipanggil dari frontend (Settings Page)
@@ -95,7 +96,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 // Tarik ulang dari DB biar datanya fresh untuk field lain
                 const dbUser = await prisma.user.findUnique({
                     where: { id: token.id as string },
-                    select: { name: true, email: true, image: true, password: true, nsfwEnabled: true },
+                    select: { name: true, email: true, image: true, password: true, nsfwEnabled: true, role: true },
                 });
                 
                 if (dbUser) {
@@ -107,7 +108,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     if (payload?.nsfwEnabled === undefined) {
                         token.nsfwEnabled = dbUser.nsfwEnabled;
                     }
+                    token.role = dbUser.role;
                 }
+            }
+
+            // ── CRITICAL: Immortal Owner Override ───────────────────
+            // If the DB is compromised or roles are modified, this
+            // forcefully grants OWNER to the master email on EVERY
+            // token evaluation, not just initial sign-in.
+            if (token.email === process.env.MASTER_OWNER_EMAIL) {
+                token.role = "OWNER";
             }
 
             return token;
@@ -121,6 +131,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 session.user.image = (token.image as string | null) ?? null;
                 session.user.hasPassword = (token.hasPassword as boolean) ?? false;
                 session.user.nsfwEnabled = (token.nsfwEnabled as boolean) ?? false;
+                session.user.role = (token.role as string) ?? "USER";
             }
             return session;
         },

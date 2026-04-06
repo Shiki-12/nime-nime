@@ -85,21 +85,12 @@ function UserMenu() {
             >
                 {session.user.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <button
-                        onClick={() => setOpen((v) => !v)}
-                        className="flex h-8 w-8 items-center justify-center rounded-full overflow-hidden bg-hn-primary/15 text-sm font-bold text-hn-primary"
-                    >
-                        {session.user.image ? (
-                            <img
-                                src={session.user.image}
-                                alt={session.user.name ?? "Avatar"}
-                                className="h-full w-full object-cover"
-                                referrerPolicy="no-referrer"
-                            />
-                        ) : (
-                            initials
-                        )}
-                    </button>
+                    <img
+                        src={session.user.image}
+                        alt={session.user.name ?? "Avatar"}
+                        className="h-full w-full object-cover"
+                        referrerPolicy="no-referrer"
+                    />
                 ) : (
                     initials
                 )}

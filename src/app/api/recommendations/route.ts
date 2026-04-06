@@ -17,7 +17,7 @@ export const GET = withAuthAndValidation(async () => {
         take: 50,
         include: {
             user: {
-                select: { name: true, image: true, email: true },
+                select: { name: true, image: true, email: true, role: true },
             },
         },
     });
@@ -26,18 +26,16 @@ export const GET = withAuthAndValidation(async () => {
 });
 
 // ─── POST: Create a new recommendation (max 2 per user, admin unlimited) ────
-const ADMIN_EMAIL = "uknowndonp@gmail.com";
-
 export const POST = withAuthAndValidation(async (req: NextRequest) => {
     const session = await auth();
     const userId = session!.user!.id;
-    const userEmail = session!.user!.email;
+    const userRole = session!.user!.role;
 
     const body = await req.json();
     const { animeSlug, animeTitle, coverImage } = body;
 
-    // Admin bypasses the 2-recommendation limit
-    if (userEmail !== ADMIN_EMAIL) {
+    // Admin/Owner bypasses the 2-recommendation limit
+    if (userRole !== "ADMIN" && userRole !== "OWNER") {
         const existingCount = await prisma.recommendation.count({
             where: { userId },
         });
@@ -59,7 +57,7 @@ export const POST = withAuthAndValidation(async (req: NextRequest) => {
         },
         include: {
             user: {
-                select: { name: true, image: true, email: true },
+                select: { name: true, image: true, email: true, role: true },
             },
         },
     });
@@ -71,7 +69,7 @@ export const POST = withAuthAndValidation(async (req: NextRequest) => {
 export const DELETE = withAuthAndValidation(async (req: NextRequest) => {
     const session = await auth();
     const userId = session!.user!.id;
-    const userEmail = session!.user!.email;
+    const userRole = session!.user!.role;
 
     const { searchParams } = new URL(req.url);
     const recommendationId = searchParams.get("id");
@@ -94,7 +92,7 @@ export const DELETE = withAuthAndValidation(async (req: NextRequest) => {
         );
     }
 
-    const isAdmin = userEmail === ADMIN_EMAIL;
+    const isAdmin = userRole === "ADMIN" || userRole === "OWNER";
     const isOwner = recommendation.userId === userId;
 
     if (!isAdmin && !isOwner) {

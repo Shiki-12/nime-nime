@@ -2,6 +2,7 @@ import * as cheerio from "cheerio";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ANIME_HTML_URL } from "@/lib/config";
 
 // ─── Cache ─────────────────────────────────────────────────────────
 // Serial relationships rarely change
@@ -62,7 +63,7 @@ async function scrapeSerialPage(url: string): Promise<{
             $(el).find(".tt, h2, h3").first().text().trim() ||
             "";
 
-        // Extract slug from href like https://v1.animasu.app/anime/some-slug/
+        // Extract slug from href like <BASE_URL>/anime/some-slug/
         const slugMatch = href.match(/\/anime\/([^/]+)/);
         if (!slugMatch) return; // skip non-anime links
 
@@ -93,7 +94,7 @@ async function scrapeSerialPage(url: string): Promise<{
 
 async function getSerialData(slug: string): Promise<SerialData | null> {
     try {
-        const baseUrl = `https://v1.animasu.app/serial/${slug}/`;
+        const baseUrl = `${ANIME_HTML_URL}/serial/${slug}/`;
         const allAnimes: SerialAnime[] = [];
         let currentUrl: string | null = baseUrl;
         let franchiseTitle = "";
@@ -152,7 +153,7 @@ export default async function SerialPage({ params, searchParams }: SerialPagePro
     const paginatedAnime = data.animes.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
     return (
-        <div className="min-h-screen bg-hn-dark">
+        <div className="bg-hn-dark">
             {/* Header */}
             <div className="relative overflow-hidden">
                 {/* Decorative gradient bg */}

@@ -16,10 +16,10 @@ interface Recommendation {
     animeTitle: string;
     coverImage: string;
     createdAt: string;
-    user: { name: string; image: string | null; email: string | null };
+    user: { name: string; image: string | null; email: string | null; role?: string };
 }
 
-const ADMIN_EMAIL = "uknowndonp@gmail.com";
+
 
 // ─── Helpers ────────────────────────────────────────────────────────
 
@@ -166,7 +166,7 @@ export default function RecommendationsPage() {
         }
     };
 
-    const isAdmin = session?.user?.email === ADMIN_EMAIL;
+    const isAdmin = session?.user?.role === "ADMIN" || session?.user?.role === "OWNER";
 
     if (status === "loading" || status === "unauthenticated") {
         return (
@@ -279,10 +279,9 @@ export default function RecommendationsPage() {
                                             <span className="max-w-[70px] truncate text-[10px] font-medium text-white/70">
                                                 {rec.user.name}
                                             </span>
-                                            {rec.user.email ===
-                                                ADMIN_EMAIL && (
-                                                <span className="flex items-center rounded-sm bg-red-500/20 px-0.5 py-[1px] text-[8px] font-bold uppercase tracking-wider text-red-500 ring-1 ring-inset ring-red-500/50">
-                                                    Admin
+                                            {(rec.user.role === "ADMIN" || rec.user.role === "OWNER") && (
+                                                <span className={`flex items-center rounded-sm px-0.5 py-[1px] text-[8px] font-bold uppercase tracking-wider ring-1 ring-inset ${rec.user.role === "OWNER" ? "bg-amber-500/20 text-amber-500 ring-amber-500/50" : "bg-red-500/20 text-red-500 ring-red-500/50"}`}>
+                                                    {rec.user.role === "OWNER" ? "Owner" : "Admin"}
                                                 </span>
                                             )}
                                         </div>

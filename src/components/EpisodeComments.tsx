@@ -21,7 +21,7 @@ interface EpisodeComment {
     parent: ParentRef | null;
     episodeSlug: string;
     createdAt: string;
-    user: { name: string; image: string | null; email: string | null };
+    user: { name: string; image: string | null; email: string | null; role?: string };
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────
@@ -71,7 +71,7 @@ function UserAvatar({
     );
 }
 
-const ADMIN_EMAIL = "uknowndonp@gmail.com";
+
 
 // ─── Skeleton ───────────────────────────────────────────────────────
 
@@ -236,7 +236,7 @@ export default function EpisodeComments({ episodeSlug, animeSlug }: EpisodeComme
         }
     };
 
-    const isAdmin = session?.user?.email === ADMIN_EMAIL;
+    const isAdmin = session?.user?.role === "ADMIN" || session?.user?.role === "OWNER";
 
     return (
         <div className="mt-8 overflow-hidden rounded-2xl border border-white/[0.06] bg-hn-card/60">
@@ -425,10 +425,9 @@ export default function EpisodeComments({ episodeSlug, animeSlug }: EpisodeComme
                                             <div className="flex items-baseline gap-2">
                                                 <span className="flex items-center gap-1.5 text-[13px] font-semibold text-white/80">
                                                     {comment.user.name}
-                                                    {comment.user.email ===
-                                                        ADMIN_EMAIL && (
-                                                        <span className="flex items-center rounded-sm bg-red-500/20 px-1 py-[1px] text-[8px] font-bold uppercase tracking-wider text-red-500 ring-1 ring-inset ring-red-500/50">
-                                                            Admin
+                                                    {(comment.user.role === "ADMIN" || comment.user.role === "OWNER") && (
+                                                        <span className={`flex items-center rounded-sm px-1 py-[1px] text-[8px] font-bold uppercase tracking-wider ring-1 ring-inset ${comment.user.role === "OWNER" ? "bg-amber-500/20 text-amber-500 ring-amber-500/50" : "bg-red-500/20 text-red-500 ring-red-500/50"}`}>
+                                                            {comment.user.role === "OWNER" ? "Owner" : "Admin"}
                                                         </span>
                                                     )}
                                                     {isOwn && (

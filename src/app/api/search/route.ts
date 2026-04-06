@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { BROWSER_HEADERS } from "@/lib/fetcher";
+import { ANIME_API_URL } from "@/lib/config";
 
-const BASE_URL = "https://www.sankavollerei.com/anime/animasu";
+const BASE_URL = ANIME_API_URL;
 
 /**
  * Server-side proxy for the client SearchBar.

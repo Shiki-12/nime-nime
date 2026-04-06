@@ -11,8 +11,9 @@
 import { unstable_cache } from "next/cache";
 import * as cheerio from "cheerio";
 import { BROWSER_HEADERS } from "@/lib/fetcher";
+import { ANIME_HTML_URL } from "@/lib/config";
 
-const ANIMASU_BASE = "https://v1.animasu.app";
+const ANIMASU_BASE = ANIME_HTML_URL;
 
 /**
  * Internal: fetch the raw HTML and extract the highest page number
@@ -90,7 +91,7 @@ async function _scrapeTotalPages(url: string): Promise<number> {
  * Get the total pages for an Animasu **search** query.
  * Cached for 6 hours per query string.
  *
- * URL pattern: https://v1.animasu.app/?s={query}
+ * URL pattern: <SCRAPER_BASE_URL>/?s={query}
  * Note: Animasu expects `+` for spaces (WordPress standard),
  * so we use encodeURIComponent then replace %20 with +.
  */
@@ -111,7 +112,7 @@ export const fetchSearchTotalPages = (query: string): Promise<number> => {
  * Get the total pages for an Animasu **genre** listing.
  * Cached for 6 hours per genre slug.
  *
- * URL pattern: https://v1.animasu.app/genre/{slug}/
+ * URL pattern: <SCRAPER_BASE_URL>/genre/{slug}/
  */
 export const fetchGenreTotalPages = (genreSlug: string): Promise<number> =>
     unstable_cache(

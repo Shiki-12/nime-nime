@@ -1,4 +1,5 @@
 import * as cheerio from "cheerio";
+import { ANIME_HTML_URL } from "@/lib/config";
 
 /**
  * Silently scrape the source website Animasu to check whether this anime
@@ -13,7 +14,7 @@ export async function fetchSerialSlug(slug: string): Promise<string | null> {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 5000);
 
-        const res = await fetch(`https://v1.animasu.app/anime/${slug}/`, {
+        const res = await fetch(`${ANIME_HTML_URL}/anime/${slug}/`, {
             signal: controller.signal,
             headers: {
                 "User-Agent":
@@ -33,7 +34,7 @@ export async function fetchSerialSlug(slug: string): Promise<string | null> {
         const href = $('a[href*="/serial/"]').attr("href");
         if (!href) return null;
 
-        // Extract the slug from a URL like https://v1.animasu.app/serial/monogatari/
+        // Extract the slug from a URL like <BASE_URL>/serial/monogatari/
         const match = href.match(/\/serial\/([^/]+)/);
         return match ? match[1] : null;
     } catch {

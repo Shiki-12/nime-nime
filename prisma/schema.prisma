@@ -7,6 +7,12 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  USER
+  ADMIN
+  OWNER
+}
+
 model User {
   id                String    @id @default(cuid())
   name              String
@@ -14,6 +20,7 @@ model User {
   emailVerified     DateTime?
   image             String?
   password          String?
+  role              Role      @default(USER)
   isVerified        Boolean   @default(false)
   nsfwEnabled       Boolean   @default(false)
   verifyToken       String?

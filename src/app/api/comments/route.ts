@@ -29,7 +29,7 @@ export const GET = withAuthAndValidation(async (req: NextRequest) => {
         take: 50,
         include: {
             user: {
-                select: { name: true, image: true, email: true },
+                select: { name: true, image: true, email: true, role: true },
             },
             parent: {
                 select: {
@@ -63,7 +63,7 @@ export const POST = withAuthAndValidation(async (req: NextRequest) => {
         },
         include: {
             user: {
-                select: { name: true, image: true, email: true },
+                select: { name: true, image: true, email: true, role: true },
             },
             parent: {
                 select: {
@@ -109,12 +109,10 @@ export const POST = withAuthAndValidation(async (req: NextRequest) => {
 }, CreateCommentSchema);
 
 // ─── DELETE: Remove a comment (Admin or Owner) ──────────────────────
-const ADMIN_EMAIL = "uknowndonp@gmail.com";
-
 export const DELETE = withAuthAndValidation(async (req: NextRequest) => {
     const session = await auth();
     const userId = session!.user!.id;
-    const userEmail = session!.user!.email;
+    const userRole = session!.user!.role;
 
     const { searchParams } = new URL(req.url);
     const commentId = searchParams.get("commentId");
@@ -137,7 +135,7 @@ export const DELETE = withAuthAndValidation(async (req: NextRequest) => {
         );
     }
 
-    const isAdmin = userEmail === ADMIN_EMAIL;
+    const isAdmin = userRole === "ADMIN" || userRole === "OWNER";
     const isOwner = comment.userId === userId;
 
     if (!isAdmin && !isOwner) {
