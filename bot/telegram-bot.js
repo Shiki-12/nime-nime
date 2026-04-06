@@ -330,18 +330,14 @@ async function main() {
   console.log(`│   Interval: Every 5 minutes                 │`);
   console.log("└─────────────────────────────────────────────┘");
 
-  // Launch the Telegraf bot (long-polling)
-  await bot.launch();
-  console.log("✅ Bot is online and listening for commands.\n");
-
-  // Run the first poll immediately
+  console.log("⏳ [Init] Running initial API check...");
   try {
     await processBroadcast(bot);
   } catch (err) {
     console.error("❌ Initial poll error:", err.message);
   }
 
-  // Set up periodic polling
+  // 2. Pasang Jadwal Rutin (Interval 5 Menit)
   setInterval(async () => {
     try {
       await processBroadcast(bot);
@@ -349,6 +345,12 @@ async function main() {
       console.error(`❌ Poll error: ${err.message}`);
     }
   }, POLL_INTERVAL_MS);
+
+  bot.launch().then(() => {
+    console.log("✅ Telegram Bot is online and listening for commands.\n");
+  }).catch((err) => {
+    console.error("❌ Telegram Bot failed to launch:", err.message);
+  });
 }
 
 // ─── Graceful Shutdown ──────────────────────────────────────────────

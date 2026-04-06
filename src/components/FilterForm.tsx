@@ -259,6 +259,18 @@ export default function FilterForm() {
     };
 
     const handleSubmit = () => {
+        const isEmpty =
+            genres.length === 0 &&
+            seasons.length === 0 &&
+            !status &&
+            !type &&
+            !sort;
+
+        if (isEmpty) {
+            router.push("/filter?status=&tipe=&urutan=default");
+            return;
+        }
+
         const params = new URLSearchParams();
         genres.forEach((g) => params.append("genre[]", g));
         seasons.forEach((s) => params.append("season[]", s));
