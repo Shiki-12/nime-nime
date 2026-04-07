@@ -32,7 +32,7 @@ export default async function AdminDashboardPage() {
     }
 
     // ── Prisma Aggregates (parallel for speed) ──────────────────────
-    const [totalUsers, totalMessages, totalComments, recentMembers] =
+    const [totalUsers, totalMessages, totalComments, recentMembers, topAnime] =
         await Promise.all([
             prisma.user.count(),
             prisma.publicMessage.count(),
@@ -48,6 +48,12 @@ export default async function AdminDashboardPage() {
                     role: true,
                     createdAt: true,
                 },
+            }),
+            prisma.watchHistory.groupBy({
+                by: ["animeId", "title"],
+                _count: { animeId: true },
+                orderBy: { _count: { animeId: "desc" } },
+                take: 5,
             }),
         ]);
 
@@ -268,6 +274,97 @@ export default async function AdminDashboardPage() {
                                 </p>
                             </div>
                         ))}
+                    </div>
+                )}
+            </div>
+
+            {/* ── Top 5 Most Viewed Anime ────────────────────────────────── */}
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] backdrop-blur-sm">
+                {/* Section header */}
+                <div className="flex items-center justify-between border-b border-white/[0.06] px-6 py-4">
+                    <div className="flex items-center gap-3">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 text-sm ring-1 ring-amber-500/20">
+                            🔥
+                        </div>
+                        <div>
+                            <h2 className="text-sm font-semibold text-hn-text">
+                                Top 5 Most Viewed Anime
+                            </h2>
+                            <p className="text-[11px] text-hn-text-muted">
+                                Based on watch history
+                            </p>
+                        </div>
+                    </div>
+                    <Link
+                        href="/aishiteru/anime-statistic"
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-hn-card px-3 py-1.5 text-xs font-medium text-hn-primary ring-1 ring-hn-border transition-all duration-200 hover:bg-hn-card-hover hover:ring-hn-primary/30"
+                    >
+                        View All
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 16 16"
+                            fill="currentColor"
+                            className="h-3 w-3"
+                        >
+                            <path
+                                fillRule="evenodd"
+                                d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 0 1 0-1.06Z"
+                                clipRule="evenodd"
+                            />
+                        </svg>
+                    </Link>
+                </div>
+
+                {/* Anime list */}
+                {topAnime.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-12 text-sm text-hn-text-muted">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="mb-2 h-8 w-8 text-white/10">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                        </svg>
+                        No watch data available yet.
+                    </div>
+                ) : (
+                    <div className="divide-y divide-white/[0.04]">
+                        {topAnime.map((anime, i) => {
+                            const rank = i + 1;
+                            const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : null;
+                            return (
+                                <div
+                                    key={anime.animeId}
+                                    className="group flex items-center gap-4 px-6 py-3.5 transition-colors duration-200 hover:bg-white/[0.02]"
+                                >
+                                    {/* Rank */}
+                                    <div className="flex h-7 w-7 shrink-0 items-center justify-center">
+                                        {medal ? (
+                                            <span className="text-base">{medal}</span>
+                                        ) : (
+                                            <span className="text-xs font-bold text-hn-text-muted">#{rank}</span>
+                                        )}
+                                    </div>
+
+                                    {/* Title */}
+                                    <div className="min-w-0 flex-1">
+                                        <p className="truncate text-sm font-medium text-hn-text">
+                                            {anime.title}
+                                        </p>
+                                        <p className="truncate font-mono text-[10px] text-hn-text-muted/50">
+                                            {anime.animeId}
+                                        </p>
+                                    </div>
+
+                                    {/* View count */}
+                                    <div className="flex items-center gap-1.5 shrink-0">
+                                        <span className="text-sm font-semibold text-hn-text">
+                                            {anime._count.animeId.toLocaleString()}
+                                        </span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3 w-3 text-hn-text-muted/40">
+                                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
+                                            <path fillRule="evenodd" d="M1.38 8.28a.87.87 0 0 1 0-.566 7.003 7.003 0 0 1 13.238.006.87.87 0 0 1 0 .566A7.003 7.003 0 0 1 1.379 8.28ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" clipRule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 )}
             </div>

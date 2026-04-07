@@ -3,6 +3,10 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import SafeImage from "@/components/SafeImage";
 import { RoleSelect, DeleteButton } from "./UserActions";
+import AdminPagination from "../AdminPagination";
+import Link from "next/link";
+
+const ITEMS_PER_PAGE = 10;
 
 // ── Relative time helper ────────────────────────────────────────────
 function formatDate(date: Date): string {
@@ -25,7 +29,11 @@ function roleBadgeClass(role: string): string {
     }
 }
 
-export default async function UsersPage() {
+export default async function UsersPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ page?: string }>;
+}) {
     // ── Auth Guard ──────────────────────────────────────────────────
     const session = await auth();
     const role = session?.user?.role;
@@ -38,18 +46,31 @@ export default async function UsersPage() {
     const requesterRole = role as "ADMIN" | "OWNER";
     const masterOwnerEmail = process.env.MASTER_OWNER_EMAIL;
 
-    // ── Fetch all users ─────────────────────────────────────────────
-    const users = await prisma.user.findMany({
-        orderBy: { createdAt: "desc" },
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            image: true,
-            role: true,
-            createdAt: true,
-        },
-    });
+    // ── Pagination params ───────────────────────────────────────────
+    const params = await searchParams;
+    const rawPage = parseInt(params.page ?? "1", 10);
+    const currentPage = Number.isFinite(rawPage) && rawPage >= 1 ? rawPage : 1;
+    const skip = (currentPage - 1) * ITEMS_PER_PAGE;
+
+    // ── Fetch paginated users + total count ─────────────────────────
+    const [users, totalCount] = await Promise.all([
+        prisma.user.findMany({
+            take: ITEMS_PER_PAGE,
+            skip,
+            orderBy: { createdAt: "desc" },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+                role: true,
+                createdAt: true,
+            },
+        }),
+        prisma.user.count(),
+    ]);
+
+    const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
     return (
         <div className="mx-auto max-w-7xl space-y-6 pb-20 md:pb-0">
@@ -60,7 +81,7 @@ export default async function UsersPage() {
                         User Management
                     </h1>
                     <p className="mt-1 text-sm text-hn-text-muted">
-                        {users.length} registered user{users.length !== 1 ? "s" : ""}
+                        {totalCount} registered user{totalCount !== 1 ? "s" : ""}
                     </p>
                 </div>
             </div>
@@ -162,15 +183,27 @@ export default async function UsersPage() {
 
                                         {/* Actions */}
                                         <td className="px-6 py-3.5">
-                                            {!isMasterOwner && (
-                                                <DeleteButton
-                                                    targetUserId={user.id}
-                                                    targetName={user.name}
-                                                    targetRole={user.role}
-                                                    requesterRole={requesterRole}
-                                                    isSelf={isSelf}
-                                                />
-                                            )}
+                                            <div className="flex items-center gap-2">
+                                                <Link
+                                                    href={`/aishiteru/users/${user.id}`}
+                                                    className="inline-flex items-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-medium text-sky-400 ring-1 ring-sky-500/20 transition-all duration-200 hover:bg-sky-500/10 hover:ring-sky-500/40"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-3 w-3">
+                                                        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
+                                                        <path fillRule="evenodd" d="M1.38 8.28a.87.87 0 0 1 0-.566 7.003 7.003 0 0 1 13.238.006.87.87 0 0 1 0 .566A7.003 7.003 0 0 1 1.379 8.28ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" clipRule="evenodd" />
+                                                    </svg>
+                                                    View
+                                                </Link>
+                                                {!isMasterOwner && (
+                                                    <DeleteButton
+                                                        targetUserId={user.id}
+                                                        targetName={user.name}
+                                                        targetRole={user.role}
+                                                        requesterRole={requesterRole}
+                                                        isSelf={isSelf}
+                                                    />
+                                                )}
+                                            </div>
                                         </td>
                                     </tr>
                                 );
@@ -230,9 +263,19 @@ export default async function UsersPage() {
 
                                 {/* Bottom row: actions */}
                                 <div className="flex items-center gap-2 pl-[52px]">
+                                    <Link
+                                        href={`/aishiteru/users/${user.id}`}
+                                        className="inline-flex items-center gap-1 rounded-lg px-2 py-1.5 text-[10px] font-medium text-sky-400 ring-1 ring-sky-500/20 transition-all duration-200 hover:bg-sky-500/10"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-2.5 w-2.5">
+                                            <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
+                                            <path fillRule="evenodd" d="M1.38 8.28a.87.87 0 0 1 0-.566 7.003 7.003 0 0 1 13.238.006.87.87 0 0 1 0 .566A7.003 7.003 0 0 1 1.379 8.28ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" clipRule="evenodd" />
+                                        </svg>
+                                        View
+                                    </Link>
                                     {isMasterOwner ? (
                                         <div className="flex items-center gap-1.5 text-[10px] font-medium text-hn-text-muted/60 uppercase tracking-widest pt-1">
-                                            <span>🔒</span> Master Owner Immunity
+                                            <span>🔒</span> Master Owner
                                         </div>
                                     ) : (
                                         <>
@@ -266,6 +309,15 @@ export default async function UsersPage() {
                     </div>
                 )}
             </div>
+
+            {/* ── Pagination ─────────────────────────────────────────── */}
+            <AdminPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={totalCount}
+                itemsPerPage={ITEMS_PER_PAGE}
+                basePath="/aishiteru/users"
+            />
         </div>
     );
 }

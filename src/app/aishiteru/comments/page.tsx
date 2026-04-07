@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import SafeImage from "@/components/SafeImage";
 import DeleteCommentButton from "./DeleteCommentButton";
+import AdminPagination from "../AdminPagination";
+
+const ITEMS_PER_PAGE = 10;
 
 // ── Relative time helper ────────────────────────────────────────────
 function timeAgo(date: Date): string {
@@ -21,7 +24,11 @@ function timeAgo(date: Date): string {
     return "Just now";
 }
 
-export default async function CommentsPage() {
+export default async function CommentsPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ page?: string }>;
+}) {
     // ── Auth Guard ──────────────────────────────────────────────────
     const session = await auth();
     const role = session?.user?.role;
@@ -30,20 +37,33 @@ export default async function CommentsPage() {
         notFound();
     }
 
-    // ── Fetch all comments with user relation ───────────────────────
-    const comments = await prisma.comment.findMany({
-        orderBy: { createdAt: "desc" },
-        include: {
-            user: {
-                select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                    image: true,
+    // ── Pagination params ───────────────────────────────────────────
+    const params = await searchParams;
+    const rawPage = parseInt(params.page ?? "1", 10);
+    const currentPage = Number.isFinite(rawPage) && rawPage >= 1 ? rawPage : 1;
+    const skip = (currentPage - 1) * ITEMS_PER_PAGE;
+
+    // ── Fetch paginated comments + total count ──────────────────────
+    const [comments, totalCount] = await Promise.all([
+        prisma.comment.findMany({
+            take: ITEMS_PER_PAGE,
+            skip,
+            orderBy: { createdAt: "desc" },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        image: true,
+                    },
                 },
             },
-        },
-    });
+        }),
+        prisma.comment.count(),
+    ]);
+
+    const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
     return (
         <div className="mx-auto max-w-7xl space-y-6 pb-20 md:pb-0">
@@ -54,7 +74,7 @@ export default async function CommentsPage() {
                         Comments Moderation
                     </h1>
                     <p className="mt-1 text-sm text-hn-text-muted">
-                        {comments.length} total comment{comments.length !== 1 ? "s" : ""} across all episodes
+                        {totalCount} total comment{totalCount !== 1 ? "s" : ""} across all episodes
                     </p>
                 </div>
             </div>
@@ -132,6 +152,15 @@ export default async function CommentsPage() {
                     </div>
                 )}
             </div>
+
+            {/* ── Pagination ─────────────────────────────────────────── */}
+            <AdminPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={totalCount}
+                itemsPerPage={ITEMS_PER_PAGE}
+                basePath="/aishiteru/comments"
+            />
         </div>
     );
 }
