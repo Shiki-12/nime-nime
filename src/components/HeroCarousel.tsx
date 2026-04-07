@@ -9,13 +9,32 @@ import Link from "next/link";
    ═══════════════════════════════════════════════════════════════════ */
 const slides = [
   {
+    id: "media-instagram",
+    title: "Join the Nime-Nime Community!",
+    synopsis:
+      "Get the latest ongoing anime updates, exciting discussions, and maintenance info straight from our Instagram feed!",
+    image: "/images/banner_media.png",
+    primaryLabel: "Follow Instagram",
+    primaryHref: "https://instagram.com/nimenime_id",
+    secondaryLabel: "Contact Us",
+    secondaryHref: "/contact",
+    mediaType: "Social",
+    duration: null,
+    releaseDate: null,
+    quality: null,
+    hasCC: false,
+    hasDub: false,
+    ccCount: null,
+    dubCount: null,
+  },
+  {
     id: "create-account",
     title: "Join NimeNime Today!",
     synopsis:
       "Create an account to unlock exclusive features, save your favorite anime, track your watch history, and get personalized recommendations based on your taste. Your journey starts here.",
     image: "/images/banner_account.png",
-    primaryLabel: "Sign Up / Log In",
-    primaryHref: "/login",
+    primaryLabel: "Contact Us",
+    primaryHref: "/contact",
     secondaryLabel: "Learn More",
     secondaryHref: "/terms",
     mediaType: "Platform",
@@ -40,8 +59,8 @@ const slides = [
     synopsis:
       "Connect with others in real-time! Share your top 5 anime recommendations, join the live chat, and discover what everyone is watching.",
     image: "/images/banner_public.png",
-    primaryLabel: "Enter Community Hub",
-    primaryHref: "/discuss",
+    primaryLabel: "Contact Us",
+    primaryHref: "/contact",
     secondaryLabel: "Read Rules",
     secondaryHref: "/rules",
     tag: "New Feature",
@@ -73,8 +92,8 @@ const slides = [
     synopsis:
       "For a safer, ad-free streaming experience, we recommend using Brave Browser or installing uBlock Origin. Protect yourself from malicious ads and enjoy your anime without distractions.",
     image: "/images/banner_adblock.jpg",
-    primaryLabel: "Get uBlock Origin",
-    primaryHref: "https://ublockorigin.com/",
+    primaryLabel: "Contact Us",
+    primaryHref: "/contact",
     secondaryLabel: "Detail",
     secondaryHref: "/terms",
     mediaType: "Tip",
@@ -92,8 +111,8 @@ const slides = [
     synopsis:
       "Stream thousands of episodes — from legendary series to the latest seasonal hits. No ads, no interruptions. Enjoy premium anime streaming with subtitles in multiple languages, all in high definition quality.",
     image: "/images/banner.png",
-    primaryLabel: "Watch Now",
-    primaryHref: "/popular",
+    primaryLabel: "Contact Us",
+    primaryHref: "/contact",
     secondaryLabel: "Browse Genres",
     secondaryHref: "/genres",
     mediaType: "TV",
@@ -111,8 +130,8 @@ const slides = [
     synopsis:
       "Experience faster streaming, smart watch history, and a sleek mobile UI. Take your favorite anime anywhere you go with our dedicated Android application. Download now and never miss an episode.",
     image: "/images/banner_download.png",
-    primaryLabel: "Download APK",
-    primaryHref: "/download",
+    primaryLabel: "Contact Us",
+    primaryHref: "/contact",
     secondaryLabel: "Detail",
     secondaryHref: "/download",
     mediaType: "App",
@@ -371,52 +390,90 @@ export default function HeroCarousel() {
                     }`}
                 >
                   {/* Primary button — Watch Now */}
-                  <Link
-                    href={slide.primaryHref}
-                    target={
-                      slide.primaryHref.startsWith("http")
-                        ? "_blank"
-                        : undefined
-                    }
-                    rel={
-                      slide.primaryHref.startsWith("http")
-                        ? "noopener noreferrer"
-                        : undefined
-                    }
-                    className="hero-btn-primary group inline-flex items-center gap-2 rounded-full bg-hn-primary px-6 py-2.5 text-sm font-bold text-hn-dark shadow-lg shadow-hn-primary/20 transition-all duration-300 hover:brightness-110 hover:shadow-hn-primary/30 hover:scale-[1.03] active:scale-[0.98]"
-                  >
-                    {/* Play icon */}
-                    <svg
-                      className="h-4 w-4 transition-transform duration-300 group-hover:scale-110"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
+                  {slide.primaryHref.startsWith("http") ? (
+                    <a
+                      href={slide.primaryHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hero-btn-primary group inline-flex items-center gap-2 rounded-full bg-hn-primary px-6 py-2.5 text-sm font-bold text-hn-dark shadow-lg shadow-hn-primary/20 transition-all duration-300 hover:brightness-110 hover:shadow-hn-primary/30 hover:scale-[1.03] active:scale-[0.98]"
                     >
-                      <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
-                    </svg>
-                    {slide.primaryLabel}
-                  </Link>
+                      {/* Play icon */}
+                      <svg
+                        className="h-4 w-4 transition-transform duration-300 group-hover:scale-110"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
+                      </svg>
+                      {slide.primaryLabel}
+                    </a>
+                  ) : (
+                    <Link
+                      href={slide.primaryHref}
+                      className="hero-btn-primary group inline-flex items-center gap-2 rounded-full bg-hn-primary px-6 py-2.5 text-sm font-bold text-hn-dark shadow-lg shadow-hn-primary/20 transition-all duration-300 hover:brightness-110 hover:shadow-hn-primary/30 hover:scale-[1.03] active:scale-[0.98]"
+                    >
+                      {/* Play icon */}
+                      <svg
+                        className="h-4 w-4 transition-transform duration-300 group-hover:scale-110"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
+                      </svg>
+                      {slide.primaryLabel}
+                    </Link>
+                  )}
 
                   {/* Secondary button — Detail */}
-                  <Link
-                    href={slide.secondaryHref}
-                    className="hero-btn-secondary group inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] px-6 py-2.5 text-sm font-semibold text-white/80 ring-1 ring-white/10 backdrop-blur-sm transition-all duration-300 hover:bg-white/[0.14] hover:text-white hover:ring-white/20 active:scale-[0.98]"
-                  >
-                    {slide.secondaryLabel}
-                    {/* Chevron right */}
-                    <svg
-                      className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2.5}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </Link>
+                  {slide.secondaryHref && (
+                    <>
+                      {slide.secondaryHref.startsWith("http") ? (
+                        <a
+                          href={slide.secondaryHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hero-btn-secondary group inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] px-6 py-2.5 text-sm font-semibold text-white/80 ring-1 ring-white/10 backdrop-blur-sm transition-all duration-300 hover:bg-white/[0.14] hover:text-white hover:ring-white/20 active:scale-[0.98]"
+                        >
+                          {slide.secondaryLabel}
+                          {/* Chevron right */}
+                          <svg
+                            className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2.5}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </a>
+                      ) : (
+                        <Link
+                          href={slide.secondaryHref}
+                          className="hero-btn-secondary group inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] px-6 py-2.5 text-sm font-semibold text-white/80 ring-1 ring-white/10 backdrop-blur-sm transition-all duration-300 hover:bg-white/[0.14] hover:text-white hover:ring-white/20 active:scale-[0.98]"
+                        >
+                          {slide.secondaryLabel}
+                          {/* Chevron right */}
+                          <svg
+                            className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2.5}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </Link>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             </div>
