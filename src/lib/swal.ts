@@ -32,6 +32,7 @@ function swalConfirmFire(
 
     return Swal.fire({
         customClass: {
+            container: "!z-[99999]",
             popup: "!rounded-2xl !border !border-white/10 !shadow-2xl !shadow-black/60",
             title: "!text-white !font-bold !text-lg",
             htmlContainer: "!text-white/50 !text-sm",
@@ -74,6 +75,7 @@ function swalDestructiveFire(
 
     return Swal.fire({
         customClass: {
+            container: "!z-[99999]",
             popup: "!rounded-2xl !border !border-white/10 !shadow-2xl !shadow-black/60",
             title: "!text-white !font-bold !text-lg",
             htmlContainer: "!text-white/50 !text-sm",
@@ -103,6 +105,9 @@ function swalToast(options?: SweetAlertOptions) {
     const bg = cssVar("--hn-card", "#0f1a14");
 
     return Swal.fire({
+        customClass: {
+            container: "!z-[99999]",
+        },
         toast: true,
         position: "bottom-end",
         showConfirmButton: false,
