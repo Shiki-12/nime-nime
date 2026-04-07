@@ -44,10 +44,10 @@ export default function HentaiNavbar({ userName }: HentaiNavbarProps) {
 
         {/* Logo / Brand */}
         <Link href="/hentai" className="group flex items-center gap-2 shrink-0">
-          <span className="text-xl font-extrabold tracking-tight text-white">
+          <span className="text-xl font-extrabold tracking-tight text-hn-text">
             Nime<span className="text-hn-primary">Nime</span>
           </span>
-          <span className="rounded bg-hn-nsfw px-1.5 py-0.5 text-[9px] font-bold text-white">
+          <span className="rounded bg-hn-nsfw px-1.5 py-0.5 text-[9px] font-bold text-hn-text">
             18+
           </span>
         </Link>

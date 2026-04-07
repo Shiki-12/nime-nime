@@ -88,10 +88,10 @@ export default function SavedPage() {
             {/* Header */}
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-extrabold text-white sm:text-3xl">
+                    <h1 className="text-2xl font-extrabold text-hn-text sm:text-3xl">
                         <span className="text-hn-primary">Saved</span> Anime
                     </h1>
-                    <p className="mt-1 text-sm text-white/40">
+                    <p className="mt-1 text-sm text-hn-text-muted/60">
                         {status === "authenticated"
                             ? "Your personal bookmarks — synced to your account."
                             : "Your personal bookmarks — saved locally in your browser."}
@@ -102,7 +102,7 @@ export default function SavedPage() {
                     <div className="flex items-center gap-3 self-start">
                         <button
                             onClick={toggleSelectionMode}
-                            className="flex items-center gap-1.5 rounded-full bg-white/5 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-white/10"
+                            className="flex items-center gap-1.5 rounded-full bg-white/5 px-4 py-2 text-xs font-semibold text-hn-text transition-colors hover:bg-white/10"
                         >
                             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -119,7 +119,7 @@ export default function SavedPage() {
                     <div className="flex items-center gap-4">
                         <button
                             onClick={handleSelectAll}
-                            className="flex items-center gap-2 text-sm font-semibold text-white transition-colors hover:text-hn-primary"
+                            className="flex items-center gap-2 text-sm font-semibold text-hn-text transition-colors hover:text-hn-primary"
                         >
                             <div className={`flex h-5 w-5 items-center justify-center rounded border transition-colors ${selectedIds.length === saved.length ? "border-hn-primary bg-hn-primary text-black" : "border-white/30"}`}>
                                 {selectedIds.length === saved.length && (
@@ -132,7 +132,7 @@ export default function SavedPage() {
                                 {selectedIds.length === saved.length ? "Unselect All" : "Select All"}
                             </span>
                         </button>
-                        <span className="text-xs font-medium text-white/50">
+                        <span className="text-xs font-medium text-hn-text-muted/70">
                             {selectedIds.length} selected
                         </span>
                     </div>
@@ -141,14 +141,14 @@ export default function SavedPage() {
                         {selectedIds.length > 0 && (
                             <button
                                 onClick={handleDeleteSelected}
-                                className="rounded-full bg-red-500 px-4 py-1.5 text-xs font-bold text-white transition-all hover:bg-red-600 hover:shadow-lg hover:shadow-red-500/25"
+                                className="rounded-full bg-red-500 px-4 py-1.5 text-xs font-bold text-hn-text transition-all hover:bg-red-600 hover:shadow-lg hover:shadow-red-500/25"
                             >
                                 Delete ({selectedIds.length})
                             </button>
                         )}
                         <button
                             onClick={toggleSelectionMode}
-                            className="rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold text-white transition-colors hover:bg-white/20"
+                            className="rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold text-hn-text transition-colors hover:bg-white/20"
                         >
                             Cancel
                         </button>
@@ -159,13 +159,13 @@ export default function SavedPage() {
             {/* Empty state */}
             {saved.length === 0 && (
                 <div className="flex flex-col items-center justify-center rounded-2xl border border-white/5 bg-hn-card/50 py-20">
-                    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-white/5 text-white/30">
+                    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-white/5 text-hn-text-muted/50">
                         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
                         </svg>
                     </div>
-                    <h2 className="text-lg font-semibold text-white/40">No saved anime yet</h2>
-                    <p className="mt-1 text-sm text-white/20">Browse anime and click Save to bookmark them.</p>
+                    <h2 className="text-lg font-semibold text-hn-text-muted/60">No saved anime yet</h2>
+                    <p className="mt-1 text-sm text-hn-text-muted/40">Browse anime and click Save to bookmark them.</p>
                     <Link
                         href="/"
                         className="mt-5 rounded-full bg-hn-primary px-5 py-2 text-sm font-semibold text-hn-dark transition-all hover:shadow-lg hover:shadow-hn-primary/25"
@@ -243,7 +243,7 @@ export default function SavedPage() {
                                                         e.stopPropagation();
                                                         setOpenMenuId(openMenuId === anime.slug ? null : anime.slug);
                                                     }}
-                                                    className={`flex h-7 w-7 items-center justify-center rounded-md backdrop-blur-sm transition-all ${openMenuId === anime.slug ? "bg-white/20 text-white" : "bg-black/50 text-white/50 md:text-white/70 md:hover:bg-white/20 md:hover:text-white opacity-100 md:opacity-0 md:group-hover:opacity-100"}`}
+                                                    className={`flex h-7 w-7 items-center justify-center rounded-md backdrop-blur-sm transition-all ${openMenuId === anime.slug ? "bg-white/20 text-hn-text" : "bg-black/50 text-hn-text-muted/70 md:text-hn-text/70 md:hover:bg-white/20 md:hover:text-hn-text opacity-100 md:opacity-0 md:group-hover:opacity-100"}`}
                                                 >
                                                     <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                                                         <path d="M12 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4ZM12 10a2 2 0 1 1 0 4 2 2 0 0 1 0-4ZM12 17a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z" />
@@ -277,12 +277,12 @@ export default function SavedPage() {
                                     </div>
                                     <div className="px-2.5 py-2">
                                         {isSelecting ? (
-                                            <h3 className="line-clamp-2 text-[13px] font-medium leading-snug text-white/90">
+                                            <h3 className="line-clamp-2 text-[13px] font-medium leading-snug text-hn-text">
                                                 {anime.title}
                                             </h3>
                                         ) : (
                                             <Link href={`/anime/${anime.slug}`}>
-                                                <h3 className="line-clamp-2 text-[13px] font-medium leading-snug text-white/90 group-hover:text-hn-primary transition-colors">
+                                                <h3 className="line-clamp-2 text-[13px] font-medium leading-snug text-hn-text group-hover:text-hn-primary transition-colors">
                                                     {anime.title}
                                                 </h3>
                                             </Link>
@@ -300,17 +300,17 @@ export default function SavedPage() {
                     <button
                         disabled={meta.page <= 1 || isLoading}
                         onClick={() => router.push(`${pathname}?page=${meta.page - 1}`)}
-                        className="rounded-full bg-white/5 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="rounded-full bg-white/5 px-4 py-2 text-sm font-semibold text-hn-text transition-colors hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Previous
                     </button>
-                    <span className="text-sm font-medium text-white/50">
+                    <span className="text-sm font-medium text-hn-text-muted/70">
                         Page {meta.page} of {meta.totalPages}
                     </span>
                     <button
                         disabled={meta.page >= meta.totalPages || isLoading}
                         onClick={() => router.push(`${pathname}?page=${meta.page + 1}`)}
-                        className="rounded-full bg-white/5 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="rounded-full bg-white/5 px-4 py-2 text-sm font-semibold text-hn-text transition-colors hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Next
                     </button>

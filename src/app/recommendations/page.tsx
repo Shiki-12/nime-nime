@@ -173,7 +173,7 @@ export default function RecommendationsPage() {
             <div className="flex min-h-screen items-center justify-center">
                 <div className="flex flex-col items-center gap-4">
                     <div className="h-8 w-8 animate-spin rounded-full border-2 border-hn-primary border-t-transparent" />
-                    <p className="text-sm text-white/40">Loading...</p>
+                    <p className="text-sm text-hn-text-muted/60">Loading...</p>
                 </div>
             </div>
         );
@@ -186,7 +186,7 @@ export default function RecommendationsPage() {
                 <div className="flex items-center gap-3">
                     <Link
                         href="/discuss"
-                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.04] text-white/40 transition-colors hover:border-hn-primary/30 hover:text-hn-primary"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-hn-border/60 bg-white/[0.04] text-hn-text-muted/60 transition-colors hover:border-hn-primary/30 hover:text-hn-primary"
                     >
                         <svg
                             className="h-4 w-4"
@@ -207,7 +207,7 @@ export default function RecommendationsPage() {
                             <span className="text-hn-secondary">⭐</span>{" "}
                             All Recommendations
                         </h1>
-                        <p className="mt-1 text-sm text-white/40">
+                        <p className="mt-1 text-sm text-hn-text-muted/60">
                             Anime recommended by the community. Each user
                             can recommend up to 2 titles.
                         </p>
@@ -221,7 +221,7 @@ export default function RecommendationsPage() {
             ) : recommendations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center gap-4 py-24 text-center">
                     <svg
-                        className="h-16 w-16 text-white/10"
+                        className="h-16 w-16 text-hn-text-muted/30"
                         fill="none"
                         viewBox="0 0 24 24"
                         strokeWidth={1}
@@ -233,7 +233,7 @@ export default function RecommendationsPage() {
                             d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
                         />
                     </svg>
-                    <p className="text-sm text-white/30">
+                    <p className="text-sm text-hn-text-muted/50">
                         No recommendations yet. Head to{" "}
                         <Link
                             href="/discuss"
@@ -255,7 +255,7 @@ export default function RecommendationsPage() {
                             <Link
                                 key={rec.id}
                                 href={`/anime/${rec.animeSlug}`}
-                                className="group/rec relative flex flex-col overflow-hidden rounded-xl border border-white/[0.04] bg-white/[0.02] transition-all hover:border-hn-primary/20 hover:bg-white/[0.05]"
+                                className="group/rec relative flex flex-col overflow-hidden rounded-xl border border-white/[0.04] bg-white/[0.02] transition-all hover:border-hn-primary/20 hover:bg-hn-card-hover"
                             >
                                 {/* Cover */}
                                 <div className="relative aspect-[3/4] w-full overflow-hidden">
@@ -276,7 +276,7 @@ export default function RecommendationsPage() {
                                             size={16}
                                         />
                                         <div className="flex items-center gap-1">
-                                            <span className="max-w-[70px] truncate text-[10px] font-medium text-white/70">
+                                            <span className="max-w-[70px] truncate text-[10px] font-medium text-hn-text/70">
                                                 {rec.user.name}
                                             </span>
                                             {(rec.user.role === "ADMIN" || rec.user.role === "OWNER") && (
@@ -287,7 +287,7 @@ export default function RecommendationsPage() {
                                         </div>
                                     </div>
                                     {/* Time badge */}
-                                    <div className="absolute right-2 top-2 rounded-full bg-black/50 px-2 py-0.5 text-[9px] font-medium text-white/50 backdrop-blur-sm">
+                                    <div className="absolute right-2 top-2 rounded-full bg-black/50 px-2 py-0.5 text-[9px] font-medium text-hn-text-muted/70 backdrop-blur-sm">
                                         {timeAgo(rec.createdAt)}
                                     </div>
 
@@ -325,7 +325,7 @@ export default function RecommendationsPage() {
                                 </div>
                                 {/* Title */}
                                 <div className="px-3 py-2.5">
-                                    <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-white/80 group-hover/rec:text-hn-primary">
+                                    <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-hn-text-muted/90 group-hover/rec:text-hn-primary">
                                         {rec.animeTitle}
                                     </h3>
                                 </div>

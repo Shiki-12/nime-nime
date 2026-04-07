@@ -56,7 +56,7 @@ export default function ContactForm() {
       <div>
         <label
           htmlFor="contact-name"
-          className="mb-1.5 block text-sm font-medium text-white/70"
+          className="mb-1.5 block text-sm font-medium text-hn-text/70"
         >
           Name
         </label>
@@ -66,7 +66,7 @@ export default function ContactForm() {
           name="name"
           required
           placeholder="Your full name"
-          className="w-full rounded-lg border border-white/[0.06] bg-hn-card px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-hn-primary/50 focus:ring-1 focus:ring-hn-primary/30"
+          className="w-full rounded-lg border border-hn-border/50 bg-hn-card px-4 py-3 text-sm text-hn-text placeholder-white/30 outline-none transition-colors focus:border-hn-primary/50 focus:ring-1 focus:ring-hn-primary/30"
         />
       </div>
 
@@ -74,7 +74,7 @@ export default function ContactForm() {
       <div>
         <label
           htmlFor="contact-email"
-          className="mb-1.5 block text-sm font-medium text-white/70"
+          className="mb-1.5 block text-sm font-medium text-hn-text/70"
         >
           Email
         </label>
@@ -84,7 +84,7 @@ export default function ContactForm() {
           name="email"
           required
           placeholder="you@example.com"
-          className="w-full rounded-lg border border-white/[0.06] bg-hn-card px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-hn-primary/50 focus:ring-1 focus:ring-hn-primary/30"
+          className="w-full rounded-lg border border-hn-border/50 bg-hn-card px-4 py-3 text-sm text-hn-text placeholder-white/30 outline-none transition-colors focus:border-hn-primary/50 focus:ring-1 focus:ring-hn-primary/30"
         />
       </div>
 
@@ -92,7 +92,7 @@ export default function ContactForm() {
       <div>
         <label
           htmlFor="contact-message"
-          className="mb-1.5 block text-sm font-medium text-white/70"
+          className="mb-1.5 block text-sm font-medium text-hn-text/70"
         >
           Message
         </label>
@@ -102,7 +102,7 @@ export default function ContactForm() {
           rows={6}
           required
           placeholder="Write your message here..."
-          className="w-full resize-none rounded-lg border border-white/[0.06] bg-hn-card px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-hn-primary/50 focus:ring-1 focus:ring-hn-primary/30"
+          className="w-full resize-none rounded-lg border border-hn-border/50 bg-hn-card px-4 py-3 text-sm text-hn-text placeholder-white/30 outline-none transition-colors focus:border-hn-primary/50 focus:ring-1 focus:ring-hn-primary/30"
         />
       </div>
 

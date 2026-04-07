@@ -61,10 +61,10 @@ export default async function FilterPage({ searchParams }: FilterPageProps) {
         <div className="mx-auto max-w-[1440px] px-4 pb-16 pt-24 lg:px-6">
             {/* Header */}
             <div className="mb-6">
-                <h1 className="text-2xl font-bold text-white sm:text-3xl">
+                <h1 className="text-2xl font-bold text-hn-text sm:text-3xl">
                     <span className="text-hn-primary">Advanced</span> Search
                 </h1>
-                <p className="mt-1 text-sm text-white/40">
+                <p className="mt-1 text-sm text-hn-text-muted/60">
                     Filter anime by genre, season, type, status, and more.
                 </p>
             </div>
@@ -77,21 +77,21 @@ export default async function FilterPage({ searchParams }: FilterPageProps) {
             {/* Error */}
             {fetchError && (
                 <div className="mb-8 rounded-xl border border-red-500/20 bg-red-500/5 p-6 text-center">
-                    <h3 className="text-lg font-bold text-white">API Unavailable</h3>
-                    <p className="mt-1 text-sm text-white/50">{fetchError}</p>
+                    <h3 className="text-lg font-bold text-hn-text">API Unavailable</h3>
+                    <p className="mt-1 text-sm text-hn-text-muted/70">{fetchError}</p>
                 </div>
             )}
 
             {/* Empty state (no filters applied yet) */}
             {!hasFilters && !fetchError && (
                 <div className="flex flex-col items-center justify-center rounded-2xl border border-white/5 bg-hn-card/50 py-16">
-                    <svg className="mb-4 h-14 w-14 text-white/10" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
+                    <svg className="mb-4 h-14 w-14 text-hn-text-muted/30" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
                     </svg>
-                    <p className="text-base font-semibold text-white/30">
+                    <p className="text-base font-semibold text-hn-text-muted/50">
                         Select filters and hit &quot;Search Criteria&quot;
                     </p>
-                    <p className="mt-1 text-sm text-white/15">
+                    <p className="mt-1 text-sm text-hn-text/15">
                         Results will appear here.
                     </p>
                 </div>
@@ -100,10 +100,10 @@ export default async function FilterPage({ searchParams }: FilterPageProps) {
             {/* Results */}
             {hasFilters && animeList.length === 0 && !fetchError && (
                 <div className="flex flex-col items-center justify-center rounded-2xl border border-white/5 bg-hn-card/50 py-16">
-                    <p className="text-base font-semibold text-white/30">
+                    <p className="text-base font-semibold text-hn-text-muted/50">
                         No results found
                     </p>
-                    <p className="mt-1 text-sm text-white/15">
+                    <p className="mt-1 text-sm text-hn-text/15">
                         Try adjusting your filters.
                     </p>
                 </div>
@@ -113,10 +113,10 @@ export default async function FilterPage({ searchParams }: FilterPageProps) {
                 <>
                     <div className="mb-4 flex items-center gap-2">
                         <div className="h-4 w-1 rounded-full bg-hn-primary" />
-                        <h2 className="text-base font-bold text-white">
+                        <h2 className="text-base font-bold text-hn-text">
                             Results
                         </h2>
-                        <span className="text-xs text-white/30">
+                        <span className="text-xs text-hn-text-muted/50">
                             Page {currentPage}
                         </span>
                     </div>
@@ -132,7 +132,7 @@ export default async function FilterPage({ searchParams }: FilterPageProps) {
                         {pagination.hasPrev && (
                             <Link
                                 href={pageHref(currentPage - 1)}
-                                className="rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-hn-card-hover"
+                                className="rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-hn-text transition-all hover:bg-hn-card-hover"
                             >
                                 ← Previous
                             </Link>
@@ -143,7 +143,7 @@ export default async function FilterPage({ searchParams }: FilterPageProps) {
                         {pagination.hasNext && (
                             <Link
                                 href={pageHref(currentPage + 1)}
-                                className="rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-hn-card-hover"
+                                className="rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-hn-text transition-all hover:bg-hn-card-hover"
                             >
                                 Next →
                             </Link>

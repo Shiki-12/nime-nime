@@ -44,14 +44,14 @@ export default async function GenreFilterPage({ params, searchParams }: GenrePag
     return (
         <div className="mx-auto max-w-[1440px] px-4 py-8 lg:px-6">
             <div className="mb-6">
-                <Link href="/genres" className="text-xs text-white/30 transition-colors hover:text-hn-primary">
+                <Link href="/genres" className="text-xs text-hn-text-muted/50 transition-colors hover:text-hn-primary">
                     ← All Genres
                 </Link>
-                <h1 className="mt-2 text-xl font-extrabold text-white sm:text-2xl">
+                <h1 className="mt-2 text-xl font-extrabold text-hn-text sm:text-2xl">
                     Genre: <span className="text-hn-primary">{displayName}</span>
                 </h1>
                 {totalPages > 1 && (
-                    <p className="mt-1 text-xs text-white/30">
+                    <p className="mt-1 text-xs text-hn-text-muted/50">
                         Page {currentPage} of {totalPages}
                     </p>
                 )}
@@ -59,13 +59,13 @@ export default async function GenreFilterPage({ params, searchParams }: GenrePag
 
             {fetchError && (
                 <div className="rounded-lg bg-red-500/5 p-6 text-center">
-                    <p className="text-sm text-white/50">{fetchError}</p>
+                    <p className="text-sm text-hn-text-muted/70">{fetchError}</p>
                 </div>
             )}
 
             {!fetchError && animeList.length === 0 && (
                 <div className="py-16 text-center">
-                    <p className="text-white/50">No anime found in this genre.</p>
+                    <p className="text-hn-text-muted/70">No anime found in this genre.</p>
                 </div>
             )}
 

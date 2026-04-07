@@ -168,7 +168,7 @@ export default async function SerialPage({ params, searchParams }: SerialPagePro
 
                 <div className="relative mx-auto max-w-[1440px] px-4 pb-6 pt-24 lg:px-6">
                     {/* Breadcrumb */}
-                    <div className="mb-4 flex items-center gap-2 text-[13px] text-white/30">
+                    <div className="mb-4 flex items-center gap-2 text-[13px] text-hn-text-muted/50">
                         <Link
                             href="/"
                             className="transition-colors hover:text-hn-primary"
@@ -176,14 +176,14 @@ export default async function SerialPage({ params, searchParams }: SerialPagePro
                             Home
                         </Link>
                         <span>/</span>
-                        <span className="text-white/50">Serial</span>
+                        <span className="text-hn-text-muted/70">Serial</span>
                     </div>
 
                     {/* Title */}
-                    <h1 className="text-2xl font-extrabold text-white sm:text-3xl md:text-4xl">
+                    <h1 className="text-2xl font-extrabold text-hn-text sm:text-3xl md:text-4xl">
                         {data.title}
                     </h1>
-                    <p className="mt-2 text-sm text-white/40">
+                    <p className="mt-2 text-sm text-hn-text-muted/60">
                         {data.animes.length} anime dalam franchise ini
                         {totalPages > 1 && (
                             <span className="ml-1">
@@ -244,7 +244,7 @@ export default async function SerialPage({ params, searchParams }: SerialPagePro
 
                                 {/* Status tag (bottom-right) */}
                                 {anime.status && (
-                                    <span className="absolute bottom-1 right-1 rounded bg-hn-dark/80 px-1.5 py-0.5 text-[10px] text-white/60 backdrop-blur-sm">
+                                    <span className="absolute bottom-1 right-1 rounded bg-hn-dark/80 px-1.5 py-0.5 text-[10px] text-hn-text-muted/80 backdrop-blur-sm">
                                         {anime.status}
                                     </span>
                                 )}
@@ -252,7 +252,7 @@ export default async function SerialPage({ params, searchParams }: SerialPagePro
 
                             {/* Title */}
                             <div className="px-2.5 py-2">
-                                <h3 className="line-clamp-2 text-[13px] font-medium leading-snug text-white/90 transition-colors group-hover:text-hn-primary">
+                                <h3 className="line-clamp-2 text-[13px] font-medium leading-snug text-hn-text transition-colors group-hover:text-hn-primary">
                                     {anime.title}
                                 </h3>
                             </div>
@@ -267,12 +267,12 @@ export default async function SerialPage({ params, searchParams }: SerialPagePro
                         {safePage > 1 ? (
                             <Link
                                 href={`?page=${safePage - 1}`}
-                                className="rounded-lg bg-white/[0.06] px-4 py-2 text-[13px] font-medium text-white/60 backdrop-blur-sm transition-colors hover:bg-white/[0.12] hover:text-white"
+                                className="rounded-lg bg-hn-border/20 px-4 py-2 text-[13px] font-medium text-hn-text-muted/80 backdrop-blur-sm transition-colors hover:bg-white/[0.12] hover:text-hn-text"
                             >
                                 « Sebelumnya
                             </Link>
                         ) : (
-                            <span className="rounded-lg bg-white/[0.03] px-4 py-2 text-[13px] font-medium text-white/20 cursor-not-allowed">
+                            <span className="rounded-lg bg-hn-card px-4 py-2 text-[13px] font-medium text-hn-text-muted/40 cursor-not-allowed">
                                 « Sebelumnya
                             </span>
                         )}
@@ -286,7 +286,7 @@ export default async function SerialPage({ params, searchParams }: SerialPagePro
                                     className={`flex h-9 w-9 items-center justify-center rounded-lg text-[13px] font-semibold transition-all duration-200 ${
                                         page === safePage
                                             ? "bg-hn-primary text-hn-dark shadow-lg shadow-hn-primary/30"
-                                            : "bg-white/[0.06] text-white/60 hover:bg-white/[0.12] hover:text-white"
+                                            : "bg-hn-border/20 text-hn-text-muted/80 hover:bg-white/[0.12] hover:text-hn-text"
                                     }`}
                                 >
                                     {page}
@@ -298,12 +298,12 @@ export default async function SerialPage({ params, searchParams }: SerialPagePro
                         {safePage < totalPages ? (
                             <Link
                                 href={`?page=${safePage + 1}`}
-                                className="rounded-lg bg-white/[0.06] px-4 py-2 text-[13px] font-medium text-white/60 backdrop-blur-sm transition-colors hover:bg-white/[0.12] hover:text-white"
+                                className="rounded-lg bg-hn-border/20 px-4 py-2 text-[13px] font-medium text-hn-text-muted/80 backdrop-blur-sm transition-colors hover:bg-white/[0.12] hover:text-hn-text"
                             >
                                 Berikutnya »
                             </Link>
                         ) : (
-                            <span className="rounded-lg bg-white/[0.03] px-4 py-2 text-[13px] font-medium text-white/20 cursor-not-allowed">
+                            <span className="rounded-lg bg-hn-card px-4 py-2 text-[13px] font-medium text-hn-text-muted/40 cursor-not-allowed">
                                 Berikutnya »
                             </span>
                         )}

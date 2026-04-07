@@ -41,15 +41,15 @@ function SkeletonCard() {
         <div className="flex min-w-[280px] snap-start overflow-hidden rounded-xl bg-hn-card md:min-w-0">
             {/* Left skeleton */}
             <div className="flex w-1/2 flex-col items-center gap-2 p-3">
-                <div className="h-[72px] w-[72px] animate-pulse rounded-full bg-white/[0.06]" />
-                <div className="h-3 w-20 animate-pulse rounded bg-white/[0.06]" />
-                <div className="h-2.5 w-12 animate-pulse rounded bg-white/[0.06]" />
+                <div className="h-[72px] w-[72px] animate-pulse rounded-full bg-hn-border/20" />
+                <div className="h-3 w-20 animate-pulse rounded bg-hn-border/20" />
+                <div className="h-2.5 w-12 animate-pulse rounded bg-hn-border/20" />
             </div>
             {/* Right skeleton */}
             <div className="flex w-1/2 flex-col items-center gap-2 border-l border-white/[0.04] p-3">
-                <div className="h-[72px] w-[72px] animate-pulse rounded-full bg-white/[0.06]" />
-                <div className="h-3 w-20 animate-pulse rounded bg-white/[0.06]" />
-                <div className="h-2.5 w-12 animate-pulse rounded bg-white/[0.06]" />
+                <div className="h-[72px] w-[72px] animate-pulse rounded-full bg-hn-border/20" />
+                <div className="h-3 w-20 animate-pulse rounded bg-hn-border/20" />
+                <div className="h-2.5 w-12 animate-pulse rounded bg-hn-border/20" />
             </div>
         </div>
     );
@@ -71,7 +71,7 @@ function CharacterCard({ char, isHiddenOnDesktop }: { char: DisplayCharacter; is
                         className="object-cover"
                     />
                 </div>
-                <p className="w-full truncate text-center text-[12px] font-semibold text-white">
+                <p className="w-full truncate text-center text-[12px] font-semibold text-hn-text">
                     {char.name}
                 </p>
                 <span className="rounded-full bg-hn-primary/10 px-2 py-0.5 text-[10px] font-bold text-hn-primary">
@@ -93,17 +93,17 @@ function CharacterCard({ char, isHiddenOnDesktop }: { char: DisplayCharacter; is
                                 className="object-cover"
                             />
                         </div>
-                        <p className="w-full truncate text-center text-[12px] font-semibold text-white">
+                        <p className="w-full truncate text-center text-[12px] font-semibold text-hn-text">
                             {char.vaName}
                         </p>
-                        <span className="rounded-full bg-white/[0.06] px-2 py-0.5 text-[10px] font-medium text-hn-text">
+                        <span className="rounded-full bg-hn-border/20 px-2 py-0.5 text-[10px] font-medium text-hn-text">
                             Seiyuu
                         </span>
                     </>
                 ) : (
                     <>
                         <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-white/[0.04]">
-                            <svg className="h-6 w-6 text-white/10" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                            <svg className="h-6 w-6 text-hn-text-muted/30" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0" />
                             </svg>
                         </div>
@@ -205,7 +205,7 @@ export default function AnimeCharacters({ animeTitle }: AnimeCharactersProps) {
     return (
         <section className="mb-8">
             {/* Section heading */}
-            <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-white">
+            <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-hn-text">
                 <div className="h-4 w-1 rounded-full bg-hn-primary" />
                 Characters &amp; Voice Actors
             </h2>
@@ -245,7 +245,7 @@ export default function AnimeCharacters({ animeTitle }: AnimeCharactersProps) {
                         <div className="mt-4 hidden w-full justify-center md:flex">
                             <button
                                 onClick={() => setShowAllCharacters(!showAllCharacters)}
-                                className="group flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.02] px-5 py-2 text-sm font-medium text-white/70 transition-all hover:border-white/20 hover:bg-white/5 hover:text-white"
+                                className="group flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.02] px-5 py-2 text-sm font-medium text-hn-text/70 transition-all hover:border-white/20 hover:bg-white/5 hover:text-hn-text"
                             >
                                 {showAllCharacters ? "Show Less" : "Show More Characters"}
                                 <svg

@@ -183,7 +183,7 @@ export default function InboxPage() {
             <div className="flex min-h-screen items-center justify-center">
                 <div className="flex flex-col items-center gap-4">
                     <div className="h-8 w-8 animate-spin rounded-full border-2 border-hn-primary border-t-transparent" />
-                    <p className="text-sm text-white/40">Loading...</p>
+                    <p className="text-sm text-hn-text-muted/60">Loading...</p>
                 </div>
             </div>
         );
@@ -194,10 +194,10 @@ export default function InboxPage() {
             {/* ── Header ─────────────────────────────────────────── */}
             <div className="mb-6 flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">
+                    <h1 className="text-2xl font-bold text-hn-text">
                         <span className="text-hn-primary">🔔</span> Inbox
                     </h1>
-                    <p className="mt-1 text-sm text-white/40">
+                    <p className="mt-1 text-sm text-hn-text-muted/60">
                         {unreadCount > 0
                             ? `You have ${unreadCount} unread notification${unreadCount !== 1 ? "s" : ""}`
                             : "You're all caught up!"}
@@ -208,7 +208,7 @@ export default function InboxPage() {
                     <button
                         onClick={markAllAsRead}
                         disabled={markingAll}
-                        className="flex items-center gap-1.5 rounded-lg bg-white/[0.06] px-3 py-2 text-xs font-semibold text-white/60 transition-all hover:bg-white/10 hover:text-white disabled:opacity-50"
+                        className="flex items-center gap-1.5 rounded-lg bg-hn-border/20 px-3 py-2 text-xs font-semibold text-hn-text-muted/80 transition-all hover:bg-white/10 hover:text-hn-text disabled:opacity-50"
                     >
                         {markingAll ? (
                             <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-transparent" />
@@ -227,17 +227,17 @@ export default function InboxPage() {
                 <InboxSkeleton />
             ) : notifications.length === 0 ? (
                 /* Empty State */
-                <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-white/[0.06] bg-hn-card/60 py-20 text-center">
+                <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-hn-border/50 bg-hn-card/60 py-20 text-center">
                     <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/[0.04]">
-                        <svg className="h-8 w-8 text-white/10" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
+                        <svg className="h-8 w-8 text-hn-text-muted/30" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
                         </svg>
                     </div>
                     <div>
-                        <p className="text-sm font-medium text-white/40">
+                        <p className="text-sm font-medium text-hn-text-muted/60">
                             No notifications yet
                         </p>
-                        <p className="mt-1 text-xs text-white/20">
+                        <p className="mt-1 text-xs text-hn-text-muted/40">
                             We&apos;ll notify you about replies and new episodes here.
                         </p>
                     </div>
@@ -268,8 +268,8 @@ export default function InboxPage() {
                                         <h3
                                             className={`text-sm font-semibold leading-tight ${
                                                 notif.isRead
-                                                    ? "text-white/60"
-                                                    : "text-white"
+                                                    ? "text-hn-text-muted/80"
+                                                    : "text-hn-text"
                                             }`}
                                         >
                                             {notif.title}
@@ -281,8 +281,8 @@ export default function InboxPage() {
                                     <p
                                         className={`mt-0.5 line-clamp-2 text-[13px] leading-relaxed ${
                                             notif.isRead
-                                                ? "text-white/30"
-                                                : "text-white/50"
+                                                ? "text-hn-text-muted/50"
+                                                : "text-hn-text-muted/70"
                                         }`}
                                     >
                                         {notif.message}
@@ -293,7 +293,7 @@ export default function InboxPage() {
                                         >
                                             {badge.label}
                                         </span>
-                                        <span className="text-[10px] text-white/20">
+                                        <span className="text-[10px] text-hn-text-muted/40">
                                             {timeAgo(notif.createdAt)}
                                         </span>
                                     </div>
@@ -302,7 +302,7 @@ export default function InboxPage() {
                                 {/* Arrow indicator for linked notifications */}
                                 {notif.link && (
                                     <svg
-                                        className="mt-1 h-4 w-4 shrink-0 text-white/10 transition-all group-hover:translate-x-0.5 group-hover:text-white/30"
+                                        className="mt-1 h-4 w-4 shrink-0 text-hn-text-muted/30 transition-all group-hover:translate-x-0.5 group-hover:text-hn-text-muted/50"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         strokeWidth={2}

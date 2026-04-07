@@ -47,11 +47,11 @@ export default async function SchedulePage() {
         <main className="mx-auto max-w-[1440px] px-4 pb-16 pt-24 lg:px-6">
             {/* Header */}
             <div className="mb-8">
-                <h1 className="text-2xl font-bold text-white sm:text-3xl">
+                <h1 className="text-2xl font-bold text-hn-text sm:text-3xl">
                     <span className="text-hn-primary">📅</span> Estimated Release
                     Schedule
                 </h1>
-                <p className="mt-1.5 text-sm text-white/50">
+                <p className="mt-1.5 text-sm text-hn-text-muted/70">
                     Browse the weekly airing schedule for ongoing anime.
                 </p>
             </div>

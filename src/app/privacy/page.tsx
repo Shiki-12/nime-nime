@@ -15,21 +15,21 @@ export default function PrivacyPage() {
         <h1 className="bg-gradient-to-r from-hn-primary via-pink-300 to-hn-primary bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl">
           Privacy Policy
         </h1>
-        <p className="mt-3 text-sm text-white/40">
+        <p className="mt-3 text-sm text-hn-text-muted/60">
           Last updated: March 18, 2026
         </p>
       </header>
 
       {/* ── Body ────────────────────────────────────────────────── */}
-      <article className="space-y-10 text-[15px] leading-relaxed text-white/75">
+      <article className="space-y-10 text-[15px] leading-relaxed text-hn-text/75">
         {/* 1 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             1. Introduction
           </h2>
           <p>
             This Privacy Policy describes how{" "}
-            <strong className="text-white">NimeNime</strong> (
+            <strong className="text-hn-text">NimeNime</strong> (
             <Link
               href="https://nime-nime.web.id"
               className="text-hn-primary hover:underline"
@@ -45,11 +45,11 @@ export default function PrivacyPage() {
 
         {/* 2 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             2. Information We Collect
           </h2>
 
-          <h3 className="mb-2 mt-4 text-base font-semibold text-white/90">
+          <h3 className="mb-2 mt-4 text-base font-semibold text-hn-text">
             2.1 Information You Provide
           </h3>
           <p>
@@ -60,24 +60,31 @@ export default function PrivacyPage() {
             from that provider.
           </p>
 
-          <h3 className="mb-2 mt-4 text-base font-semibold text-white/90">
+          <h3 className="mb-2 mt-4 text-base font-semibold text-hn-text">
             2.2 Automatically Collected Information
           </h3>
-          <ul className="list-inside list-disc space-y-1.5 pl-2 text-white/65">
+          <ul className="list-inside list-disc space-y-1.5 pl-2 text-hn-text/65">
             <li>
-              <strong className="text-white/80">IP Address:</strong> Your IP
+              <strong className="text-hn-text-muted/90">IP Address:</strong> Your IP
               address may be collected by our server infrastructure and
               third-party services (e.g., video hosts, analytics) for security
               and operational purposes.
             </li>
             <li>
-              <strong className="text-white/80">Device &amp; Browser Info:</strong>{" "}
+              <strong className="text-hn-text-muted/90">Device &amp; Browser Info:</strong>{" "}
               We may collect information about the device and browser you use
               to access NimeNime, including browser type, operating system,
               and screen resolution.
             </li>
             <li>
-              <strong className="text-white/80">Usage Data:</strong> Pages
+              <strong className="text-hn-text-muted/90">Usage Information:</strong> We
+              automatically collect information about your interactions with our
+              Service. This includes the content you view, your watch history,
+              the items you save to your lists, and your general activity
+              patterns on the platform.
+            </li>
+            <li>
+              <strong className="text-hn-text-muted/90">Usage Data:</strong> Pages
               visited, time spent on the site, referral URLs, and interaction
               data may be collected for analytics purposes.
             </li>
@@ -86,20 +93,20 @@ export default function PrivacyPage() {
 
         {/* 3 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             3. Cookies &amp; Local Storage
           </h2>
           <p className="mb-3">NimeNime uses the following technologies:</p>
-          <ul className="list-inside list-disc space-y-1.5 pl-2 text-white/65">
+          <ul className="list-inside list-disc space-y-1.5 pl-2 text-hn-text/65">
             <li>
-              <strong className="text-white/80">Cookies:</strong> We use
+              <strong className="text-hn-text-muted/90">Cookies:</strong> We use
               cookies to manage user sessions (authentication), remember your
               preferences, and support analytics. Some cookies are essential
               for the Service to function; others help us understand usage
               patterns.
             </li>
             <li>
-              <strong className="text-white/80">Local Storage:</strong> We use
+              <strong className="text-hn-text-muted/90">Local Storage:</strong> We use
               your browser&rsquo;s local storage to persist watch history,
               saved anime lists, and UI preferences (such as theme or video
               player settings) for a seamless experience across visits.
@@ -113,29 +120,29 @@ export default function PrivacyPage() {
 
         {/* 4 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             4. Third-Party Services
           </h2>
           <p className="mb-3">
             NimeNime integrates with or links to external third-party
             services, including but not limited to:
           </p>
-          <ul className="list-inside list-disc space-y-1.5 pl-2 text-white/65">
+          <ul className="list-inside list-disc space-y-1.5 pl-2 text-hn-text/65">
             <li>
-              <strong className="text-white/80">Video Hosting Providers:</strong>{" "}
+              <strong className="text-hn-text-muted/90">Video Hosting Providers:</strong>{" "}
               Embedded video players from third-party hosts (e.g., Vidhide,
               Doodstream, StreamWish) may collect your IP address, set
               cookies, and track viewing data according to their own privacy
               policies.
             </li>
             <li>
-              <strong className="text-white/80">Analytics Services:</strong>{" "}
+              <strong className="text-hn-text-muted/90">Analytics Services:</strong>{" "}
               We may use third-party analytics tools (e.g., Google Analytics)
               to understand how users interact with our Service. These tools
               may collect IP addresses and usage data.
             </li>
             <li>
-              <strong className="text-white/80">OAuth Providers:</strong> If
+              <strong className="text-hn-text-muted/90">OAuth Providers:</strong> If
               you choose to sign in using Google, Discord, or another OAuth
               provider, we receive limited profile information as permitted by
               that provider.
@@ -149,22 +156,33 @@ export default function PrivacyPage() {
 
         {/* 5 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             5. How We Use Your Information
           </h2>
-          <ul className="list-inside list-disc space-y-1.5 pl-2 text-white/65">
-            <li>To provide and maintain the Service.</li>
-            <li>To personalize your experience (e.g., saved anime, watch history).</li>
-            <li>To authenticate and manage user accounts.</li>
-            <li>To communicate with you regarding your account or changes to the Service.</li>
-            <li>To detect, prevent, and address technical issues and abuse.</li>
-            <li>To analyze usage trends and improve the Service.</li>
+          <p className="mb-3 text-hn-text/75">We use the collected information to:</p>
+          <ul className="list-inside list-disc space-y-1.5 pl-2 text-hn-text/65">
+            <li>
+              Provide, maintain, and personalize your experience on our platform
+              (such as recommending content).
+            </li>
+            <li>
+              Analyze how users interact with our Service to improve our features,
+              user interface, and overall performance.
+            </li>
+            <li>
+              Generate aggregated, non-identifying statistical data to understand
+              market trends, optimize our operations, and support business
+              development.
+            </li>
+            <li>Authenticate and manage user accounts.</li>
+            <li>Communicate with you regarding your account or changes to the Service.</li>
+            <li>Detect, prevent, and address technical issues and abuse.</li>
           </ul>
         </section>
 
         {/* 6 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             6. Data Sharing &amp; Disclosure
           </h2>
           <p>
@@ -172,18 +190,18 @@ export default function PrivacyPage() {
             parties. We may share information only in the following
             circumstances:
           </p>
-          <ul className="mt-3 list-inside list-disc space-y-1.5 pl-2 text-white/65">
+          <ul className="mt-3 list-inside list-disc space-y-1.5 pl-2 text-hn-text/65">
             <li>
-              <strong className="text-white/80">Legal Compliance:</strong>{" "}
+              <strong className="text-hn-text-muted/90">Legal Compliance:</strong>{" "}
               When required by law, subpoena, or other legal process.
             </li>
             <li>
-              <strong className="text-white/80">Protection of Rights:</strong>{" "}
+              <strong className="text-hn-text-muted/90">Protection of Rights:</strong>{" "}
               To enforce our Terms of Service or protect the rights, property,
               or safety of NimeNime, our users, or others.
             </li>
             <li>
-              <strong className="text-white/80">Service Providers:</strong>{" "}
+              <strong className="text-hn-text-muted/90">Service Providers:</strong>{" "}
               With trusted third-party service providers who assist us in
               operating the Service, subject to confidentiality obligations.
             </li>
@@ -192,7 +210,7 @@ export default function PrivacyPage() {
 
         {/* 7 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             7. Data Security
           </h2>
           <p>
@@ -206,7 +224,7 @@ export default function PrivacyPage() {
 
         {/* 8 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             8. Data Retention
           </h2>
           <p>
@@ -219,7 +237,7 @@ export default function PrivacyPage() {
 
         {/* 9 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             9. Your Rights
           </h2>
           <p>
@@ -238,7 +256,7 @@ export default function PrivacyPage() {
 
         {/* 10 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             10. Children&rsquo;s Privacy
           </h2>
           <p>
@@ -251,7 +269,7 @@ export default function PrivacyPage() {
 
         {/* 11 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             11. Changes to This Policy
           </h2>
           <p>
@@ -265,7 +283,7 @@ export default function PrivacyPage() {
 
         {/* 12 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             12. Contact Us
           </h2>
           <p>

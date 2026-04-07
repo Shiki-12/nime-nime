@@ -16,7 +16,7 @@ export default function ErrorPage({
             </div>
 
             <div>
-                <h2 className="text-2xl font-bold text-white">Something went wrong</h2>
+                <h2 className="text-2xl font-bold text-hn-text">Something went wrong</h2>
                 <p className="mt-2 max-w-md text-sm text-zinc-400">
                     {error.message || "An unexpected error occurred while loading this page."}
                 </p>
@@ -24,7 +24,7 @@ export default function ErrorPage({
 
             <button
                 onClick={reset}
-                className="rounded-xl bg-violet-600 px-6 py-2.5 text-sm font-semibold text-white transition-all hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-600/25"
+                className="rounded-xl bg-violet-600 px-6 py-2.5 text-sm font-semibold text-hn-text transition-all hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-600/25"
             >
                 Try again
             </button>

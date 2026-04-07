@@ -104,7 +104,7 @@ export default async function AdminLayout({
                                 href={item.href}
                                 className="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-hn-text-muted transition-all duration-200 hover:bg-hn-card hover:text-hn-text"
                             >
-                                <span className="flex items-center text-white/50 transition-colors duration-200 group-hover:text-hn-primary group-hover:scale-110">
+                                <span className="flex items-center text-hn-text-muted/70 transition-colors duration-200 group-hover:text-hn-primary group-hover:scale-110">
                                     {item.icon}
                                 </span>
                                 {item.label}
@@ -118,7 +118,7 @@ export default async function AdminLayout({
                             href="/"
                             className="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-hn-text-muted transition-all duration-200 hover:bg-hn-card hover:text-hn-text"
                         >
-                            <span className="flex items-center text-white/50 transition-colors duration-200 group-hover:-translate-x-0.5 group-hover:text-red-400">
+                            <span className="flex items-center text-hn-text-muted/70 transition-colors duration-200 group-hover:-translate-x-0.5 group-hover:text-red-400">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor" className="h-5 w-5">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
                                 </svg>
@@ -184,7 +184,7 @@ export default async function AdminLayout({
                             href={item.href}
                             className="group flex flex-col items-center gap-0.5 px-3 py-1 text-hn-text-muted transition-colors hover:text-hn-text"
                         >
-                            <span className="flex items-center text-white/50 transition-colors duration-200 group-hover:text-hn-primary">
+                            <span className="flex items-center text-hn-text-muted/70 transition-colors duration-200 group-hover:text-hn-primary">
                                 {item.icon}
                             </span>
                             <span className="text-[9px] font-medium tracking-wide">
@@ -196,7 +196,7 @@ export default async function AdminLayout({
                         href="/"
                         className="group flex flex-col items-center gap-0.5 px-3 py-1 text-hn-text-muted transition-colors hover:text-hn-text hover:text-red-400"
                     >
-                        <span className="flex items-center text-white/50 transition-colors duration-200 group-hover:text-red-400">
+                        <span className="flex items-center text-hn-text-muted/70 transition-colors duration-200 group-hover:text-red-400">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor" className="h-5 w-5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
                             </svg>

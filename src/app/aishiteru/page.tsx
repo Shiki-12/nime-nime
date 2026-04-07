@@ -105,7 +105,7 @@ export default async function AdminDashboardPage() {
             {/* ── Stats Cards ────────────────────────────────────────── */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {/* Card 1 — Total Wibus */}
-                <div className="group relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.03] p-6 backdrop-blur-sm transition-all duration-300 hover:border-hn-primary/20 hover:bg-white/[0.05] hover:shadow-lg hover:shadow-hn-primary/5">
+                <div className="group relative overflow-hidden rounded-xl border border-hn-border/50 bg-hn-card p-6 backdrop-blur-sm transition-all duration-300 hover:border-hn-primary/20 hover:bg-hn-card-hover hover:shadow-lg hover:shadow-hn-primary/5">
                     <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-sky-500/8 blur-2xl transition-all duration-500 group-hover:bg-sky-500/15" />
                     <div className="relative flex items-center justify-between">
                         <div>
@@ -126,7 +126,7 @@ export default async function AdminDashboardPage() {
                 </div>
 
                 {/* Card 2 — Total Engagement */}
-                <div className="group relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.03] p-6 backdrop-blur-sm transition-all duration-300 hover:border-hn-primary/20 hover:bg-white/[0.05] hover:shadow-lg hover:shadow-hn-primary/5">
+                <div className="group relative overflow-hidden rounded-xl border border-hn-border/50 bg-hn-card p-6 backdrop-blur-sm transition-all duration-300 hover:border-hn-primary/20 hover:bg-hn-card-hover hover:shadow-lg hover:shadow-hn-primary/5">
                     <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-hn-green/8 blur-2xl transition-all duration-500 group-hover:bg-hn-green/15" />
                     <div className="relative flex items-center justify-between">
                         <div>
@@ -149,7 +149,7 @@ export default async function AdminDashboardPage() {
                 </div>
 
                 {/* Card 3 — Server Status */}
-                <div className="group relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.03] p-6 backdrop-blur-sm transition-all duration-300 hover:border-hn-primary/20 hover:bg-white/[0.05] hover:shadow-lg hover:shadow-hn-primary/5">
+                <div className="group relative overflow-hidden rounded-xl border border-hn-border/50 bg-hn-card p-6 backdrop-blur-sm transition-all duration-300 hover:border-hn-primary/20 hover:bg-hn-card-hover hover:shadow-lg hover:shadow-hn-primary/5">
                     <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-emerald-500/8 blur-2xl transition-all duration-500 group-hover:bg-emerald-500/15" />
                     <div className="relative flex items-center justify-between">
                         <div>
@@ -179,9 +179,9 @@ export default async function AdminDashboardPage() {
             </div>
 
             {/* ── Recent Members ──────────────────────────────────────── */}
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] backdrop-blur-sm">
+            <div className="rounded-xl border border-hn-border/50 bg-hn-card backdrop-blur-sm">
                 {/* Section header */}
-                <div className="flex items-center justify-between border-b border-white/[0.06] px-6 py-4">
+                <div className="flex items-center justify-between border-b border-hn-border/50 px-6 py-4">
                     <div className="flex items-center gap-3">
                         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-hn-primary/10 text-sm ring-1 ring-hn-primary/20">
                             ✨
@@ -279,9 +279,9 @@ export default async function AdminDashboardPage() {
             </div>
 
             {/* ── Top 5 Most Viewed Anime ────────────────────────────────── */}
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] backdrop-blur-sm">
+            <div className="rounded-xl border border-hn-border/50 bg-hn-card backdrop-blur-sm">
                 {/* Section header */}
-                <div className="flex items-center justify-between border-b border-white/[0.06] px-6 py-4">
+                <div className="flex items-center justify-between border-b border-hn-border/50 px-6 py-4">
                     <div className="flex items-center gap-3">
                         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 text-sm ring-1 ring-amber-500/20">
                             🔥
@@ -318,7 +318,7 @@ export default async function AdminDashboardPage() {
                 {/* Anime list */}
                 {topAnime.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-sm text-hn-text-muted">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="mb-2 h-8 w-8 text-white/10">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="mb-2 h-8 w-8 text-hn-text-muted/30">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
                         </svg>
                         No watch data available yet.

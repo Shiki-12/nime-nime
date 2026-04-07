@@ -72,9 +72,9 @@ export default function RegisterPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
                     </svg>
                 </div>
-                <h2 className="mb-2 text-xl font-bold text-white">Check your email</h2>
-                <p className="mb-6 text-sm text-white/50">
-                    We&apos;ve sent a verification link to <strong className="text-white">{email}</strong>. Click the link to activate your account.
+                <h2 className="mb-2 text-xl font-bold text-hn-text">Check your email</h2>
+                <p className="mb-6 text-sm text-hn-text-muted/70">
+                    We&apos;ve sent a verification link to <strong className="text-hn-text">{email}</strong>. Click the link to activate your account.
                 </p>
                 <Link
                     href="/login"
@@ -92,7 +92,7 @@ export default function RegisterPage() {
             {/* Header */}
             <div className="mb-8 text-center">
                 <h1 className="text-2xl font-extrabold text-hn-primary">NimeNime</h1>
-                <p className="mt-1 text-sm text-white/40">Create your account</p>
+                <p className="mt-1 text-sm text-hn-text-muted/60">Create your account</p>
             </div>
 
             {/* ── Google Sign-Up ──────────────────────────────────── */}
@@ -100,7 +100,7 @@ export default function RegisterPage() {
                 type="button"
                 onClick={handleGoogleSignIn}
                 disabled={googleLoading}
-                className="group flex w-full items-center justify-center gap-3 rounded-full border border-white/10 bg-white/5 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10 hover:shadow-lg hover:shadow-white/5 disabled:cursor-not-allowed disabled:opacity-50"
+                className="group flex w-full items-center justify-center gap-3 rounded-full border border-white/10 bg-white/5 py-3 text-sm font-semibold text-hn-text backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10 hover:shadow-lg hover:shadow-white/5 disabled:cursor-not-allowed disabled:opacity-50"
             >
                 {googleLoading ? (
                     <>
@@ -126,7 +126,7 @@ export default function RegisterPage() {
             {/* ── Divider ────────────────────────────────────────── */}
             <div className="my-6 flex items-center gap-3">
                 <div className="h-px flex-1 bg-white/10" />
-                <span className="text-xs font-medium text-white/30">or register with email</span>
+                <span className="text-xs font-medium text-hn-text-muted/50">or register with email</span>
                 <div className="h-px flex-1 bg-white/10" />
             </div>
 
@@ -140,7 +140,7 @@ export default function RegisterPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Name */}
                 <div>
-                    <label htmlFor="name" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-white/30">
+                    <label htmlFor="name" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-hn-text-muted/50">
                         Name
                     </label>
                     <input
@@ -149,14 +149,14 @@ export default function RegisterPage() {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Your name"
-                        className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 text-sm text-white placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
+                        className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 text-sm text-hn-text placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
                         disabled={loading}
                     />
                 </div>
 
                 {/* Email */}
                 <div>
-                    <label htmlFor="email" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-white/30">
+                    <label htmlFor="email" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-hn-text-muted/50">
                         Email
                     </label>
                     <input
@@ -165,14 +165,14 @@ export default function RegisterPage() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="you@example.com"
-                        className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 text-sm text-white placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
+                        className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 text-sm text-hn-text placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
                         disabled={loading}
                     />
                 </div>
 
                 {/* Password */}
                 <div>
-                    <label htmlFor="password" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-white/30">
+                    <label htmlFor="password" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-hn-text-muted/50">
                         Password
                     </label>
                     <div className="relative">
@@ -182,13 +182,13 @@ export default function RegisterPage() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Min. 8 characters"
-                            className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 pr-10 text-sm text-white placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
+                            className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 pr-10 text-sm text-hn-text placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
                             disabled={loading}
                         />
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-hn-text-muted/60 hover:text-hn-text transition-colors"
                             aria-label={showPassword ? "Hide password" : "Show password"}
                         >
                             {showPassword ? (
@@ -202,7 +202,7 @@ export default function RegisterPage() {
 
                 {/* Confirm Password */}
                 <div>
-                    <label htmlFor="confirmPassword" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-white/30">
+                    <label htmlFor="confirmPassword" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-hn-text-muted/50">
                         Confirm Password
                     </label>
                     <div className="relative">
@@ -212,13 +212,13 @@ export default function RegisterPage() {
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             placeholder="Re-enter your password"
-                            className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 pr-10 text-sm text-white placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
+                            className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 pr-10 text-sm text-hn-text placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
                             disabled={loading}
                         />
                         <button
                             type="button"
                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-hn-text-muted/60 hover:text-hn-text transition-colors"
                             aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                         >
                             {showConfirmPassword ? (
@@ -248,10 +248,21 @@ export default function RegisterPage() {
                         "Create Account"
                     )}
                 </button>
+                <p className="mt-4 text-center text-xs text-hn-text-muted/70">
+                    By creating an account, you agree to our{" "}
+                    <Link href="/terms" className="transition-colors hover:text-pink-400 hover:underline">
+                        Terms of Service
+                    </Link>{" "}
+                    and{" "}
+                    <Link href="/privacy" className="transition-colors hover:text-pink-400 hover:underline">
+                        Privacy Policy
+                    </Link>
+                    .
+                </p>
             </form>
 
             {/* Footer link */}
-            <p className="mt-6 text-center text-sm text-white/40">
+            <p className="mt-6 text-center text-sm text-hn-text-muted/60">
                 Already have an account?{" "}
                 <Link href="/login" className="font-semibold text-hn-primary transition-colors hover:text-hn-primary/80">
                     Sign in

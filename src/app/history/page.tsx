@@ -99,10 +99,10 @@ export default function HistoryPage() {
             {/* Header */}
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-white sm:text-3xl">
+                    <h1 className="text-2xl font-bold text-hn-text sm:text-3xl">
                         <span className="text-hn-primary">🕘</span> My Watch History
                     </h1>
-                    <p className="mt-1 text-sm text-white/40">
+                    <p className="mt-1 text-sm text-hn-text-muted/60">
                         {entries.length > 0
                             ? `${entries.length} anime watched`
                             : "Your history will appear here."}
@@ -113,7 +113,7 @@ export default function HistoryPage() {
                     <div className="flex items-center gap-3 self-start">
                         <button
                             onClick={toggleSelectionMode}
-                            className="flex items-center gap-1.5 rounded-full bg-white/5 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-white/10"
+                            className="flex items-center gap-1.5 rounded-full bg-white/5 px-4 py-2 text-xs font-semibold text-hn-text transition-colors hover:bg-white/10"
                         >
                             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -139,7 +139,7 @@ export default function HistoryPage() {
                     <div className="flex items-center gap-4">
                         <button
                             onClick={handleSelectAll}
-                            className="flex items-center gap-2 text-sm font-semibold text-white transition-colors hover:text-hn-primary"
+                            className="flex items-center gap-2 text-sm font-semibold text-hn-text transition-colors hover:text-hn-primary"
                         >
                             <div className={`flex h-5 w-5 items-center justify-center rounded border transition-colors ${selectedIds.length === entries.length ? "border-hn-primary bg-hn-primary text-black" : "border-white/30"}`}>
                                 {selectedIds.length === entries.length && (
@@ -152,7 +152,7 @@ export default function HistoryPage() {
                                 {selectedIds.length === entries.length ? "Unselect All" : "Select All"}
                             </span>
                         </button>
-                        <span className="text-xs font-medium text-white/50">
+                        <span className="text-xs font-medium text-hn-text-muted/70">
                             {selectedIds.length} selected
                         </span>
                     </div>
@@ -161,14 +161,14 @@ export default function HistoryPage() {
                         {selectedIds.length > 0 && (
                             <button
                                 onClick={handleDeleteSelected}
-                                className="rounded-full bg-red-500 px-4 py-1.5 text-xs font-bold text-white transition-all hover:bg-red-600 hover:shadow-lg hover:shadow-red-500/25"
+                                className="rounded-full bg-red-500 px-4 py-1.5 text-xs font-bold text-hn-text transition-all hover:bg-red-600 hover:shadow-lg hover:shadow-red-500/25"
                             >
                                 Delete ({selectedIds.length})
                             </button>
                         )}
                         <button
                             onClick={toggleSelectionMode}
-                            className="rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold text-white transition-colors hover:bg-white/20"
+                            className="rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold text-hn-text transition-colors hover:bg-white/20"
                         >
                             Cancel
                         </button>
@@ -179,13 +179,13 @@ export default function HistoryPage() {
             {/* Empty state */}
             {entries.length === 0 && (
                 <div className="flex flex-col items-center justify-center rounded-2xl border border-white/5 bg-hn-card/50 py-20">
-                    <svg className="mb-4 h-16 w-16 text-white/10" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
+                    <svg className="mb-4 h-16 w-16 text-hn-text-muted/30" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
-                    <h2 className="text-lg font-semibold text-white/40">
+                    <h2 className="text-lg font-semibold text-hn-text-muted/60">
                         No watch history yet
                     </h2>
-                    <p className="mt-1 text-sm text-white/20">
+                    <p className="mt-1 text-sm text-hn-text-muted/40">
                         Start watching anime and your history will appear here.
                     </p>
                     <Link
@@ -268,12 +268,12 @@ export default function HistoryPage() {
                                         <div className="relative">
                                             {/* Title */}
                                             {isSelecting ? (
-                                                <h3 className="line-clamp-2 pr-6 text-sm font-semibold text-white">
+                                                <h3 className="line-clamp-2 pr-6 text-sm font-semibold text-hn-text">
                                                     {entry.title}
                                                 </h3>
                                             ) : (
                                                 <Link href={`/anime/${entry.slug}`}>
-                                                    <h3 className="line-clamp-2 pr-6 text-sm font-semibold text-white transition-colors group-hover:text-hn-primary">
+                                                    <h3 className="line-clamp-2 pr-6 text-sm font-semibold text-hn-text transition-colors group-hover:text-hn-primary">
                                                         {entry.title}
                                                     </h3>
                                                 </Link>
@@ -289,7 +289,7 @@ export default function HistoryPage() {
                                                             e.stopPropagation();
                                                             setOpenMenuId(openMenuId === entry.slug ? null : entry.slug);
                                                         }}
-                                                        className="flex h-6 w-6 items-center justify-center rounded-full text-white/50 transition-colors hover:bg-white/10 hover:text-white"
+                                                        className="flex h-6 w-6 items-center justify-center rounded-full text-hn-text-muted/70 transition-colors hover:bg-white/10 hover:text-hn-text"
                                                     >
                                                         <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                                                             <path d="M12 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4ZM12 10a2 2 0 1 1 0 4 2 2 0 0 1 0-4ZM12 17a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z" />
@@ -322,7 +322,7 @@ export default function HistoryPage() {
                                             )}
 
                                             <div className="flex items-center gap-2 mt-1">
-                                                <p className="text-[11px] text-white/30">
+                                                <p className="text-[11px] text-hn-text-muted/50">
                                                     {watchedCount}{entry.totalEpisodes > 0 ? `/${entry.totalEpisodes}` : ""} episode{watchedCount !== 1 ? "s" : ""} watched · {timeAgo}
                                                 </p>
                                                 {entry.totalEpisodes > 0 && watchedCount >= entry.totalEpisodes && (
@@ -340,7 +340,7 @@ export default function HistoryPage() {
                                             
                                             {/* Action Button */}
                                             {isSelecting ? (
-                                                <div className="inline-flex items-center gap-1 rounded-full bg-white/5 px-3 py-1 text-[11px] font-semibold text-white/20">
+                                                <div className="inline-flex items-center gap-1 rounded-full bg-white/5 px-3 py-1 text-[11px] font-semibold text-hn-text-muted/40">
                                                     <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
                                                         <path d="M6.3 2.84A1.5 1.5 0 0 0 4 4.11v11.78a1.5 1.5 0 0 0 2.3 1.27l9.344-5.891a1.5 1.5 0 0 0 0-2.538L6.3 2.841Z" />
                                                     </svg>
@@ -371,17 +371,17 @@ export default function HistoryPage() {
                     <button
                         disabled={meta.page <= 1 || isLoading}
                         onClick={() => router.push(`${pathname}?page=${meta.page - 1}`)}
-                        className="rounded-full bg-white/5 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="rounded-full bg-white/5 px-4 py-2 text-sm font-semibold text-hn-text transition-colors hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Previous
                     </button>
-                    <span className="text-sm font-medium text-white/50">
+                    <span className="text-sm font-medium text-hn-text-muted/70">
                         Page {meta.page} of {meta.totalPages}
                     </span>
                     <button
                         disabled={meta.page >= meta.totalPages || isLoading}
                         onClick={() => router.push(`${pathname}?page=${meta.page + 1}`)}
-                        className="rounded-full bg-white/5 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="rounded-full bg-white/5 px-4 py-2 text-sm font-semibold text-hn-text transition-colors hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Next
                     </button>

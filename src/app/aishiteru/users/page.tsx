@@ -87,12 +87,12 @@ export default async function UsersPage({
             </div>
 
             {/* ── Users Table ────────────────────────────────────────── */}
-            <div className="overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.03] backdrop-blur-sm">
+            <div className="overflow-hidden rounded-xl border border-hn-border/50 bg-hn-card backdrop-blur-sm">
                 {/* Desktop table */}
                 <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-left text-sm">
                         <thead>
-                            <tr className="border-b border-white/[0.06]">
+                            <tr className="border-b border-hn-border/50">
                                 <th className="px-6 py-4 text-[11px] font-semibold uppercase tracking-wider text-hn-text-muted">
                                     User
                                 </th>

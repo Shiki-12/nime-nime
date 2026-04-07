@@ -36,7 +36,7 @@ export default function ScheduleTabs({ days, defaultDay }: ScheduleTabsProps) {
                 className={`group flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
                   isActive
                     ? "bg-hn-primary/15 text-hn-primary shadow-sm shadow-hn-primary/10"
-                    : "text-white/50 hover:bg-white/5 hover:text-white/80"
+                    : "text-hn-text-muted/70 hover:bg-white/5 hover:text-hn-text-muted/90"
                 }`}
               >
                 {/* Day dot indicator */}
@@ -53,7 +53,7 @@ export default function ScheduleTabs({ days, defaultDay }: ScheduleTabsProps) {
                   className={`ml-auto rounded-full px-2 py-0.5 text-[10px] font-semibold ${
                     isActive
                       ? "bg-hn-primary/20 text-hn-primary"
-                      : "bg-white/5 text-white/30"
+                      : "bg-white/5 text-hn-text-muted/50"
                   }`}
                 >
                   {day.animes.length}
@@ -69,7 +69,7 @@ export default function ScheduleTabs({ days, defaultDay }: ScheduleTabsProps) {
         {current && current.animes.length > 0 ? (
           <>
             <div className="mb-4 flex items-center gap-3">
-              <h2 className="text-lg font-semibold text-white">
+              <h2 className="text-lg font-semibold text-hn-text">
                 {current.label}
               </h2>
               <span className="rounded-md bg-hn-primary/10 px-2 py-0.5 text-xs font-medium text-hn-primary">
@@ -85,7 +85,7 @@ export default function ScheduleTabs({ days, defaultDay }: ScheduleTabsProps) {
           </>
         ) : (
           <div className="flex h-64 items-center justify-center rounded-xl border border-white/5 bg-hn-card/50">
-            <p className="text-sm text-white/40">
+            <p className="text-sm text-hn-text-muted/60">
               No anime scheduled for this day.
             </p>
           </div>

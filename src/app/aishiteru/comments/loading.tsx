@@ -8,7 +8,7 @@ export default function CommentsLoading() {
             </div>
 
             {/* Comments list skeleton */}
-            <div className="overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.03]">
+            <div className="overflow-hidden rounded-xl border border-hn-border/50 bg-hn-card">
                 <div className="divide-y divide-white/[0.04]">
                     {Array.from({ length: 6 }).map((_, i) => (
                         <div key={i} className="flex gap-3 px-6 py-4">

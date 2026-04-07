@@ -351,7 +351,7 @@ export default function FilterForm() {
                 {activeCount > 0 && (
                     <button
                         onClick={handleReset}
-                        className="rounded-full bg-white/[0.06] px-5 py-2.5 text-sm font-medium text-white/50 transition-colors hover:bg-white/[0.1] hover:text-white"
+                        className="rounded-full bg-hn-border/20 px-5 py-2.5 text-sm font-medium text-hn-text-muted/70 transition-colors hover:bg-white/[0.1] hover:text-hn-text"
                     >
                         Reset ({activeCount})
                     </button>
@@ -376,13 +376,13 @@ function SelectField({
 }) {
     return (
         <div>
-            <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-white/30">
+            <label className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-hn-text-muted/50">
                 {label}
             </label>
             <select
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                className="w-full cursor-pointer rounded-lg border border-white/5 bg-hn-body px-3 py-2 text-sm text-white outline-none transition-colors focus:border-hn-primary/40"
+                className="w-full cursor-pointer rounded-lg border border-white/5 bg-hn-body px-3 py-2 text-sm text-hn-text outline-none transition-colors focus:border-hn-primary/40"
             >
                 {options.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -413,7 +413,7 @@ function CheckboxGroup({
                 onClick={() => setExpanded(!expanded)}
                 className="mb-2 flex w-full items-center justify-between text-left"
             >
-                <span className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-white/30">
+                <span className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-hn-text-muted/50">
                     {title}
                     {selected.length > 0 && (
                         <span className="rounded bg-hn-primary/15 px-1.5 py-0.5 text-[10px] font-bold normal-case text-hn-primary">
@@ -422,7 +422,7 @@ function CheckboxGroup({
                     )}
                 </span>
                 <svg
-                    className={`h-3.5 w-3.5 text-white/20 transition-transform ${expanded ? "rotate-180" : ""}`}
+                    className={`h-3.5 w-3.5 text-hn-text-muted/40 transition-transform ${expanded ? "rotate-180" : ""}`}
                     fill="none"
                     viewBox="0 0 24 24"
                     strokeWidth={2}
@@ -441,7 +441,7 @@ function CheckboxGroup({
                                 className={`flex cursor-pointer items-center gap-2 rounded-lg px-2.5 py-2 text-[12px] font-medium transition-all ${
                                     isChecked
                                         ? "bg-hn-primary/15 text-hn-primary ring-1 ring-hn-primary/25"
-                                        : "bg-white/[0.03] text-white/50 hover:bg-white/[0.06] hover:text-white/70"
+                                        : "bg-hn-card text-hn-text-muted/70 hover:bg-hn-border/20 hover:text-hn-text/70"
                                 }`}
                             >
                                 <input

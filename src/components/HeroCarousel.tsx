@@ -269,7 +269,7 @@ export default function HeroCarousel() {
 
                 {/* Title */}
                 <h2
-                  className={`text-3xl font-extrabold leading-[1.1] text-white sm:text-4xl md:text-5xl lg:text-6xl transition-all duration-700 ${index === currentSlide
+                  className={`text-3xl font-extrabold leading-[1.1] text-hn-text sm:text-4xl md:text-5xl lg:text-6xl transition-all duration-700 ${index === currentSlide
                     ? "opacity-100 translate-y-0 delay-300"
                     : "opacity-0 translate-y-4"
                     }`}
@@ -279,7 +279,7 @@ export default function HeroCarousel() {
 
                 {/* Metadata badges */}
                 <div
-                  className={`mt-4 flex flex-wrap items-center gap-2 text-sm text-white/70 transition-all duration-700 ${index === currentSlide
+                  className={`mt-4 flex flex-wrap items-center gap-2 text-sm text-hn-text-muted transition-all duration-700 ${index === currentSlide
                     ? "opacity-100 translate-y-0 delay-[400ms]"
                     : "opacity-0 translate-y-4"
                     }`}
@@ -287,7 +287,7 @@ export default function HeroCarousel() {
                   {slide.mediaType && (
                     <span className="inline-flex items-center gap-1">
                       <svg
-                        className="h-3.5 w-3.5 text-white/50"
+                        className="h-3.5 w-3.5 text-hn-text-muted"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -308,7 +308,7 @@ export default function HeroCarousel() {
                       <span className="dot-sep" />
                       <span className="inline-flex items-center gap-1">
                         <svg
-                          className="h-3.5 w-3.5 text-white/50"
+                          className="h-3.5 w-3.5 text-hn-text-muted"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -330,7 +330,7 @@ export default function HeroCarousel() {
                       <span className="dot-sep" />
                       <span className="inline-flex items-center gap-1">
                         <svg
-                          className="h-3.5 w-3.5 text-white/50"
+                          className="h-3.5 w-3.5 text-hn-text-muted"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -374,7 +374,7 @@ export default function HeroCarousel() {
 
                 {/* Synopsis */}
                 <p
-                  className={`mt-4 max-w-2xl text-sm leading-relaxed text-white/50 line-clamp-3 md:text-[15px] md:line-clamp-4 transition-all duration-700 ${index === currentSlide
+                  className={`mt-4 max-w-2xl text-sm leading-relaxed text-hn-text-muted line-clamp-3 md:text-[15px] md:line-clamp-4 transition-all duration-700 ${index === currentSlide
                     ? "opacity-100 translate-y-0 delay-500"
                     : "opacity-0 translate-y-4"
                     }`}
@@ -432,7 +432,7 @@ export default function HeroCarousel() {
                           href={slide.secondaryHref}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="hero-btn-secondary group inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] px-6 py-2.5 text-sm font-semibold text-white/80 ring-1 ring-white/10 backdrop-blur-sm transition-all duration-300 hover:bg-white/[0.14] hover:text-white hover:ring-white/20 active:scale-[0.98]"
+                          className="hero-btn-secondary group inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] px-6 py-2.5 text-sm font-semibold text-hn-text-muted/90 ring-1 ring-white/10 backdrop-blur-sm transition-all duration-300 hover:bg-white/[0.14] hover:text-hn-text hover:ring-white/20 active:scale-[0.98]"
                         >
                           {slide.secondaryLabel}
                           {/* Chevron right */}
@@ -453,7 +453,7 @@ export default function HeroCarousel() {
                       ) : (
                         <Link
                           href={slide.secondaryHref}
-                          className="hero-btn-secondary group inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] px-6 py-2.5 text-sm font-semibold text-white/80 ring-1 ring-white/10 backdrop-blur-sm transition-all duration-300 hover:bg-white/[0.14] hover:text-white hover:ring-white/20 active:scale-[0.98]"
+                          className="hero-btn-secondary group inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] px-6 py-2.5 text-sm font-semibold text-hn-text-muted/90 ring-1 ring-white/10 backdrop-blur-sm transition-all duration-300 hover:bg-white/[0.14] hover:text-hn-text hover:ring-white/20 active:scale-[0.98]"
                         >
                           {slide.secondaryLabel}
                           {/* Chevron right */}
@@ -486,7 +486,7 @@ export default function HeroCarousel() {
         <button
           onClick={prevSlide}
           disabled={isTransitioning}
-          className="hero-nav-btn flex h-10 w-10 items-center justify-center rounded-md bg-black/40 text-white/70 backdrop-blur-md transition-all duration-300 hover:bg-black/60 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+          className="hero-nav-btn flex h-10 w-10 items-center justify-center rounded-md bg-black/40 text-hn-text/70 backdrop-blur-md transition-all duration-300 hover:bg-black/60 hover:text-hn-text disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label="Previous slide"
         >
           <svg
@@ -506,7 +506,7 @@ export default function HeroCarousel() {
         <button
           onClick={nextSlide}
           disabled={isTransitioning}
-          className="hero-nav-btn flex h-10 w-10 items-center justify-center rounded-md bg-black/40 text-white/70 backdrop-blur-md transition-all duration-300 hover:bg-black/60 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+          className="hero-nav-btn flex h-10 w-10 items-center justify-center rounded-md bg-black/40 text-hn-text/70 backdrop-blur-md transition-all duration-300 hover:bg-black/60 hover:text-hn-text disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label="Next slide"
         >
           <svg

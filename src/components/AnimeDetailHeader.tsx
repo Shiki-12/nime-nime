@@ -132,7 +132,7 @@ export default function AnimeDetailHeader({
                     {/* ── Text & Actions ────────────────────────────── */}
                     <div className="flex flex-1 flex-col justify-end gap-4">
                         {/* Title */}
-                        <h1 className="text-2xl font-extrabold leading-tight text-white drop-shadow-lg sm:text-3xl md:text-4xl">
+                        <h1 className="text-2xl font-extrabold leading-tight text-hn-text drop-shadow-lg sm:text-3xl md:text-4xl">
                             {title}
                         </h1>
 
@@ -141,11 +141,11 @@ export default function AnimeDetailHeader({
                             <span className="rounded bg-hn-primary/20 px-2 py-0.5 font-semibold text-hn-primary">
                                 {type}
                             </span>
-                            <span className="rounded bg-white/[0.06] px-2 py-0.5 font-medium text-white/60 backdrop-blur-sm">
+                            <span className="rounded bg-hn-border/20 px-2 py-0.5 font-medium text-hn-text-muted/80 backdrop-blur-sm">
                                 {status}
                             </span>
                             {duration && (
-                                <span className="rounded bg-white/[0.06] px-2 py-0.5 font-medium text-white/60 backdrop-blur-sm">
+                                <span className="rounded bg-hn-border/20 px-2 py-0.5 font-medium text-hn-text-muted/80 backdrop-blur-sm">
                                     {duration}
                                 </span>
                             )}
@@ -157,7 +157,7 @@ export default function AnimeDetailHeader({
                                 <Link
                                     key={g.slug}
                                     href={`/genres/${g.slug}`}
-                                    className="rounded bg-white/[0.06] px-3 py-1.5 text-[11px] font-medium text-white/50 backdrop-blur-sm transition-colors hover:bg-hn-primary/15 hover:text-hn-primary"
+                                    className="rounded bg-hn-border/20 px-3 py-1.5 text-[11px] font-medium text-hn-text-muted/70 backdrop-blur-sm transition-colors hover:bg-hn-primary/15 hover:text-hn-primary"
                                 >
                                     {g.name}
                                 </Link>
@@ -165,7 +165,7 @@ export default function AnimeDetailHeader({
                         </div>
 
                         {/* Synopsis excerpt */}
-                        <p className="line-clamp-3 max-w-2xl text-[13px] leading-relaxed text-white/40">
+                        <p className="line-clamp-3 max-w-2xl text-[13px] leading-relaxed text-hn-text-muted/60">
                             {synopsis}
                         </p>
 

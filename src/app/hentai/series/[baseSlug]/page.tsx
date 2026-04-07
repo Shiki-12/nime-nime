@@ -223,7 +223,7 @@ export default async function SeriesDetailPage({
                 {/* Play icon overlay */}
                 <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-all group-hover:bg-black/10">
                   <svg
-                    className="h-5 w-5 text-white/80"
+                    className="h-5 w-5 text-hn-text-muted/90"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >

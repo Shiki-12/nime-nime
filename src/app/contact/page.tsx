@@ -15,7 +15,7 @@ export default function ContactPage() {
         <h1 className="bg-gradient-to-r from-hn-primary via-pink-300 to-hn-primary bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl">
           Contact Us
         </h1>
-        <p className="mt-3 text-sm text-white/40">
+        <p className="mt-3 text-sm text-hn-text-muted/60">
           We&rsquo;d love to hear from you. Reach out anytime.
         </p>
       </header>
@@ -29,7 +29,7 @@ export default function ContactPage() {
         {/* ── Contact Info Sidebar ────────────────────────────── */}
         <aside className="space-y-6 lg:col-span-2">
           {/* Email */}
-          <div className="rounded-xl border border-white/[0.06] bg-hn-card p-5">
+          <div className="rounded-xl border border-hn-border/50 bg-hn-card p-5">
             <div className="mb-2 flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +45,7 @@ export default function ContactPage() {
                   d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                 />
               </svg>
-              <h2 className="text-sm font-bold text-white">Email</h2>
+              <h2 className="text-sm font-bold text-hn-text">Email</h2>
             </div>
             <a
               href="mailto:admin@nime-nime.web.id"
@@ -53,7 +53,7 @@ export default function ContactPage() {
             >
               admin@nime-nime.web.id
             </a>
-            <p className="mt-1 text-xs text-white/40">
+            <p className="mt-1 text-xs text-hn-text-muted/60">
               General inquiries &amp; feedback
             </p>
             <a
@@ -62,14 +62,14 @@ export default function ContactPage() {
             >
               legal@nime-nime.web.id
             </a>
-            <p className="mt-1 text-xs text-white/40">
+            <p className="mt-1 text-xs text-hn-text-muted/60">
               DMCA &amp; copyright requests
             </p>
           </div>
 
           {/* Social */}
-          <div className="rounded-xl border border-white/[0.06] bg-hn-card p-5">
-            <h2 className="mb-3 text-sm font-bold text-white">
+          <div className="rounded-xl border border-hn-border/50 bg-hn-card p-5">
+            <h2 className="mb-3 text-sm font-bold text-hn-text">
               Follow Us
             </h2>
             <div className="space-y-3">
@@ -78,7 +78,7 @@ export default function ContactPage() {
                 href="https://www.instagram.com/nimenime_id/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 text-sm text-white/60 transition-colors hover:text-hn-primary"
+                className="flex items-center gap-3 text-sm text-hn-text-muted/80 transition-colors hover:text-hn-primary"
               >
                 <svg
                   className="h-5 w-5"
@@ -95,7 +95,7 @@ export default function ContactPage() {
                 href="https://x.com/nimenime_id"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 text-sm text-white/60 transition-colors hover:text-hn-primary"
+                className="flex items-center gap-3 text-sm text-hn-text-muted/80 transition-colors hover:text-hn-primary"
               >
                 <svg
                   className="h-5 w-5"
@@ -112,7 +112,7 @@ export default function ContactPage() {
                 href="https://discord.gg/JzjhYef86W"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 text-sm text-white/60 transition-colors hover:text-hn-primary"
+                className="flex items-center gap-3 text-sm text-hn-text-muted/80 transition-colors hover:text-hn-primary"
               >
                 <svg
                   className="h-5 w-5"
@@ -129,7 +129,7 @@ export default function ContactPage() {
                 href="https://t.me/nimenime_id"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 text-sm text-white/60 transition-colors hover:text-hn-primary"
+                className="flex items-center gap-3 text-sm text-hn-text-muted/80 transition-colors hover:text-hn-primary"
               >
                 <svg
                   className="h-5 w-5"
@@ -145,12 +145,12 @@ export default function ContactPage() {
 
           {/* Response Time */}
           <div className="rounded-xl border border-hn-secondary/20 bg-hn-secondary/5 p-5">
-            <h2 className="mb-1 text-sm font-bold text-white">
+            <h2 className="mb-1 text-sm font-bold text-hn-text">
               Response Time
             </h2>
-            <p className="text-xs text-white/50">
+            <p className="text-xs text-hn-text-muted/70">
               We typically respond within{" "}
-              <strong className="text-white/70">24 – 48 hours</strong>. For
+              <strong className="text-hn-text/70">24 – 48 hours</strong>. For
               DMCA-related requests, please email{" "}
               <a
                 href="mailto:legal@nime-nime.web.id"

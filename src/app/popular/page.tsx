@@ -30,17 +30,17 @@ export default async function PopularPage({ searchParams }: PopularPageProps) {
   return (
     <div className="mx-auto max-w-[1440px] px-4 py-8 lg:px-6">
       <section className="mb-8 text-center">
-        <h1 className="text-2xl font-extrabold text-white sm:text-3xl">
+        <h1 className="text-2xl font-extrabold text-hn-text sm:text-3xl">
           <span className="text-hn-primary">Popular</span> Anime
         </h1>
-        <p className="mx-auto mt-2 max-w-md text-sm text-white/40">
+        <p className="mx-auto mt-2 max-w-md text-sm text-hn-text-muted/60">
           The most watched and highest rated anime series right now.
         </p>
       </section>
 
       {fetchError && (
         <div className="rounded-lg bg-red-500/5 p-6 text-center">
-          <p className="text-sm text-white/50">{fetchError}</p>
+          <p className="text-sm text-hn-text-muted/70">{fetchError}</p>
         </div>
       )}
 
@@ -55,7 +55,7 @@ export default async function PopularPage({ searchParams }: PopularPageProps) {
             {pagination.hasPrev && (
               <Link
                 href={`/popular?page=${currentPage - 1}`}
-                className="rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-white hover:bg-hn-card-hover"
+                className="rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-hn-text hover:bg-hn-card-hover"
               >
                 ← Previous
               </Link>
@@ -66,7 +66,7 @@ export default async function PopularPage({ searchParams }: PopularPageProps) {
             {pagination.hasNext && (
               <Link
                 href={`/popular?page=${currentPage + 1}`}
-                className="rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-white hover:bg-hn-card-hover"
+                className="rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-hn-text hover:bg-hn-card-hover"
               >
                 Next →
               </Link>

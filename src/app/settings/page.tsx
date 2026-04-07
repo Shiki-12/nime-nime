@@ -190,10 +190,10 @@ export default function SettingsPage() {
         <div className="mx-auto max-w-xl px-4 pb-16 pt-24">
             {/* Page header */}
             <div className="mb-8">
-                <h1 className="text-2xl font-bold text-white">
+                <h1 className="text-2xl font-bold text-hn-text">
                     Account Settings
                 </h1>
-                <p className="mt-1 text-sm text-white/40">
+                <p className="mt-1 text-sm text-hn-text-muted/60">
                     Manage your profile and security
                 </p>
             </div>
@@ -213,8 +213,8 @@ export default function SettingsPage() {
 
             <form onSubmit={handleSubmit} className="space-y-8">
                 {/* ── Avatar Section ─────────────────────────────── */}
-                <div className="rounded-2xl border border-white/[0.06] bg-hn-card p-6">
-                    <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white/30">
+                <div className="rounded-2xl border border-hn-border/50 bg-hn-card p-6">
+                    <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-hn-text-muted/50">
                         Profile Picture
                     </h2>
                     <div className="flex items-center gap-5">
@@ -238,11 +238,11 @@ export default function SettingsPage() {
                             <button
                                 type="button"
                                 onClick={() => fileInputRef.current?.click()}
-                                className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition-all hover:border-white/20 hover:bg-white/10"
+                                className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-hn-text transition-all hover:border-white/20 hover:bg-white/10"
                             >
                                 Choose Image
                             </button>
-                            <p className="mt-2 text-xs text-white/30">
+                            <p className="mt-2 text-xs text-hn-text-muted/50">
                                 JPG, PNG, WebP, or GIF. Max 5 MB.
                             </p>
                             <input
@@ -257,8 +257,8 @@ export default function SettingsPage() {
                 </div>
 
                 {/* ── Profile Info ────────────────────────────────── */}
-                <div className="rounded-2xl border border-white/[0.06] bg-hn-card p-6">
-                    <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white/30">
+                <div className="rounded-2xl border border-hn-border/50 bg-hn-card p-6">
+                    <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-hn-text-muted/50">
                         Profile
                     </h2>
                     <div className="space-y-4">
@@ -266,7 +266,7 @@ export default function SettingsPage() {
                         <div>
                             <label
                                 htmlFor="settings-name"
-                                className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-white/30"
+                                className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-hn-text-muted/50"
                             >
                                 Name
                             </label>
@@ -275,7 +275,7 @@ export default function SettingsPage() {
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 text-sm text-white placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
+                                className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 text-sm text-hn-text placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
                                 disabled={loading}
                             />
                         </div>
@@ -284,7 +284,7 @@ export default function SettingsPage() {
                         <div>
                             <label
                                 htmlFor="settings-email"
-                                className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-white/30"
+                                className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-hn-text-muted/50"
                             >
                                 Email
                             </label>
@@ -293,9 +293,9 @@ export default function SettingsPage() {
                                 type="email"
                                 value={session.user.email ?? ""}
                                 disabled
-                                className="w-full cursor-not-allowed rounded-lg border border-white/5 bg-hn-dark/50 px-4 py-3 text-sm text-white/40 outline-none"
+                                className="w-full cursor-not-allowed rounded-lg border border-white/5 bg-hn-dark/50 px-4 py-3 text-sm text-hn-text-muted/60 outline-none"
                             />
-                            <p className="mt-1 text-xs text-white/20">
+                            <p className="mt-1 text-xs text-hn-text-muted/40">
                                 Email cannot be changed.
                             </p>
                         </div>
@@ -303,17 +303,17 @@ export default function SettingsPage() {
                 </div>
 
                 {/* ── Password Section ────────────────────────────── */}
-                <div className="rounded-2xl border border-white/[0.06] bg-hn-card p-6">
-                    <h2 className="mb-1 text-sm font-semibold uppercase tracking-wider text-white/30">
+                <div className="rounded-2xl border border-hn-border/50 bg-hn-card p-6">
+                    <h2 className="mb-1 text-sm font-semibold uppercase tracking-wider text-hn-text-muted/50">
                         Password
                     </h2>
                     {!hasPassword ? (
-                        <p className="mt-2 text-sm text-white/40">
+                        <p className="mt-2 text-sm text-hn-text-muted/60">
                             You are logged in with Google. Password management is handled by your Google account.
                         </p>
                     ) : (
                         <>
-                            <p className="mb-4 text-xs text-white/20">
+                            <p className="mb-4 text-xs text-hn-text-muted/40">
                                 Enter your current password to set a new one.
                             </p>
                             <div className="space-y-4">
@@ -327,13 +327,13 @@ export default function SettingsPage() {
                                             setCurrentPassword(e.target.value)
                                         }
                                         placeholder="Enter current password"
-                                        className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 pr-10 text-sm text-white placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
+                                        className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 pr-10 text-sm text-hn-text placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
                                         disabled={loading}
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-hn-text-muted/60 hover:text-hn-text transition-colors"
                                         aria-label={showCurrentPassword ? "Hide password" : "Show password"}
                                     >
                                         {showCurrentPassword ? (
@@ -352,13 +352,13 @@ export default function SettingsPage() {
                                         value={newPassword}
                                         onChange={(e) => setNewPassword(e.target.value)}
                                         placeholder="Min. 8 characters"
-                                        className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 pr-10 text-sm text-white placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
+                                        className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 pr-10 text-sm text-hn-text placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
                                         disabled={loading}
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowNewPassword(!showNewPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-hn-text-muted/60 hover:text-hn-text transition-colors"
                                         aria-label={showNewPassword ? "Hide password" : "Show password"}
                                     >
                                         {showNewPassword ? (
@@ -374,16 +374,16 @@ export default function SettingsPage() {
                 </div>
 
                 {/* ── Content Preferences (NSFW Toggle) ──────────── */}
-                <div className="rounded-2xl border border-white/[0.06] bg-hn-card p-6">
-                    <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white/30">
+                <div className="rounded-2xl border border-hn-border/50 bg-hn-card p-6">
+                    <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-hn-text-muted/50">
                         Content Preferences
                     </h2>
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex-1">
-                            <p className="text-sm font-medium text-white/80">
+                            <p className="text-sm font-medium text-hn-text-muted/90">
                                 Enable 18+ Content
                             </p>
-                            <p className="mt-0.5 text-xs text-white/30">
+                            <p className="mt-0.5 text-xs text-hn-text-muted/50">
                                 Unlock the adult anime section. You must be 18 years or older.
                             </p>
                         </div>

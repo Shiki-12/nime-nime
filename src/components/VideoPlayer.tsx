@@ -16,7 +16,7 @@ export default function VideoPlayer({ streams, title }: VideoPlayerProps) {
 
     if (!streams.length || !activeStream) {
         return (
-            <div className="flex aspect-video w-full items-center justify-center rounded-2xl bg-hn-card text-white/30">
+            <div className="flex aspect-video w-full items-center justify-center rounded-2xl bg-hn-card text-hn-text-muted/50">
                 <p>No streaming source available.</p>
             </div>
         );
@@ -43,7 +43,7 @@ export default function VideoPlayer({ streams, title }: VideoPlayerProps) {
                 <div className="flex flex-wrap items-center justify-between">
                     {streams.length > 1 ? (
                         <div className="flex items-center gap-2 text-xs">
-                            <span className="font-medium text-white/40">
+                            <span className="font-medium text-hn-text-muted/60">
                                 Server:
                             </span>
                             <div className="relative">
@@ -52,7 +52,7 @@ export default function VideoPlayer({ streams, title }: VideoPlayerProps) {
                                     onChange={(e) =>
                                         setActiveIdx(Number(e.target.value))
                                     }
-                                    className="appearance-none rounded-lg bg-white/[0.06] py-1.5 pl-3 pr-8 text-xs font-semibold text-white/80 outline-none ring-1 ring-white/10 transition-all hover:bg-white/10 focus:ring-hn-primary/40 cursor-pointer"
+                                    className="appearance-none rounded-lg bg-hn-border/20 py-1.5 pl-3 pr-8 text-xs font-semibold text-hn-text-muted/90 outline-none ring-1 ring-white/10 transition-all hover:bg-white/10 focus:ring-hn-primary/40 cursor-pointer"
                                     style={{
                                         backgroundColor:
                                             "rgba(255,255,255,0.06)",
@@ -62,14 +62,14 @@ export default function VideoPlayer({ streams, title }: VideoPlayerProps) {
                                         <option
                                             key={`${s.name}-${i}`}
                                             value={i}
-                                            className="bg-hn-dark text-white"
+                                            className="bg-hn-dark text-hn-text"
                                         >
                                             {s.name}
                                         </option>
                                     ))}
                                 </select>
                                 <svg
-                                    className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/40"
+                                    className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-hn-text-muted/60"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     strokeWidth={2.5}
@@ -98,7 +98,7 @@ export default function VideoPlayer({ streams, title }: VideoPlayerProps) {
                                     ),
                                 )
                             }
-                            className="group flex items-center gap-2 rounded-lg bg-hn-card px-3 py-1.5 text-xs font-semibold text-white/70 transition-all hover:bg-hn-card-hover hover:text-white"
+                            className="group flex items-center gap-2 rounded-lg bg-hn-card px-3 py-1.5 text-xs font-semibold text-hn-text/70 transition-all hover:bg-hn-card-hover hover:text-hn-text"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -121,8 +121,8 @@ export default function VideoPlayer({ streams, title }: VideoPlayerProps) {
                             onClick={() => setIsLightsOff(!isLightsOff)}
                             className={`group flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
                                 isLightsOff
-                                    ? "bg-white/10 text-white hover:bg-white/20"
-                                    : "bg-hn-card text-white/70 hover:bg-hn-card-hover hover:text-white"
+                                    ? "bg-white/10 text-hn-text hover:bg-white/20"
+                                    : "bg-hn-card text-hn-text/70 hover:bg-hn-card-hover hover:text-hn-text"
                             }`}
                         >
                             <span
@@ -137,7 +137,7 @@ export default function VideoPlayer({ streams, title }: VideoPlayerProps) {
                     </div>
                 </div>
 
-                <h1 className="mt-2 text-lg font-bold text-white sm:text-xl">
+                <h1 className="mt-2 text-lg font-bold text-hn-text sm:text-xl">
                     {title}
                 </h1>
             </div>

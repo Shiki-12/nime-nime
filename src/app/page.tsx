@@ -34,8 +34,8 @@ export default async function Home({ searchParams }: HomeProps) {
         {/* Header */}
         <div className="mb-6 flex items-center gap-2.5">
           <div className="h-6 w-1 rounded-full bg-hn-primary" />
-          <h1 className="text-2xl font-bold text-white">All Ongoing Anime</h1>
-          <span className="text-xs text-white/30">Page {currentPage}</span>
+          <h1 className="text-2xl font-bold text-hn-text">All Ongoing Anime</h1>
+          <span className="text-xs text-hn-text-muted/50">Page {currentPage}</span>
           <Link
             href="/"
             className="ml-auto text-xs font-semibold text-hn-primary/70 transition-colors hover:text-hn-primary"
@@ -47,11 +47,11 @@ export default async function Home({ searchParams }: HomeProps) {
         {/* Error */}
         {fetchError && (
           <div className="mx-auto mb-10 max-w-xl rounded-xl border border-red-500/20 bg-red-500/5 p-6 text-center">
-            <h3 className="text-lg font-bold text-white">API Unavailable</h3>
-            <p className="mt-1 text-sm text-white/50">
+            <h3 className="text-lg font-bold text-hn-text">API Unavailable</h3>
+            <p className="mt-1 text-sm text-hn-text-muted">
               The anime API server is currently unreachable.
             </p>
-            <p className="mt-2 break-all text-xs text-white/20">{fetchError}</p>
+            <p className="mt-2 break-all text-xs text-hn-text-muted/40">{fetchError}</p>
             <Link
               href={`/?tab=ongoing&page=${currentPage}`}
               className="mt-4 inline-block rounded-full bg-hn-primary px-5 py-2 text-sm font-semibold text-hn-dark"
@@ -75,7 +75,7 @@ export default async function Home({ searchParams }: HomeProps) {
           {currentPage > 1 && (
             <Link
               href={`/?tab=ongoing&page=${currentPage - 1}`}
-              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
+              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-hn-text transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
             >
               ← Previous
             </Link>
@@ -88,14 +88,14 @@ export default async function Home({ searchParams }: HomeProps) {
           {currentPage < 12 ? (
             <Link
               href={`/?tab=ongoing&page=${currentPage + 1}`}
-              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
+              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-hn-text transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
             >
               Next →
             </Link>
           ) : (
             <Link
               href="/"
-              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
+              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-hn-text transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
             >
               Back to Home
             </Link>
@@ -123,8 +123,8 @@ export default async function Home({ searchParams }: HomeProps) {
         {/* Header */}
         <div className="mb-6 flex items-center gap-2.5">
           <div className="h-6 w-1 rounded-full bg-hn-secondary" />
-          <h1 className="text-2xl font-bold text-white">All Completed Anime</h1>
-          <span className="text-xs text-white/30">Page {currentPage}</span>
+          <h1 className="text-2xl font-bold text-hn-text">All Completed Anime</h1>
+          <span className="text-xs text-hn-text-muted/50">Page {currentPage}</span>
           <Link
             href="/"
             className="ml-auto text-xs font-semibold text-hn-primary/70 transition-colors hover:text-hn-primary"
@@ -136,11 +136,11 @@ export default async function Home({ searchParams }: HomeProps) {
         {/* Error */}
         {fetchError && (
           <div className="mx-auto mb-10 max-w-xl rounded-xl border border-red-500/20 bg-red-500/5 p-6 text-center">
-            <h3 className="text-lg font-bold text-white">API Unavailable</h3>
-            <p className="mt-1 text-sm text-white/50">
+            <h3 className="text-lg font-bold text-hn-text">API Unavailable</h3>
+            <p className="mt-1 text-sm text-hn-text-muted">
               The anime API server is currently unreachable.
             </p>
-            <p className="mt-2 break-all text-xs text-white/20">{fetchError}</p>
+            <p className="mt-2 break-all text-xs text-hn-text-muted/40">{fetchError}</p>
             <Link
               href={`/?tab=completed&page=${currentPage}`}
               className="mt-4 inline-block rounded-full bg-hn-primary px-5 py-2 text-sm font-semibold text-hn-dark"
@@ -164,7 +164,7 @@ export default async function Home({ searchParams }: HomeProps) {
           {currentPage > 1 && (
             <Link
               href={`/?tab=completed&page=${currentPage - 1}`}
-              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
+              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-hn-text transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
             >
               ← Previous
             </Link>
@@ -177,14 +177,14 @@ export default async function Home({ searchParams }: HomeProps) {
           {currentPage < 12 ? (
             <Link
               href={`/?tab=completed&page=${currentPage + 1}`}
-              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
+              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-hn-text transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
             >
               Next →
             </Link>
           ) : (
             <Link
               href="/"
-              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
+              className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-hn-text transition-all hover:bg-hn-primary/15 hover:text-hn-primary"
             >
               Back to Home
             </Link>
@@ -220,11 +220,11 @@ export default async function Home({ searchParams }: HomeProps) {
         {/* Error */}
         {fetchError && (
           <div className="mx-auto mb-10 max-w-xl rounded-xl border border-red-500/20 bg-red-500/5 p-6 text-center">
-            <h3 className="text-lg font-bold text-white">API Unavailable</h3>
-            <p className="mt-1 text-sm text-white/50">
+            <h3 className="text-lg font-bold text-hn-text">API Unavailable</h3>
+            <p className="mt-1 text-sm text-hn-text-muted">
               The anime API server is currently unreachable.
             </p>
-            <p className="mt-2 break-all text-xs text-white/20">{fetchError}</p>
+            <p className="mt-2 break-all text-xs text-hn-text-muted/40">{fetchError}</p>
             <Link
               href="/"
               className="mt-4 inline-block rounded-full bg-hn-primary px-5 py-2 text-sm font-semibold text-hn-dark"
@@ -244,7 +244,7 @@ export default async function Home({ searchParams }: HomeProps) {
               </div>
               <Link
                 href="/?tab=ongoing"
-                className="flex items-center gap-1 text-xs font-semibold text-white/40 transition-colors hover:text-hn-primary"
+                className="flex items-center gap-1 text-xs font-semibold text-hn-text-muted/60 transition-colors hover:text-hn-primary"
               >
                 View more
                 <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
@@ -271,7 +271,7 @@ export default async function Home({ searchParams }: HomeProps) {
               </div>
               <Link
                 href="/?tab=completed"
-                className="flex items-center gap-1 text-xs font-semibold text-white/40 transition-colors hover:text-hn-primary"
+                className="flex items-center gap-1 text-xs font-semibold text-hn-text-muted/60 transition-colors hover:text-hn-primary"
               >
                 View more
                 <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">

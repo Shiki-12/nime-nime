@@ -31,7 +31,7 @@ function LoadingSpinner() {
                         d="M4 12a8 8 0 0 1 8-8V0C5.373 0 0 5.373 0 12h4Z"
                     />
                 </svg>
-                <p className="text-sm font-medium text-white/50">Loading video…</p>
+                <p className="text-sm font-medium text-hn-text-muted/70">Loading video…</p>
             </div>
         </div>
     );
@@ -213,7 +213,7 @@ export default function VideoPlayerWrapper({
             className={[
                 "group/wrapper relative overflow-hidden bg-hn-card transition-all duration-300",
                 isFullscreen
-                    ? "h-[100dvh] w-screen rounded-none bg-black"
+                    ? "h-[100dvh] w-screen rounded-none bg-hn-body"
                     : "aspect-video w-full rounded-2xl",
             ].join(" ")}
             onMouseMove={showFullscreenControls}
@@ -267,7 +267,7 @@ export default function VideoPlayerWrapper({
                             setIsLoading(false);
                         }}
                         className={[
-                            "border-0 bg-black",
+                            "border-0 bg-hn-body",
                             isFullscreen ? "h-[100dvh] w-screen" : "h-full w-full",
                         ].join(" ")}
                         allowFullScreen
@@ -285,7 +285,7 @@ export default function VideoPlayerWrapper({
                             onClick={exitFullscreen}
                             className={[
                                 "absolute right-3 top-3 z-50 flex h-11 w-11 items-center justify-center rounded-xl",
-                                "bg-black/60 text-white/90 backdrop-blur-md transition-all duration-300",
+                                "bg-black/60 text-hn-text backdrop-blur-md transition-all duration-300",
                                 "hover:bg-black/90 hover:text-hn-primary active:scale-95",
                                 showFsControls
                                     ? "opacity-100 pointer-events-auto"
@@ -318,7 +318,7 @@ export default function VideoPlayerWrapper({
             {hasError && (
                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 bg-hn-dark/90">
                     <svg
-                        className="h-12 w-12 text-white/20"
+                        className="h-12 w-12 text-hn-text-muted/40"
                         fill="none"
                         viewBox="0 0 24 24"
                         strokeWidth={1.5}
@@ -331,17 +331,17 @@ export default function VideoPlayerWrapper({
                         />
                     </svg>
 
-                    <p className="text-sm font-semibold text-white/60">
+                    <p className="text-sm font-semibold text-hn-text-muted/80">
                         Failed to load video.
                     </p>
-                    <p className="text-xs text-white/30">
+                    <p className="text-xs text-hn-text-muted/50">
                         The server may be down or the link could be broken.
                     </p>
 
                     <button
                         type="button"
                         onClick={handleRetry}
-                        className="flex items-center gap-2 rounded-lg bg-white/10 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/20"
+                        className="flex items-center gap-2 rounded-lg bg-white/10 px-5 py-2.5 text-sm font-medium text-hn-text transition-colors hover:bg-white/20"
                     >
                         <svg
                             className="h-4 w-4"

@@ -239,9 +239,9 @@ export default function EpisodeComments({ episodeSlug, animeSlug }: EpisodeComme
     const isAdmin = session?.user?.role === "ADMIN" || session?.user?.role === "OWNER";
 
     return (
-        <div className="mt-8 overflow-hidden rounded-2xl border border-white/[0.06] bg-hn-card/60">
+        <div className="mt-8 overflow-hidden rounded-2xl border border-hn-border/50 bg-hn-card/60">
             {/* Header */}
-            <div className="flex items-center gap-2.5 border-b border-white/[0.06] px-5 py-3.5">
+            <div className="flex items-center gap-2.5 border-b border-hn-border/50 px-5 py-3.5">
                 <svg
                     className="h-4 w-4 text-hn-primary"
                     fill="none"
@@ -255,10 +255,10 @@ export default function EpisodeComments({ episodeSlug, animeSlug }: EpisodeComme
                         d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
                     />
                 </svg>
-                <h3 className="text-sm font-semibold tracking-wide uppercase text-white/70">
+                <h3 className="text-sm font-semibold tracking-wide uppercase text-hn-text/70">
                     Comments
                 </h3>
-                <span className="ml-auto text-[11px] text-white/25">
+                <span className="ml-auto text-[11px] text-hn-text/25">
                     {!loading &&
                         `${comments.length} comment${comments.length !== 1 ? "s" : ""}`}
                 </span>
@@ -268,7 +268,7 @@ export default function EpisodeComments({ episodeSlug, animeSlug }: EpisodeComme
             {status === "authenticated" ? (
                 <form
                     onSubmit={handleSubmit}
-                    className="border-b border-white/[0.06] px-5 py-4"
+                    className="border-b border-hn-border/50 px-5 py-4"
                 >
                     {/* Replying-to indicator */}
                     {replyingTo && (
@@ -307,10 +307,10 @@ export default function EpisodeComments({ episodeSlug, animeSlug }: EpisodeComme
                                 placeholder={replyingTo ? `Reply to @${replyingTo.userName}...` : "Write a comment..."}
                                 maxLength={1000}
                                 rows={3}
-                                className="w-full resize-none rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 text-sm leading-relaxed text-white placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40 focus:bg-white/[0.06]"
+                                className="w-full resize-none rounded-xl border border-hn-border/60 bg-white/[0.04] px-4 py-2.5 text-sm leading-relaxed text-hn-text placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40 focus:bg-hn-border/20"
                             />
                             <div className="mt-2 flex items-center justify-between">
-                                <span className="text-[10px] text-white/20">
+                                <span className="text-[10px] text-hn-text-muted/40">
                                     {commentText.length}/1000
                                 </span>
                                 <button
@@ -344,8 +344,8 @@ export default function EpisodeComments({ episodeSlug, animeSlug }: EpisodeComme
                     </div>
                 </form>
             ) : (
-                <div className="border-b border-white/[0.06] px-5 py-4">
-                    <p className="text-center text-xs text-white/30">
+                <div className="border-b border-hn-border/50 px-5 py-4">
+                    <p className="text-center text-xs text-hn-text-muted/50">
                         Please{" "}
                         <a
                             href="/login"
@@ -367,7 +367,7 @@ export default function EpisodeComments({ episodeSlug, animeSlug }: EpisodeComme
                 ) : comments.length === 0 ? (
                     <div className="flex flex-col items-center justify-center gap-2 py-12 text-center">
                         <svg
-                            className="h-10 w-10 text-white/10"
+                            className="h-10 w-10 text-hn-text-muted/30"
                             fill="none"
                             viewBox="0 0 24 24"
                             strokeWidth={1}
@@ -379,7 +379,7 @@ export default function EpisodeComments({ episodeSlug, animeSlug }: EpisodeComme
                                 d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
                             />
                         </svg>
-                        <p className="text-xs text-white/25">
+                        <p className="text-xs text-hn-text/25">
                             No comments yet. Be the first!
                         </p>
                     </div>
@@ -394,7 +394,7 @@ export default function EpisodeComments({ episodeSlug, animeSlug }: EpisodeComme
                                 <div
                                     key={comment.id}
                                     id={`comment-${comment.id}`}
-                                    className="group/comment rounded-xl px-3 py-2.5 transition-all hover:bg-white/[0.03]"
+                                    className="group/comment rounded-xl px-3 py-2.5 transition-all hover:bg-hn-card"
                                 >
                                     {/* Discord-style parent reference */}
                                     {comment.parent && (
@@ -404,11 +404,11 @@ export default function EpisodeComments({ episodeSlug, animeSlug }: EpisodeComme
                                             className="mb-1.5 flex items-center gap-1.5 rounded-md px-2 py-1 transition-colors hover:bg-white/[0.04]"
                                         >
                                             {/* Curved reply connector ╭ */}
-                                            <svg className="h-3.5 w-3.5 shrink-0 text-white/20" viewBox="0 0 20 20" fill="none">
+                                            <svg className="h-3.5 w-3.5 shrink-0 text-hn-text-muted/40" viewBox="0 0 20 20" fill="none">
                                                 <path d="M4 16V8c0-2.21 1.79-4 4-4h8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                                             </svg>
-                                            <span className="truncate text-[11px] text-white/30">
-                                                <span className="font-semibold text-white/40">@{comment.parent.user.name}</span>
+                                            <span className="truncate text-[11px] text-hn-text-muted/50">
+                                                <span className="font-semibold text-hn-text-muted/60">@{comment.parent.user.name}</span>
                                                 {" "}
                                                 {comment.parent.text}
                                             </span>
@@ -423,7 +423,7 @@ export default function EpisodeComments({ episodeSlug, animeSlug }: EpisodeComme
                                         />
                                         <div className="min-w-0 flex-1">
                                             <div className="flex items-baseline gap-2">
-                                                <span className="flex items-center gap-1.5 text-[13px] font-semibold text-white/80">
+                                                <span className="flex items-center gap-1.5 text-[13px] font-semibold text-hn-text-muted/90">
                                                     {comment.user.name}
                                                     {(comment.user.role === "ADMIN" || comment.user.role === "OWNER") && (
                                                         <span className={`flex items-center rounded-sm px-1 py-[1px] text-[8px] font-bold uppercase tracking-wider ring-1 ring-inset ${comment.user.role === "OWNER" ? "bg-amber-500/20 text-amber-500 ring-amber-500/50" : "bg-red-500/20 text-red-500 ring-red-500/50"}`}>
@@ -436,11 +436,11 @@ export default function EpisodeComments({ episodeSlug, animeSlug }: EpisodeComme
                                                         </span>
                                                     )}
                                                 </span>
-                                                <span className="text-[10px] text-white/20">
+                                                <span className="text-[10px] text-hn-text-muted/40">
                                                     {timeAgo(comment.createdAt)}
                                                 </span>
                                             </div>
-                                            <p className="mt-0.5 break-words whitespace-pre-wrap text-[13px] leading-relaxed text-white/60">
+                                            <p className="mt-0.5 break-words whitespace-pre-wrap text-[13px] leading-relaxed text-hn-text-muted/80">
                                                 {comment.text}
                                             </p>
 
@@ -449,7 +449,7 @@ export default function EpisodeComments({ episodeSlug, animeSlug }: EpisodeComme
                                                 <button
                                                     type="button"
                                                     onClick={() => handleReply(comment.id, comment.user.name)}
-                                                    className="mt-1 flex items-center gap-1 text-[11px] font-medium text-white/30 md:text-white/20 transition-colors active:text-hn-primary md:hover:text-hn-primary opacity-100 md:opacity-0 md:group-hover/comment:opacity-100"
+                                                    className="mt-1 flex items-center gap-1 text-[11px] font-medium text-hn-text-muted/50 md:text-hn-text-muted/40 transition-colors active:text-hn-primary md:hover:text-hn-primary opacity-100 md:opacity-0 md:group-hover/comment:opacity-100"
                                                 >
                                                     <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />

@@ -66,7 +66,7 @@ export default async function HentaiDetailPage({
     <div className="min-h-screen bg-hn-dark">
       {/* ─── Video Player ─────────────────────────────────────────── */}
       <div className="mx-auto max-w-5xl px-4 pt-24 lg:px-6">
-        <div className="aspect-video w-full overflow-hidden rounded-xl bg-black shadow-lg shadow-hn-primary/10">
+        <div className="aspect-video w-full overflow-hidden rounded-xl bg-hn-body shadow-lg shadow-hn-primary/10">
           <iframe
             src={`https://hentaiocean.com/embed/${slug}`}
             className="h-full w-full"
@@ -81,14 +81,14 @@ export default async function HentaiDetailPage({
       {/* ─── Metadata Section ─────────────────────────────────────── */}
       <div className="mx-auto max-w-5xl px-4 pb-16 lg:px-6">
         {/* Title */}
-        <h1 className="mt-6 text-2xl font-bold text-white md:text-3xl">
+        <h1 className="mt-6 text-2xl font-bold text-hn-text md:text-3xl">
           {info.videoname}
         </h1>
 
         {/* Badges row */}
         <div className="mt-4 flex flex-wrap items-center gap-2">
           {/* 18+ badge */}
-          <span className="rounded bg-red-600 px-2.5 py-1 text-xs font-bold text-white">
+          <span className="rounded bg-red-600 px-2.5 py-1 text-xs font-bold text-hn-text">
             18+
           </span>
 
@@ -99,7 +99,7 @@ export default async function HentaiDetailPage({
 
           {/* Release date */}
           {releaseDate && (
-            <span className="flex items-center gap-1.5 rounded bg-white/[0.06] px-2.5 py-1 text-xs text-white/50">
+            <span className="flex items-center gap-1.5 rounded bg-hn-border/20 px-2.5 py-1 text-xs text-hn-text-muted/70">
               <svg
                 className="h-3 w-3"
                 fill="none"
@@ -118,7 +118,7 @@ export default async function HentaiDetailPage({
 
           {/* Upload date */}
           {uploadDate && (
-            <span className="flex items-center gap-1.5 rounded bg-white/[0.06] px-2.5 py-1 text-xs text-white/50">
+            <span className="flex items-center gap-1.5 rounded bg-hn-border/20 px-2.5 py-1 text-xs text-hn-text-muted/70">
               <svg
                 className="h-3 w-3"
                 fill="none"
@@ -157,28 +157,28 @@ export default async function HentaiDetailPage({
         )}
 
         {/* Divider */}
-        <div className="my-6 h-px bg-white/[0.06]" />
+        <div className="my-6 h-px bg-hn-border/20" />
 
         {/* Synopsis */}
         {description && (
           <div>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-white/40">
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-hn-text-muted/60">
               Synopsis
             </h2>
-            <p className="whitespace-pre-line leading-relaxed text-white/70">
+            <p className="whitespace-pre-line leading-relaxed text-hn-text/70">
               {description}
             </p>
           </div>
         )}
 
         {/* Divider */}
-        <div className="my-6 h-px bg-white/[0.06]" />
+        <div className="my-6 h-px bg-hn-border/20" />
 
         {/* Back navigation */}
         <div className="flex items-center gap-3">
           <Link
             href="/hentai"
-            className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-hn-card-hover"
+            className="rounded-full bg-hn-card px-5 py-2.5 text-sm font-semibold text-hn-text transition-all hover:bg-hn-card-hover"
           >
             ← Back to Collection
           </Link>
@@ -186,7 +186,7 @@ export default async function HentaiDetailPage({
             href={`https://hentaiocean.com/watch/${slug}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full border border-white/10 px-5 py-2.5 text-sm font-medium text-white/50 transition-all hover:border-white/20 hover:text-white/80"
+            className="rounded-full border border-white/10 px-5 py-2.5 text-sm font-medium text-hn-text-muted/70 transition-all hover:border-white/20 hover:text-hn-text-muted/90"
           >
             View on HentaiOcean ↗
           </a>

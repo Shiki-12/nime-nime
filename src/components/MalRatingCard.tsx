@@ -112,10 +112,10 @@ export default function MalRatingCard({
     if (score === null && !failed) {
         return (
             <div className="rounded-lg bg-hn-card p-5">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-white/30">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-hn-text-muted/50">
                     Rating MAL
                 </p>
-                <div className="mt-2 h-5 w-12 animate-pulse rounded bg-white/[0.06]" />
+                <div className="mt-2 h-5 w-12 animate-pulse rounded bg-hn-border/20" />
             </div>
         );
     }
@@ -123,10 +123,10 @@ export default function MalRatingCard({
     // ── Loaded / Failed ─────────────────────────────────────────────
     return (
         <div className="rounded-lg bg-hn-card p-5">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-white/30">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-hn-text-muted/50">
                 Rating MAL
             </p>
-            <p className="mt-2 text-sm font-semibold text-white">
+            <p className="mt-2 text-sm font-semibold text-hn-text">
                 {failed ? "N/A" : score}
             </p>
         </div>

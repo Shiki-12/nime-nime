@@ -58,10 +58,10 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
                                 key={item.label}
                                 className="rounded-lg bg-hn-card p-5"
                             >
-                                <p className="text-[10px] font-bold uppercase tracking-wider text-white/30">
+                                <p className="text-[10px] font-bold uppercase tracking-wider text-hn-text-muted/50">
                                     {item.label}
                                 </p>
-                                <p className="mt-2 text-sm font-semibold text-white">
+                                <p className="mt-2 text-sm font-semibold text-hn-text">
                                     {item.value}
                                 </p>
                             </div>
@@ -70,11 +70,11 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
 
                 {/* Synopsis */}
                 <section className="mb-10">
-                    <h2 className="mb-3 flex items-center gap-2 text-base font-bold text-white">
+                    <h2 className="mb-3 flex items-center gap-2 text-base font-bold text-hn-text">
                         <div className="h-4 w-1 rounded-full bg-hn-primary" />
                         Synopsis
                     </h2>
-                    <p className="max-w-3xl text-sm leading-relaxed text-white/50">
+                    <p className="max-w-3xl text-sm leading-relaxed text-hn-text-muted/70">
                         {anime.synopsis}
                     </p>
                 </section>
@@ -82,7 +82,7 @@ export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) 
                 {/* Trailer */}
                 {anime.trailer && (
                     <section className="mb-10 ">
-                        <h2 className="mb-3 flex items-center gap-2 text-base font-bold text-white">
+                        <h2 className="mb-3 flex items-center gap-2 text-base font-bold text-hn-text">
                             <div className="h-4 w-1 rounded-full bg-hn-primary" />
                             Trailer
                         </h2>

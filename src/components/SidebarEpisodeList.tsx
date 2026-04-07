@@ -28,7 +28,7 @@ export default function SidebarEpisodeList({
         <aside className="hidden lg:block">
             <div className="sticky top-[76px] rounded-lg bg-hn-card p-3">
                 <div className="mb-3 flex items-center gap-2 border-b border-white/5 pb-3">
-                    <h3 className="text-sm font-bold text-white">Episodes</h3>
+                    <h3 className="text-sm font-bold text-hn-text">Episodes</h3>
                     <span className="rounded bg-hn-primary/15 px-2 py-0.5 text-[10px] font-bold text-hn-primary">
                         {episodes.length}
                     </span>
@@ -52,8 +52,8 @@ export default function SidebarEpisodeList({
                                         isActive
                                             ? "bg-hn-primary text-hn-dark"
                                             : watched
-                                              ? "bg-white/[0.03] text-white/30"
-                                              : "text-white/50 hover:bg-white/5 hover:text-white"
+                                              ? "bg-hn-card text-hn-text-muted/50"
+                                              : "text-hn-text-muted/70 hover:bg-white/5 hover:text-hn-text"
                                     }`}
                                 >
                                     {watched ? (
@@ -87,7 +87,7 @@ export default function SidebarEpisodeList({
                                     className={`absolute right-1.5 top-1/2 -translate-y-1/2 flex h-5 w-5 items-center justify-center rounded-full transition-all duration-200 opacity-100 md:opacity-0 md:group-hover:opacity-100 ${
                                         watched 
                                             ? "bg-hn-green text-hn-dark opacity-100" 
-                                            : "bg-white/10 text-white/40 hover:bg-white/20 hover:text-white"
+                                            : "bg-white/10 text-hn-text-muted/60 hover:bg-white/20 hover:text-hn-text"
                                     }`}
                                 >
                                     <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={4} stroke="currentColor">

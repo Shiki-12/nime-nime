@@ -44,7 +44,7 @@ export default function Footer() {
   if (pathname.startsWith("/hentai")) return null;
 
   return (
-    <footer className="relative overflow-hidden border-t border-white/[0.04] bg-hn-dark">
+    <footer className="relative overflow-hidden border-t border-hn-border/50 bg-hn-dark">
       {/* Gradient glow behind footer */}
       <div className="absolute -top-px left-1/2 h-px w-1/2 -translate-x-1/2 bg-gradient-to-r from-transparent via-hn-primary/40 to-transparent" />
 
@@ -53,11 +53,11 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-flex items-center gap-1.5">
-              <span className="text-xl font-extrabold tracking-tight text-white">
+              <span className="text-xl font-extrabold tracking-tight text-hn-text">
                 Nime<span className="text-hn-primary">Nime</span>
               </span>
             </Link>
-            <p className="mt-3 max-w-sm text-xs leading-relaxed text-white/35">
+            <p className="mt-3 max-w-sm text-xs leading-relaxed text-hn-text-muted">
               Your premium destination for streaming anime. Discover ongoing
               series, explore genres, and watch in high quality. NimeNime does
               not store any files on its server.
@@ -80,7 +80,7 @@ export default function Footer() {
           {/* Link columns */}
           {FOOTER_SECTIONS.map((section) => (
             <div key={section.title}>
-              <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-white/50">
+              <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-hn-text-muted">
                 {section.title}
               </h4>
               <ul className="space-y-2">
@@ -88,7 +88,7 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-[13px] text-white/40 transition-colors hover:text-hn-primary"
+                      className="text-[13px] text-hn-text-muted/70 transition-colors hover:text-hn-primary"
                     >
                       {link.label}
                     </Link>
@@ -100,12 +100,12 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/[0.04] pt-6 sm:flex-row">
-          <p className="text-[11px] text-white/20">
+        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-hn-border/50 pt-6 sm:flex-row">
+          <p className="text-[11px] text-hn-text-muted/50">
             &copy; {new Date().getFullYear()} NimeNime. For educational purposes
             only.
           </p>
-          <p className="max-w-md text-center text-[10px] uppercase tracking-widest text-white/15">
+          <p className="max-w-md text-center text-[10px] uppercase tracking-widest text-hn-text-muted/40">
             This site does not store any files on its server. All contents are
             provided by non-affiliated third parties.
           </p>

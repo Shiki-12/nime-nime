@@ -205,7 +205,7 @@ export default function SearchBar() {
                         }}
                         placeholder="Search anime..."
                         autoComplete="off"
-                        className="w-full bg-transparent text-[13px] text-white placeholder:text-hn-text focus:outline-none"
+                        className="w-full bg-transparent text-[13px] text-hn-text placeholder:text-hn-text focus:outline-none"
                     />
 
                     {/* Clear button */}
@@ -219,7 +219,7 @@ export default function SearchBar() {
                                 setNoResults(false);
                                 inputRef.current?.focus();
                             }}
-                            className="shrink-0 text-hn-text transition-colors hover:text-white"
+                            className="shrink-0 text-hn-text transition-colors hover:text-hn-text"
                         >
                             <svg
                                 className="h-3.5 w-3.5"
@@ -237,7 +237,7 @@ export default function SearchBar() {
                         </button>
                     )}
 
-                    <kbd className="hidden shrink-0 rounded bg-white/[0.06] px-1.5 py-0.5 text-[10px] font-medium text-hn-text sm:inline-block">
+                    <kbd className="hidden shrink-0 rounded bg-hn-border/20 px-1.5 py-0.5 text-[10px] font-medium text-hn-text sm:inline-block">
                         Enter
                     </kbd>
                 </div>
@@ -245,7 +245,7 @@ export default function SearchBar() {
 
             {/* ── Dropdown Results ─────────────────────────────────── */}
             {showDropdown && (
-                <div className="absolute left-0 right-0 top-full z-50 max-h-[380px] overflow-y-auto rounded-b-xl border border-white/[0.06] border-t-0 bg-hn-card shadow-xl backdrop-blur-xl">
+                <div className="absolute left-0 right-0 top-full z-50 max-h-[380px] overflow-y-auto rounded-b-xl border border-hn-border/50 border-t-0 bg-hn-card shadow-xl backdrop-blur-xl">
                     {/* No results state */}
                     {noResults && (
                         <div className="flex flex-col items-center gap-2 px-4 py-8 text-center">
@@ -295,7 +295,7 @@ export default function SearchBar() {
 
                                         {/* Info */}
                                         <div className="min-w-0 flex-1">
-                                            <p className="truncate text-[13px] font-semibold text-white">
+                                            <p className="truncate text-[13px] font-semibold text-hn-text">
                                                 {anime.title}
                                             </p>
                                             <div className="mt-0.5 flex items-center gap-2">

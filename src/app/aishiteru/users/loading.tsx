@@ -8,9 +8,9 @@ export default function UsersLoading() {
             </div>
 
             {/* Table skeleton */}
-            <div className="overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.03]">
+            <div className="overflow-hidden rounded-xl border border-hn-border/50 bg-hn-card">
                 {/* Header row */}
-                <div className="hidden md:flex items-center gap-6 border-b border-white/[0.06] px-6 py-4">
+                <div className="hidden md:flex items-center gap-6 border-b border-hn-border/50 px-6 py-4">
                     {["w-20", "w-16", "w-12", "w-20", "w-16"].map((w, i) => (
                         <div key={i} className={`h-3 ${w} rounded skeleton`} />
                     ))}

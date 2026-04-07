@@ -15,13 +15,13 @@ export default function DmcaPage() {
         <h1 className="bg-gradient-to-r from-hn-primary via-pink-300 to-hn-primary bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl">
           DMCA &amp; Copyright Policy
         </h1>
-        <p className="mt-3 text-sm text-white/40">
+        <p className="mt-3 text-sm text-hn-text-muted/60">
           Last updated: March 18, 2026
         </p>
       </header>
 
       {/* ── Body ────────────────────────────────────────────────── */}
-      <article className="space-y-10 text-[15px] leading-relaxed text-white/75">
+      <article className="space-y-10 text-[15px] leading-relaxed text-hn-text/75">
         {/* Critical Disclaimer */}
         <section className="rounded-xl border border-hn-primary/20 bg-hn-primary/5 p-6">
           <h2 className="mb-3 flex items-center gap-2 text-xl font-bold text-hn-primary">
@@ -41,8 +41,8 @@ export default function DmcaPage() {
             </svg>
             Important Disclaimer
           </h2>
-          <p className="text-white/80">
-            <strong className="text-white">
+          <p className="text-hn-text-muted/90">
+            <strong className="text-hn-text">
               NimeNime does NOT host, store, upload, or distribute any video,
               media, or media files (such as .mp4, .mkv, .avi, or any other
               format) on its servers.
@@ -56,7 +56,7 @@ export default function DmcaPage() {
 
         {/* 1 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             1. Nature of the Service
           </h2>
           <p>
@@ -72,13 +72,13 @@ export default function DmcaPage() {
 
         {/* 2 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             2. Third-Party Content Hosts
           </h2>
           <p className="mb-3">
             Since all video and media content is hosted and served by
             third-party platforms, any copyright infringement concerns
-            relating to the actual video files <strong className="text-white">must</strong>{" "}
+            relating to the actual video files <strong className="text-hn-text">must</strong>{" "}
             be directed to the respective third-party host. Below are common
             hosts whose content may appear in our index:
           </p>
@@ -93,13 +93,13 @@ export default function DmcaPage() {
             ].map((host) => (
               <div
                 key={host}
-                className="rounded-lg border border-white/[0.06] bg-hn-card px-4 py-2.5 text-center text-sm font-medium text-white/80"
+                className="rounded-lg border border-hn-border/50 bg-hn-card px-4 py-2.5 text-center text-sm font-medium text-hn-text-muted/90"
               >
                 {host}
               </div>
             ))}
           </div>
-          <p className="mt-3 text-white/50 text-sm">
+          <p className="mt-3 text-hn-text-muted/70 text-sm">
             Each of these platforms has its own DMCA / abuse contact. Please
             direct content removal requests to the platform that actually
             hosts the material.
@@ -108,7 +108,7 @@ export default function DmcaPage() {
 
         {/* 3 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             3. Link Removal from Our Index
           </h2>
           <p className="mb-3">
@@ -118,8 +118,8 @@ export default function DmcaPage() {
             agent) and would like to request the removal of links from
             NimeNime&rsquo;s index, please submit a written notice to:
           </p>
-          <div className="rounded-xl border border-white/[0.06] bg-hn-card p-5">
-            <p className="text-sm text-white/50">
+          <div className="rounded-xl border border-hn-border/50 bg-hn-card p-5">
+            <p className="text-sm text-hn-text-muted/70">
               Email for Link Removal Requests:
             </p>
             <a
@@ -133,44 +133,44 @@ export default function DmcaPage() {
 
         {/* 4 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             4. Requirements for a Valid Takedown Request
           </h2>
           <p className="mb-3">
             To process your link removal request efficiently, please include
             the following information in your notice:
           </p>
-          <ol className="list-inside list-decimal space-y-2 pl-2 text-white/65">
+          <ol className="list-inside list-decimal space-y-2 pl-2 text-hn-text/65">
             <li>
-              <strong className="text-white/80">Identification of the copyrighted work</strong>{" "}
+              <strong className="text-hn-text-muted/90">Identification of the copyrighted work</strong>{" "}
               — A description or link to the original copyrighted work that
               you claim is being infringed.
             </li>
             <li>
-              <strong className="text-white/80">Identification of the infringing links</strong>{" "}
+              <strong className="text-hn-text-muted/90">Identification of the infringing links</strong>{" "}
               — The specific NimeNime URLs that index the allegedly infringing
               content. Provide exact page URLs wherever possible.
             </li>
             <li>
-              <strong className="text-white/80">Your contact information</strong>{" "}
+              <strong className="text-hn-text-muted/90">Your contact information</strong>{" "}
               — Full legal name, email address, phone number, and physical
               address.
             </li>
             <li>
-              <strong className="text-white/80">Statement of good faith</strong>{" "}
+              <strong className="text-hn-text-muted/90">Statement of good faith</strong>{" "}
               — A statement that you have a good faith belief that the use of
               the material is not authorized by the copyright owner, its
               agent, or the law.
             </li>
             <li>
-              <strong className="text-white/80">Statement of accuracy</strong>{" "}
+              <strong className="text-hn-text-muted/90">Statement of accuracy</strong>{" "}
               — A statement, made under penalty of perjury, that the
               information in your notice is accurate and that you are the
               copyright owner or authorized to act on behalf of the copyright
               owner.
             </li>
             <li>
-              <strong className="text-white/80">Signature</strong> — A
+              <strong className="text-hn-text-muted/90">Signature</strong> — A
               physical or electronic signature of the copyright owner or
               authorized representative.
             </li>
@@ -179,15 +179,15 @@ export default function DmcaPage() {
 
         {/* 5 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             5. Processing Time
           </h2>
           <div className="rounded-xl border border-hn-secondary/20 bg-hn-secondary/5 p-5">
-            <p className="text-white/80">
+            <p className="text-hn-text-muted/90">
               Upon receipt of a valid and complete takedown request, NimeNime
               will review and process the removal of the identified links from
               our index within{" "}
-              <strong className="text-white">3 – 5 business days</strong>.
+              <strong className="text-hn-text">3 – 5 business days</strong>.
               You will receive a confirmation email once the links have been
               removed.
             </p>
@@ -196,7 +196,7 @@ export default function DmcaPage() {
 
         {/* 6 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             6. Counter-Notification
           </h2>
           <p>
@@ -219,7 +219,7 @@ export default function DmcaPage() {
 
         {/* 7 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             7. Repeat Infringers
           </h2>
           <p>
@@ -231,7 +231,7 @@ export default function DmcaPage() {
 
         {/* 8 */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             8. Contact
           </h2>
           <p>

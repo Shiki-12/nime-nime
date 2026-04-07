@@ -62,7 +62,7 @@ function SeriesCard({ series }: { series: HentaiSeries }) {
         </div>
 
         {/* 18+ badge (top-left) */}
-        <div className="absolute left-0 top-0 flex items-center gap-1 bg-hn-nsfw/90 px-2 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
+        <div className="absolute left-0 top-0 flex items-center gap-1 bg-hn-nsfw/90 px-2 py-1 text-[11px] font-bold text-hn-text backdrop-blur-sm">
           18+
         </div>
 

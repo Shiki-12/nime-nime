@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import SearchBar from "@/components/SearchBar";
+import ThemeModeToggle from "@/components/ThemeModeToggle";
 
 const NAV_LINKS = [
     { label: "Home", href: "/" },
@@ -42,7 +43,7 @@ function UserMenu() {
     // ── Loading state ────────────────────────────────────────────
     if (status === "loading") {
         return (
-            <div className="h-8 w-8 animate-pulse rounded-full bg-white/5" />
+            <div className="h-8 w-8 animate-pulse rounded-full bg-hn-text-muted/10" />
         );
     }
 
@@ -51,7 +52,7 @@ function UserMenu() {
         return (
             <Link
                 href="/login"
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-white/[0.06] text-white/40 transition-all duration-200 hover:bg-hn-primary/15 hover:text-hn-primary hover:shadow-[0_0_12px_rgba(255,186,222,0.15)]"
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-hn-text-muted/10 text-hn-text-muted/60 transition-all duration-200 hover:bg-hn-primary/15 hover:text-hn-primary hover:shadow-[0_0_12px_rgba(255,186,222,0.15)]"
                 aria-label="Sign in"
             >
                 <svg
@@ -98,14 +99,14 @@ function UserMenu() {
 
             {/* Dropdown */}
             {open && (
-                <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-60 overflow-hidden rounded-xl border border-white/[0.06] bg-hn-card shadow-2xl shadow-black/40">
+                <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-60 overflow-hidden rounded-xl border border-hn-border/50 bg-hn-card shadow-2xl shadow-black/40">
                     {/* User info */}
-                    <div className="border-b border-white/[0.06] px-4 py-3">
-                        <p className="truncate text-sm font-semibold text-white">
+                    <div className="border-b border-hn-border/50 px-4 py-3">
+                        <p className="truncate text-sm font-semibold text-hn-text">
                             {session.user.name ?? "User"}
                         </p>
                         {session.user.email && (
-                            <p className="truncate text-xs text-white/40">
+                            <p className="truncate text-xs text-hn-text-muted/80">
                                 {session.user.email}
                             </p>
                         )}
@@ -137,13 +138,13 @@ function UserMenu() {
                                     </svg>
                                     Aishiteru
                                 </Link>
-                                <div className="mx-3 my-1 border-t border-white/[0.06]" />
+                                <div className="mx-3 my-1 border-t border-hn-border/50" />
                             </>
                         )}
                         <Link
                             href="/settings"
                             onClick={() => setOpen(false)}
-                            className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-white/70 transition-all duration-200 hover:bg-white/5 hover:text-white"
+                            className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-hn-text-muted transition-all duration-200 hover:bg-hn-text-muted/10 hover:text-hn-text"
                         >
                             <svg
                                 className="h-4 w-4"
@@ -168,7 +169,7 @@ function UserMenu() {
                         <Link
                             href="/settings/appearance"
                             onClick={() => setOpen(false)}
-                            className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-white/70 transition-all duration-200 hover:bg-white/5 hover:text-white"
+                            className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-hn-text-muted transition-all duration-200 hover:bg-hn-text-muted/10 hover:text-hn-text"
                         >
                             <svg
                                 className="h-4 w-4"
@@ -187,13 +188,13 @@ function UserMenu() {
                         </Link>
                         {session.user.nsfwEnabled && (
                             <>
-                                <div className="mx-3 my-1 border-t border-white/[0.06]" />
+                                <div className="mx-3 my-1 border-t border-hn-border/50" />
                                 <Link
                                     href="/hentai"
                                     onClick={() => setOpen(false)}
                                     className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-red-400/80 transition-all duration-200 hover:bg-red-500/10 hover:text-red-400"
                                 >
-                                    <span className="flex h-4 w-4 items-center justify-center rounded bg-red-600 text-[8px] font-bold text-white">
+                                    <span className="flex h-4 w-4 items-center justify-center rounded bg-red-600 text-[8px] font-bold text-hn-text">
                                         18
                                     </span>
                                     18+ Section
@@ -316,7 +317,7 @@ function NotificationBell() {
         <div ref={bellRef} className="relative">
             <button
                 onClick={() => setOpen((v) => !v)}
-                className="relative flex h-9 w-9 items-center justify-center rounded-lg text-white/50 transition-all duration-200 hover:bg-white/[0.06] hover:text-white"
+                className="relative flex h-9 w-9 items-center justify-center rounded-lg text-hn-text-muted transition-all duration-200 hover:bg-hn-text-muted/10 hover:text-hn-text"
                 aria-label="Notifications"
             >
                 <svg
@@ -333,7 +334,7 @@ function NotificationBell() {
                     />
                 </svg>
                 {unreadCount > 0 && (
-                    <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white shadow-lg shadow-red-500/30">
+                    <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-hn-text shadow-lg shadow-red-500/30">
                         {unreadCount > 99 ? "99+" : unreadCount}
                     </span>
                 )}
@@ -341,10 +342,10 @@ function NotificationBell() {
 
             {/* Dropdown */}
             {open && (
-                <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-80 overflow-hidden rounded-xl border border-white/[0.06] bg-hn-card shadow-2xl shadow-black/40">
+                <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-80 overflow-hidden rounded-xl border border-hn-border/50 bg-hn-card shadow-2xl shadow-black/40">
                     {/* Header */}
-                    <div className="flex items-center justify-between border-b border-white/[0.06] px-4 py-3">
-                        <h3 className="text-sm font-semibold text-white">
+                    <div className="flex items-center justify-between border-b border-hn-border/50 px-4 py-3">
+                        <h3 className="text-sm font-semibold text-hn-text">
                             Notifications
                         </h3>
                         {unreadCount > 0 && (
@@ -359,7 +360,7 @@ function NotificationBell() {
                         {displayNotifs.length === 0 ? (
                             <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
                                 <svg
-                                    className="h-8 w-8 text-white/10"
+                                    className="h-8 w-8 text-hn-text-muted/30"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     strokeWidth={1}
@@ -371,7 +372,7 @@ function NotificationBell() {
                                         d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
                                     />
                                 </svg>
-                                <p className="text-xs text-white/25">
+                                <p className="text-xs text-hn-text-muted/60">
                                     No notifications
                                 </p>
                             </div>
@@ -389,7 +390,7 @@ function NotificationBell() {
                                         <div
                                             className={`flex items-start gap-3 px-4 py-2.5 transition-colors ${
                                                 notif.isRead
-                                                    ? "hover:bg-white/[0.03]"
+                                                    ? "hover:bg-hn-text-muted/5"
                                                     : "bg-hn-primary/[0.03] hover:bg-hn-primary/[0.06]"
                                             }`}
                                         >
@@ -447,7 +448,7 @@ function NotificationBell() {
                                             <div className="min-w-0 flex-1">
                                                 <div className="flex items-center gap-1.5">
                                                     <p
-                                                        className={`truncate text-[13px] font-semibold leading-tight ${notif.isRead ? "text-white/50" : "text-white/90"}`}
+                                                        className={`truncate text-[13px] font-semibold leading-tight ${notif.isRead ? "text-hn-text-muted" : "text-hn-text"}`}
                                                     >
                                                         {notif.title}
                                                     </p>
@@ -456,11 +457,11 @@ function NotificationBell() {
                                                     )}
                                                 </div>
                                                 <p
-                                                    className={`mt-0.5 line-clamp-1 text-[12px] ${notif.isRead ? "text-white/25" : "text-white/40"}`}
+                                                    className={`mt-0.5 line-clamp-1 text-[12px] ${notif.isRead ? "text-hn-text-muted/50" : "text-hn-text-muted/80"}`}
                                                 >
                                                     {notif.message}
                                                 </p>
-                                                <span className="mt-0.5 text-[10px] text-white/20">
+                                                <span className="mt-0.5 text-[10px] text-hn-text-muted/40">
                                                     {notifTimeAgo(
                                                         notif.createdAt,
                                                     )}
@@ -506,7 +507,7 @@ function NotificationBell() {
                     <Link
                         href="/inbox"
                         onClick={() => setOpen(false)}
-                        className="flex items-center justify-center gap-1.5 border-t border-white/[0.06] px-4 py-2.5 text-xs font-semibold text-hn-primary transition-colors hover:bg-white/[0.03]"
+                        className="flex items-center justify-center gap-1.5 border-t border-hn-border/50 px-4 py-2.5 text-xs font-semibold text-hn-primary transition-colors hover:bg-hn-text-muted/5"
                     >
                         View all in Inbox
                         <svg
@@ -545,7 +546,7 @@ export default function Navbar() {
                     {/* Hamburger — visible on all sizes for aniwatch style, functional on mobile */}
                     <button
                         onClick={() => setMobileOpen(!mobileOpen)}
-                        className="flex h-9 w-9 items-center justify-center rounded-lg text-white/60 transition-all duration-200 hover:bg-white/5 hover:text-white lg:hidden"
+                        className="flex h-9 w-9 items-center justify-center rounded-lg text-hn-text-muted transition-all duration-200 hover:bg-hn-text-muted/10 hover:text-hn-text lg:hidden"
                         aria-label="Toggle menu"
                     >
                         <svg
@@ -576,7 +577,7 @@ export default function Navbar() {
                         href="/"
                         className="group flex items-center gap-1.5 shrink-0"
                     >
-                        <span className="text-xl font-extrabold tracking-tight text-white">
+                        <span className="text-xl font-extrabold tracking-tight text-hn-text">
                             Nime<span className="text-hn-primary">Nime</span>
                         </span>
                     </Link>
@@ -599,7 +600,7 @@ export default function Navbar() {
                                 className={`relative rounded-lg px-3 py-1.5 text-[13px] font-medium transition-all duration-200 ${
                                     isActive
                                         ? "text-hn-primary"
-                                        : "text-white/60 hover:bg-white/[0.04] hover:text-white"
+                                        : "text-hn-text-muted hover:bg-hn-text-muted/10 hover:text-hn-text"
                                 }`}
                             >
                                 {link.label}
@@ -633,7 +634,7 @@ export default function Navbar() {
                                 if (searchInput) searchInput.focus();
                             }, 100);
                         }}
-                        className="flex h-9 w-9 items-center justify-center rounded-lg text-white/60 transition-all duration-200 hover:bg-white/5 hover:text-white md:hidden"
+                        className="flex h-9 w-9 items-center justify-center rounded-lg text-hn-text-muted transition-all duration-200 hover:bg-hn-text-muted/10 hover:text-hn-text md:hidden"
                         aria-label="Search"
                     >
                         <svg
@@ -654,7 +655,7 @@ export default function Navbar() {
                     {/* Random button */}
                     <a
                         href="/api/random"
-                        className="hidden h-9 items-center gap-1.5 rounded-lg px-3 text-[12px] font-medium text-white/50 transition-all duration-200 hover:bg-white/[0.04] hover:text-white sm:flex"
+                        className="hidden h-9 items-center gap-1.5 rounded-lg px-3 text-[12px] font-medium text-hn-text-muted transition-all duration-200 hover:bg-hn-text-muted/10 hover:text-hn-text sm:flex"
                         aria-label="Random anime"
                     >
                         <svg
@@ -673,6 +674,9 @@ export default function Navbar() {
                         Random
                     </a>
 
+                    {/* Theme mode toggle (sun/moon) */}
+                    <ThemeModeToggle />
+
                     {/* Notification bell */}
                     <NotificationBell />
 
@@ -689,7 +693,7 @@ export default function Navbar() {
                         : "max-h-0 opacity-0"
                 }`}
             >
-                <div className="border-t border-white/[0.06] bg-hn-dark/95 backdrop-blur-xl px-5 pb-6 pt-4">
+                <div className="border-t border-hn-border/50 bg-hn-dark/95 backdrop-blur-xl px-5 pb-6 pt-4">
                     <div className="mb-4 md:hidden">
                         <SearchBar />
                     </div>
@@ -710,7 +714,7 @@ export default function Navbar() {
                                     className={`rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
                                         isActive
                                             ? "bg-hn-primary/10 text-hn-primary"
-                                            : "text-white/60 hover:bg-white/5 hover:text-white"
+                                            : "text-hn-text-muted hover:bg-hn-text-muted/5 hover:text-hn-text"
                                     }`}
                                 >
                                     {link.label}

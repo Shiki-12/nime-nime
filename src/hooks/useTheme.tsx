@@ -10,24 +10,47 @@ import {
 } from "react";
 
 // ─── Types ──────────────────────────────────────────────────────────
-export type ThemeColor = "green" | "blue" | "purple" | "orange" | "red" | "white";
+/** Dark-mode themes (6 originals — :root default is "purple") */
+export type DarkTheme = "purple" | "blue" | "green" | "orange" | "red" | "white";
+/** Light-mode themes (4 fully self-contained) */
+export type LightTheme = "amethyst" | "maroon" | "frost" | "matcha";
+/** Union of all theme IDs */
+export type ThemeColor = DarkTheme | LightTheme;
+
+/** Derived mode — not stored as a separate attribute */
+export type ThemeMode = "light" | "dark";
 
 interface ThemeContextValue {
-    /** Current active theme */
+    /** Current active theme (data-theme) */
     theme: ThemeColor;
-    /** Change the theme (persists to localStorage) */
+    /** Change the theme (persists to localStorage, sets data-theme) */
     setTheme: (t: ThemeColor) => void;
+    /** Derived display mode based on current theme */
+    mode: ThemeMode;
+    /** Switch mode — auto-selects default theme for that mode */
+    setMode: (m: ThemeMode) => void;
     /** True once the client has mounted and theme is loaded */
     mounted: boolean;
 }
 
 const STORAGE_KEY = "nimenime-theme";
-const DEFAULT_THEME: ThemeColor = "purple";
+const DEFAULT_DARK_THEME: DarkTheme = "purple";
+const DEFAULT_LIGHT_THEME: LightTheme = "amethyst";
+
+export const DARK_THEMES: DarkTheme[] = ["purple", "blue", "green", "orange", "red", "white"];
+export const LIGHT_THEMES: LightTheme[] = ["amethyst", "maroon", "frost", "matcha"];
+const ALL_THEMES: ThemeColor[] = [...DARK_THEMES, ...LIGHT_THEMES];
+
+function deriveMode(theme: ThemeColor): ThemeMode {
+    return (LIGHT_THEMES as string[]).includes(theme) ? "light" : "dark";
+}
 
 // ─── Context ────────────────────────────────────────────────────────
 const ThemeContext = createContext<ThemeContextValue>({
-    theme: DEFAULT_THEME,
+    theme: DEFAULT_DARK_THEME,
     setTheme: () => {},
+    mode: "dark",
+    setMode: () => {},
     mounted: false,
 });
 
@@ -37,14 +60,13 @@ export function useTheme() {
 
 // ─── Provider ───────────────────────────────────────────────────────
 export function ThemeProvider({ children }: { children: ReactNode }) {
-    const [theme, setThemeState] = useState<ThemeColor>(DEFAULT_THEME);
+    const [theme, setThemeState] = useState<ThemeColor>(DEFAULT_DARK_THEME);
     const [mounted, setMounted] = useState(false);
 
     // Read from localStorage once on mount
     useEffect(() => {
         const stored = localStorage.getItem(STORAGE_KEY) as ThemeColor | null;
-        if (stored && ["green", "blue", "purple", "orange", "red", "white"].includes(stored)) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
+        if (stored && ALL_THEMES.includes(stored)) {
             setThemeState(stored);
         }
         setMounted(true);
@@ -54,11 +76,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         if (!mounted) return;
         const root = document.documentElement;
-        if (theme === DEFAULT_THEME) {
+
+        // "purple" is :root default — remove attribute so :root vars apply
+        if (theme === DEFAULT_DARK_THEME) {
             root.removeAttribute("data-theme");
         } else {
             root.setAttribute("data-theme", theme);
         }
+
+        // Clean up any leftover data-mode attribute from previous versions
+        root.removeAttribute("data-mode");
     }, [theme, mounted]);
 
     const setTheme = useCallback((t: ThemeColor) => {
@@ -66,8 +93,17 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         localStorage.setItem(STORAGE_KEY, t);
     }, []);
 
+    // setMode: switch to the default theme for that mode
+    const setMode = useCallback((m: ThemeMode) => {
+        const newTheme = m === "dark" ? DEFAULT_DARK_THEME : DEFAULT_LIGHT_THEME;
+        setThemeState(newTheme);
+        localStorage.setItem(STORAGE_KEY, newTheme);
+    }, []);
+
+    const mode = deriveMode(theme);
+
     return (
-        <ThemeContext.Provider value={{ theme, setTheme, mounted }}>
+        <ThemeContext.Provider value={{ theme, setTheme, mode, setMode, mounted }}>
             {children}
         </ThemeContext.Provider>
     );

@@ -69,12 +69,12 @@ export default function PaginationNav({
                 {safePage > 1 ? (
                     <Link
                         href={buildHref(safePage - 1)}
-                        className="rounded-lg bg-white/[0.06] px-3 py-2 text-xs font-medium text-white/60 backdrop-blur-sm transition-all hover:bg-white/[0.12] hover:text-white sm:px-4 sm:text-[13px]"
+                        className="rounded-lg bg-hn-border/20 px-3 py-2 text-xs font-medium text-hn-text-muted/80 backdrop-blur-sm transition-all hover:bg-white/[0.12] hover:text-hn-text sm:px-4 sm:text-[13px]"
                     >
                         ← Prev
                     </Link>
                 ) : (
-                    <span className="cursor-not-allowed rounded-lg bg-white/[0.03] px-3 py-2 text-xs font-medium text-white/20 sm:px-4 sm:text-[13px]">
+                    <span className="cursor-not-allowed rounded-lg bg-hn-card px-3 py-2 text-xs font-medium text-hn-text-muted/40 sm:px-4 sm:text-[13px]">
                         ← Prev
                     </span>
                 )}
@@ -84,7 +84,7 @@ export default function PaginationNav({
                     page === "..." ? (
                         <span
                             key={`ellipsis-${idx}`}
-                            className="px-0.5 text-xs text-white/30 sm:px-1 sm:text-[13px]"
+                            className="px-0.5 text-xs text-hn-text-muted/50 sm:px-1 sm:text-[13px]"
                         >
                             …
                         </span>
@@ -95,7 +95,7 @@ export default function PaginationNav({
                             className={`flex h-8 w-8 items-center justify-center rounded-lg text-xs font-semibold transition-all duration-200 sm:h-9 sm:w-9 sm:text-[13px] ${
                                 page === safePage
                                     ? "bg-hn-primary text-hn-dark shadow-lg shadow-hn-primary/30"
-                                    : "bg-white/[0.06] text-white/60 hover:bg-white/[0.12] hover:text-white"
+                                    : "bg-hn-border/20 text-hn-text-muted/80 hover:bg-white/[0.12] hover:text-hn-text"
                             }`}
                         >
                             {page}
@@ -107,12 +107,12 @@ export default function PaginationNav({
                 {safePage < validTotalPages ? (
                     <Link
                         href={buildHref(safePage + 1)}
-                        className="rounded-lg bg-white/[0.06] px-3 py-2 text-xs font-medium text-white/60 backdrop-blur-sm transition-all hover:bg-white/[0.12] hover:text-white sm:px-4 sm:text-[13px]"
+                        className="rounded-lg bg-hn-border/20 px-3 py-2 text-xs font-medium text-hn-text-muted/80 backdrop-blur-sm transition-all hover:bg-white/[0.12] hover:text-hn-text sm:px-4 sm:text-[13px]"
                     >
                         Next →
                     </Link>
                 ) : (
-                    <span className="cursor-not-allowed rounded-lg bg-white/[0.03] px-3 py-2 text-xs font-medium text-white/20 sm:px-4 sm:text-[13px]">
+                    <span className="cursor-not-allowed rounded-lg bg-hn-card px-3 py-2 text-xs font-medium text-hn-text-muted/40 sm:px-4 sm:text-[13px]">
                         Next →
                     </span>
                 )}
@@ -132,12 +132,12 @@ export default function PaginationNav({
             {hasPrev ? (
                 <Link
                     href={buildHref(currentPage - 1)}
-                    className="rounded-full bg-white/[0.06] px-5 py-2 text-sm font-semibold text-white/70 transition-all hover:bg-white/[0.12] hover:text-white"
+                    className="rounded-full bg-hn-border/20 px-5 py-2 text-sm font-semibold text-hn-text/70 transition-all hover:bg-white/[0.12] hover:text-hn-text"
                 >
                     ← Previous
                 </Link>
             ) : (
-                <span className="cursor-not-allowed rounded-full bg-white/[0.03] px-5 py-2 text-sm font-semibold text-white/20">
+                <span className="cursor-not-allowed rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-hn-text-muted/40">
                     ← Previous
                 </span>
             )}
@@ -149,12 +149,12 @@ export default function PaginationNav({
             {hasNext ? (
                 <Link
                     href={buildHref(currentPage + 1)}
-                    className="rounded-full bg-white/[0.06] px-5 py-2 text-sm font-semibold text-white/70 transition-all hover:bg-white/[0.12] hover:text-white"
+                    className="rounded-full bg-hn-border/20 px-5 py-2 text-sm font-semibold text-hn-text/70 transition-all hover:bg-white/[0.12] hover:text-hn-text"
                 >
                     Next →
                 </Link>
             ) : (
-                <span className="cursor-not-allowed rounded-full bg-white/[0.03] px-5 py-2 text-sm font-semibold text-white/20">
+                <span className="cursor-not-allowed rounded-full bg-hn-card px-5 py-2 text-sm font-semibold text-hn-text-muted/40">
                     Next →
                 </span>
             )}

@@ -23,7 +23,7 @@ export default function AnimeActions({ anime }: AnimeActionsProps) {
                 onClick={() => toggleSave(anime)}
                 className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition-all ${saved
                         ? "bg-hn-primary text-hn-dark shadow-lg shadow-hn-primary/25"
-                        : "bg-white/[0.06] text-white/70 hover:bg-white/10 hover:text-white"
+                        : "bg-hn-border/20 text-hn-text/70 hover:bg-white/10 hover:text-hn-text"
                     }`}
             >
                 <svg
@@ -47,7 +47,7 @@ export default function AnimeActions({ anime }: AnimeActionsProps) {
                 onClick={() => setRating("like")}
                 className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${currentRating === "like"
                         ? "bg-hn-green/20 text-hn-green"
-                        : "bg-white/[0.06] text-white/40 hover:bg-white/10 hover:text-hn-green"
+                        : "bg-hn-border/20 text-hn-text-muted/60 hover:bg-white/10 hover:text-hn-green"
                     }`}
             >
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -64,7 +64,7 @@ export default function AnimeActions({ anime }: AnimeActionsProps) {
                 onClick={() => setRating("dislike")}
                 className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${currentRating === "dislike"
                         ? "bg-red-500/20 text-red-400"
-                        : "bg-white/[0.06] text-white/40 hover:bg-white/10 hover:text-red-400"
+                        : "bg-hn-border/20 text-hn-text-muted/60 hover:bg-white/10 hover:text-red-400"
                     }`}
             >
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">

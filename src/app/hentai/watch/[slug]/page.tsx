@@ -138,7 +138,7 @@ export default async function HentaiWatchPage({
 
       {/* ─── Video Player ─────────────────────────────────────────── */}
       <div className="mx-auto max-w-5xl px-4 lg:px-6">
-        <div className="aspect-video w-full overflow-hidden rounded-xl bg-black shadow-lg shadow-hn-primary/10">
+        <div className="aspect-video w-full overflow-hidden rounded-xl bg-hn-body shadow-lg shadow-hn-primary/10">
           <iframe
             src={`https://hentaiocean.com/embed/${slug}`}
             className="h-full w-full border-0"
@@ -220,7 +220,7 @@ export default async function HentaiWatchPage({
                       />
                       <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors group-hover:bg-black/10">
                         <svg
-                          className="h-4 w-4 text-white/80"
+                          className="h-4 w-4 text-hn-text-muted/90"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >

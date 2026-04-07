@@ -24,7 +24,7 @@ export default async function BotEnginePage() {
             </div>
 
             {/* ── Status Card ────────────────────────────────────────── */}
-            <div className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6 backdrop-blur-sm md:p-8">
+            <div className="relative overflow-hidden rounded-2xl border border-hn-border/50 bg-hn-card p-6 backdrop-blur-sm md:p-8">
                 {/* Decorative glow */}
                 <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-hn-primary/5 blur-3xl" />
                 <div className="pointer-events-none absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-emerald-500/5 blur-3xl" />
@@ -43,7 +43,7 @@ export default async function BotEnginePage() {
                                 NimeNime Bot
                             </h2>
                             <p className="mt-0.5 text-xs text-hn-text-muted">
-                                PM2 Process: <code className="rounded bg-white/[0.06] px-1.5 py-0.5 text-[10px] font-mono text-hn-text/70">nimenime-bot</code>
+                                PM2 Process: <code className="rounded bg-hn-border/20 px-1.5 py-0.5 text-[10px] font-mono text-hn-text/70">nimenime-bot</code>
                             </p>
                             <div className="mt-2 flex items-center gap-2">
                                 <span className="relative flex h-2 w-2">
@@ -63,7 +63,7 @@ export default async function BotEnginePage() {
             {/* ── Info Cards Grid ─────────────────────────────────────── */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {/* Process Manager */}
-                <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] p-5 backdrop-blur-sm">
+                <div className="rounded-xl border border-hn-border/50 bg-hn-card p-5 backdrop-blur-sm">
                     <div className="flex items-center gap-3">
                         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-500/10 ring-1 ring-sky-500/20">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor" className="h-4 w-4 text-sky-400">
@@ -80,7 +80,7 @@ export default async function BotEnginePage() {
                 </div>
 
                 {/* Runtime */}
-                <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] p-5 backdrop-blur-sm">
+                <div className="rounded-xl border border-hn-border/50 bg-hn-card p-5 backdrop-blur-sm">
                     <div className="flex items-center gap-3">
                         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-500/10 ring-1 ring-violet-500/20">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor" className="h-4 w-4 text-violet-400">
@@ -97,7 +97,7 @@ export default async function BotEnginePage() {
                 </div>
 
                 {/* API */}
-                <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] p-5 backdrop-blur-sm">
+                <div className="rounded-xl border border-hn-border/50 bg-hn-card p-5 backdrop-blur-sm">
                     <div className="flex items-center gap-3">
                         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10 ring-1 ring-amber-500/20">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor" className="h-4 w-4 text-amber-400">
@@ -115,27 +115,27 @@ export default async function BotEnginePage() {
             </div>
 
             {/* ── Terminal-like Log Section ────────────────────────────── */}
-            <div className="overflow-hidden rounded-xl border border-white/[0.06] bg-black/40 backdrop-blur-sm">
+            <div className="overflow-hidden rounded-xl border border-hn-border/50 bg-black/40 backdrop-blur-sm">
                 {/* Terminal header */}
-                <div className="flex items-center gap-2 border-b border-white/[0.06] px-4 py-2.5">
+                <div className="flex items-center gap-2 border-b border-hn-border/50 px-4 py-2.5">
                     <div className="flex gap-1.5">
                         <div className="h-2.5 w-2.5 rounded-full bg-red-500/70" />
                         <div className="h-2.5 w-2.5 rounded-full bg-amber-500/70" />
                         <div className="h-2.5 w-2.5 rounded-full bg-emerald-500/70" />
                     </div>
-                    <span className="ml-2 text-[10px] font-medium tracking-wider text-white/30 uppercase">
+                    <span className="ml-2 text-[10px] font-medium tracking-wider text-hn-text-muted/50 uppercase">
                         Terminal — nimenime-bot
                     </span>
                 </div>
 
                 {/* Terminal body */}
-                <div className="p-4 font-mono text-xs leading-6 text-white/50">
+                <div className="p-4 font-mono text-xs leading-6 text-hn-text-muted/70">
                     <p><span className="text-emerald-400">$</span> pm2 status nimenime-bot</p>
-                    <p className="text-white/30">┌──────────────┬────┬──────┬────────┬─────────┐</p>
-                    <p className="text-white/30">│ name         │ id │ mode │ status │ cpu     │</p>
-                    <p className="text-white/30">├──────────────┼────┼──────┼────────┼─────────┤</p>
-                    <p>│ <span className="text-hn-primary">nimenime-bot</span> │ <span className="text-white/60">0</span>  │ <span className="text-white/60">fork</span> │ <span className="text-emerald-400">online</span> │ <span className="text-white/60">0.1%</span>    │</p>
-                    <p className="text-white/30">└──────────────┴────┴──────┴────────┴─────────┘</p>
+                    <p className="text-hn-text-muted/50">┌──────────────┬────┬──────┬────────┬─────────┐</p>
+                    <p className="text-hn-text-muted/50">│ name         │ id │ mode │ status │ cpu     │</p>
+                    <p className="text-hn-text-muted/50">├──────────────┼────┼──────┼────────┼─────────┤</p>
+                    <p>│ <span className="text-hn-primary">nimenime-bot</span> │ <span className="text-hn-text-muted/80">0</span>  │ <span className="text-hn-text-muted/80">fork</span> │ <span className="text-emerald-400">online</span> │ <span className="text-hn-text-muted/80">0.1%</span>    │</p>
+                    <p className="text-hn-text-muted/50">└──────────────┴────┴──────┴────────┴─────────┘</p>
                     <p className="mt-2"><span className="text-emerald-400">$</span> <span className="animate-pulse">█</span></p>
                 </div>
             </div>

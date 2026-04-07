@@ -15,20 +15,20 @@ export default function TermsPage() {
         <h1 className="bg-gradient-to-r from-hn-primary via-pink-300 to-hn-primary bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl">
           Terms of Service
         </h1>
-        <p className="mt-3 text-sm text-white/40">
+        <p className="mt-3 text-sm text-hn-text-muted/60">
           Last updated: March 18, 2026
         </p>
       </header>
 
       {/* ── Body ────────────────────────────────────────────────── */}
-      <article className="space-y-10 text-[15px] leading-relaxed text-white/75">
+      <article className="space-y-10 text-[15px] leading-relaxed text-hn-text/75">
         {/* 1 – Introduction */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             1. Introduction
           </h2>
           <p>
-            Welcome to <strong className="text-white">NimeNime</strong> (
+            Welcome to <strong className="text-hn-text">NimeNime</strong> (
             <Link
               href="https://nime-nime.web.id"
               className="text-hn-primary hover:underline"
@@ -44,7 +44,7 @@ export default function TermsPage() {
 
         {/* 2 – Description of Service */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             2. Description of Service
           </h2>
           <p>
@@ -57,7 +57,7 @@ export default function TermsPage() {
 
         {/* 3 – Eligibility */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             3. Eligibility
           </h2>
           <p>
@@ -70,7 +70,7 @@ export default function TermsPage() {
 
         {/* 4 – User Accounts */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             4. User Accounts
           </h2>
           <p>
@@ -84,13 +84,13 @@ export default function TermsPage() {
 
         {/* 5 – User Conduct */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             5. User Conduct
           </h2>
           <p className="mb-3">
-            When using NimeNime, you agree <strong className="text-white">not</strong> to:
+            When using NimeNime, you agree <strong className="text-hn-text">not</strong> to:
           </p>
-          <ul className="list-inside list-disc space-y-1.5 pl-2 text-white/65">
+          <ul className="list-inside list-disc space-y-1.5 pl-2 text-hn-text/65">
             <li>
               Use the Service for any unlawful purpose or in violation of any
               applicable laws or regulations.
@@ -122,13 +122,13 @@ export default function TermsPage() {
 
         {/* 6 – Intellectual Property */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             6. Intellectual Property
           </h2>
           <p className="mb-3">
             All anime titles, characters, artwork, logos, and related media
             displayed on NimeNime are the property of their respective owners,
-            creators, and licensors. NimeNime does <strong className="text-white">not</strong>{" "}
+            creators, and licensors. NimeNime does <strong className="text-hn-text">not</strong>{" "}
             claim ownership of any third-party intellectual property.
           </p>
           <p>
@@ -143,7 +143,7 @@ export default function TermsPage() {
 
         {/* 7 – Third-Party Links & Content */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             7. Third-Party Links &amp; Content
           </h2>
           <p>
@@ -157,7 +157,7 @@ export default function TermsPage() {
 
         {/* 8 – Disclaimer of Warranties */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             8. Disclaimer of Warranties
           </h2>
           <p>
@@ -173,7 +173,7 @@ export default function TermsPage() {
 
         {/* 9 – Limitation of Liability */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             9. Limitation of Liability
           </h2>
           <p>
@@ -191,7 +191,7 @@ export default function TermsPage() {
 
         {/* 10 – Indemnification */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             10. Indemnification
           </h2>
           <p>
@@ -205,7 +205,7 @@ export default function TermsPage() {
 
         {/* 11 – Modifications */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             11. Modifications to Terms
           </h2>
           <p>
@@ -219,7 +219,7 @@ export default function TermsPage() {
 
         {/* 12 – Governing Law */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             12. Governing Law
           </h2>
           <p>
@@ -231,7 +231,7 @@ export default function TermsPage() {
 
         {/* 13 – Contact */}
         <section>
-          <h2 className="mb-3 text-xl font-bold text-white">
+          <h2 className="mb-3 text-xl font-bold text-hn-text">
             13. Contact Us
           </h2>
           <p>

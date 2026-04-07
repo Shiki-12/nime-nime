@@ -46,7 +46,7 @@ export default function EpisodeList({
                 {prevEp ? (
                     <Link
                         href={buildHref(prevEp.slug)}
-                        className="group flex items-center gap-2 rounded-full bg-hn-card px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-hn-card-hover"
+                        className="group flex items-center gap-2 rounded-full bg-hn-card px-4 py-2 text-xs font-semibold text-hn-text transition-all hover:bg-hn-card-hover"
                     >
                         <svg className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
@@ -78,7 +78,7 @@ export default function EpisodeList({
             <div className="lg:hidden">
                 <div className="mb-2 flex items-center gap-2">
                     <div className="h-4 w-1 rounded-full bg-hn-primary" />
-                    <h3 className="text-sm font-bold text-white">
+                    <h3 className="text-sm font-bold text-hn-text">
                         All Episodes ({episodes.length})
                     </h3>
                 </div>
@@ -100,8 +100,8 @@ export default function EpisodeList({
                                             isActive
                                                 ? "bg-hn-primary text-hn-dark"
                                                 : watched
-                                                  ? "bg-white/[0.03] text-white/30"
-                                                  : "text-white/50 hover:bg-white/5 hover:text-white"
+                                                  ? "bg-hn-card text-hn-text-muted/50"
+                                                  : "text-hn-text-muted/70 hover:bg-white/5 hover:text-hn-text"
                                         }`}
                                     >
                                         {watched ? (
@@ -135,7 +135,7 @@ export default function EpisodeList({
                                         className={`absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full transition-all duration-200 ${
                                             watched 
                                                 ? "bg-hn-green text-hn-dark shadow-sm" 
-                                                : "bg-white/10 text-white/40 md:hover:bg-white/20 md:hover:text-white opacity-100 md:opacity-0 md:group-hover:opacity-100"
+                                                : "bg-white/10 text-hn-text-muted/60 md:hover:bg-white/20 md:hover:text-hn-text opacity-100 md:opacity-0 md:group-hover:opacity-100"
                                         }`}
                                     >
                                         <svg className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" strokeWidth={5} stroke="currentColor">

@@ -19,12 +19,12 @@ export default function NotFound() {
                 </h1>
 
                 {/* Title */}
-                <h2 className="mt-4 text-2xl md:text-3xl font-bold text-white tracking-tight">
+                <h2 className="mt-4 text-2xl md:text-3xl font-bold text-hn-text tracking-tight">
                     Page Not Found
                 </h2>
 
                 {/* Anime-themed description */}
-                <p className="mt-4 max-w-md text-base md:text-lg text-white/50 leading-relaxed">
+                <p className="mt-4 max-w-md text-base md:text-lg text-hn-text-muted/70 leading-relaxed">
                     Waduh! Sepertinya halaman yang kamu cari sudah ber-Isekai ke dunia lain, atau link-nya memang rusak.
                 </p>
 
@@ -54,7 +54,7 @@ export default function NotFound() {
                     {/* Secondary Button: Report */}
                     <Link
                         href="/contact"
-                        className="group flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-white/[0.05] px-6 py-3 font-medium text-white/80 ring-1 ring-white/15 backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:text-white hover:ring-white/30"
+                        className="group flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-hn-card-hover px-6 py-3 font-medium text-hn-text-muted/90 ring-1 ring-white/15 backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:text-hn-text hover:ring-white/30"
                     >
                         <svg
                             className="h-5 w-5 opacity-70 transition-opacity group-hover:opacity-100"

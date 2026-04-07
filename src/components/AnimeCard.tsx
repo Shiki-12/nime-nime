@@ -33,7 +33,7 @@ export default function AnimeCard({ anime }: AnimeCardProps) {
           {/* Play button — fades + scales in on hover */}
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 ring-2 ring-white/40 backdrop-blur-sm opacity-60 scale-100 md:opacity-0 md:scale-50 transition-all duration-300 ease-out md:group-hover:opacity-100 md:group-hover:scale-100">
             <svg
-              className="h-5 w-5 text-white ml-0.5"
+              className="h-5 w-5 text-hn-text ml-0.5"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -46,7 +46,7 @@ export default function AnimeCard({ anime }: AnimeCardProps) {
 
         {/* Episode badge — bottom left */}
         {anime.episode && (
-          <span className="absolute bottom-2 left-2 z-10 flex items-center gap-1 rounded-[4px] bg-hn-dark/85 px-2 py-0.5 text-[11px] font-semibold text-white backdrop-blur-sm">
+          <span className="absolute bottom-2 left-2 z-10 flex items-center gap-1 rounded-[4px] bg-hn-dark/85 px-2 py-0.5 text-[11px] font-semibold text-hn-text backdrop-blur-sm">
             <svg className="h-3 w-3 text-hn-primary" fill="currentColor" viewBox="0 0 20 20">
               <path d="M4 4a2 2 0 0 1 2-2h4.586A2 2 0 0 1 12 2.586L15.414 6A2 2 0 0 1 16 7.414V16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4Z" />
             </svg>
@@ -64,14 +64,14 @@ export default function AnimeCard({ anime }: AnimeCardProps) {
 
       {/* ── Title & metadata below image (no shift on hover) ── */}
       <div className="mt-2 px-0.5">
-        <h3 className="line-clamp-2 text-[13px] font-semibold leading-snug text-white/90 transition-colors duration-200 group-hover:text-hn-primary">
+        <h3 className="line-clamp-2 text-[13px] font-semibold leading-snug text-hn-text transition-colors duration-200 group-hover:text-hn-primary">
           {anime.title}
         </h3>
-        <div className="mt-1 flex items-center gap-1.5 text-[11px] text-white/35">
+        <div className="mt-1 flex items-center gap-1.5 text-[11px] text-hn-text-muted">
           {anime.type && <span>{anime.type}</span>}
           {anime.status_or_day && (
             <>
-              <span className="inline-block h-[3px] w-[3px] rounded-full bg-white/25" />
+              <span className="inline-block h-[3px] w-[3px] rounded-full bg-hn-text-muted/40" />
               <span>{anime.status_or_day}</span>
             </>
           )}

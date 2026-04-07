@@ -163,6 +163,104 @@
   --hn-hero-r-mid: rgba(12, 12, 12, 0.7);
 }
 
+/* ─── LIGHT THEMES (Fully Self-Contained) ─────────────────────────── */
+
+/* 1. Amethyst (Light Purple) */
+[data-theme="amethyst"] {
+  --hn-body: #fcfcfd;
+  --hn-dark: #f3f0f5;
+  --hn-card: #ffffff;
+  --hn-card-hover: #f9f6fb;
+  --hn-primary: #a182ab;
+  --hn-secondary: #8c6a96;
+  --hn-green: #10b981;
+  --hn-orange: #f59e0b;
+  --hn-blue: #3b82f6;
+  --hn-text: #2d2430;
+  --hn-text-muted: #a182ab;
+  --hn-border: rgba(161, 130, 171, 0.2);
+  --hn-nsfw: #ef4444;
+  --hn-nsfw-muted: rgba(239, 68, 68, 0.15);
+  --hn-scrollbar-hover: #a182ab;
+  --hn-scrollbar-thin: rgba(161, 130, 171, 0.3);
+  --hn-glass-bg: rgba(255, 255, 255, 0.75);
+  --hn-glass-border: rgba(161, 130, 171, 0.15);
+  --hn-hero-r-start: rgba(252, 252, 253, 1);
+  --hn-hero-r-mid: rgba(252, 252, 253, 0.4);
+}
+
+/* 2. Maroon (Light Crimson) */
+[data-theme="maroon"] {
+  --hn-body: #fdfcfc;
+  --hn-dark: #f5efef;
+  --hn-card: #ffffff;
+  --hn-card-hover: #fcf5f5;
+  --hn-primary: #591d1d;
+  --hn-secondary: #401212;
+  --hn-green: #10b981;
+  --hn-orange: #f59e0b;
+  --hn-blue: #3b82f6;
+  --hn-text: #260d0d;
+  --hn-text-muted: #8c3b3b;
+  --hn-border: rgba(89, 29, 29, 0.2);
+  --hn-nsfw: #ef4444;
+  --hn-nsfw-muted: rgba(239, 68, 68, 0.15);
+  --hn-scrollbar-hover: #591d1d;
+  --hn-scrollbar-thin: rgba(89, 29, 29, 0.3);
+  --hn-glass-bg: rgba(255, 255, 255, 0.75);
+  --hn-glass-border: rgba(89, 29, 29, 0.15);
+  --hn-hero-r-start: rgba(253, 252, 252, 1);
+  --hn-hero-r-mid: rgba(253, 252, 252, 0.4);
+}
+
+/* 3. Frost (Light Grey-Blue) */
+[data-theme="frost"] {
+  --hn-body: #fbfcfd;
+  --hn-dark: #f0f4f8;
+  --hn-card: #ffffff;
+  --hn-card-hover: #f4f7fa;
+  --hn-primary: #95a5b8;
+  --hn-secondary: #74879e;
+  --hn-green: #10b981;
+  --hn-orange: #f59e0b;
+  --hn-blue: #3b82f6;
+  --hn-text: #1e2630;
+  --hn-text-muted: #6b829e;
+  --hn-border: rgba(149, 165, 184, 0.2);
+  --hn-nsfw: #ef4444;
+  --hn-nsfw-muted: rgba(239, 68, 68, 0.15);
+  --hn-scrollbar-hover: #95a5b8;
+  --hn-scrollbar-thin: rgba(149, 165, 184, 0.3);
+  --hn-glass-bg: rgba(255, 255, 255, 0.75);
+  --hn-glass-border: rgba(149, 165, 184, 0.15);
+  --hn-hero-r-start: rgba(251, 252, 253, 1);
+  --hn-hero-r-mid: rgba(251, 252, 253, 0.4);
+}
+
+/* 4. Matcha (Light Teal) */
+[data-theme="matcha"] {
+  --hn-body: #fafffe;
+  --hn-dark: #effaf8;
+  --hn-card: #ffffff;
+  --hn-card-hover: #f2fcfb;
+  --hn-primary: #14b8a6;
+  --hn-secondary: #0f766e;
+  --hn-green: #10b981;
+  --hn-orange: #f59e0b;
+  --hn-blue: #3b82f6;
+  --hn-text: #0d2b27;
+  --hn-text-muted: #14b8a6;
+  --hn-border: rgba(20, 184, 166, 0.2);
+  --hn-nsfw: #ef4444;
+  --hn-nsfw-muted: rgba(239, 68, 68, 0.15);
+  --hn-scrollbar-hover: #14b8a6;
+  --hn-scrollbar-thin: rgba(20, 184, 166, 0.3);
+  --hn-glass-bg: rgba(255, 255, 255, 0.75);
+  --hn-glass-border: rgba(20, 184, 166, 0.15);
+  --hn-hero-r-start: rgba(250, 255, 254, 1);
+  --hn-hero-r-mid: rgba(250, 255, 254, 0.4);
+}
+
 /* ─── Tailwind Theme — references the overridable vars above ───── */
 @theme inline {
   --font-sans: 'Inter', var(--font-inter), system-ui, sans-serif;
@@ -341,5 +439,4 @@ video::-webkit-media-controls-panel {
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
-}
-
+}

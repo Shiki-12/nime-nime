@@ -96,7 +96,7 @@ export default async function UserDetailPage({
             </Link>
 
             {/* ── User Profile Card ──────────────────────────────────── */}
-            <div className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6 backdrop-blur-sm md:p-8">
+            <div className="relative overflow-hidden rounded-2xl border border-hn-border/50 bg-hn-card p-6 backdrop-blur-sm md:p-8">
                 <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-hn-primary/5 blur-3xl" />
 
                 <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -153,8 +153,8 @@ export default async function UserDetailPage({
             {/* ── Activity Grid ──────────────────────────────────────── */}
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 {/* Watch History */}
-                <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] backdrop-blur-sm">
-                    <div className="flex items-center gap-3 border-b border-white/[0.06] px-5 py-4">
+                <div className="rounded-xl border border-hn-border/50 bg-hn-card backdrop-blur-sm">
+                    <div className="flex items-center gap-3 border-b border-hn-border/50 px-5 py-4">
                         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-500/10 ring-1 ring-sky-500/20">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor" className="h-4 w-4 text-sky-400">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -168,7 +168,7 @@ export default async function UserDetailPage({
 
                     {user.watchHistory.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-12 text-sm text-hn-text-muted">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="mb-2 h-8 w-8 text-white/10">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="mb-2 h-8 w-8 text-hn-text-muted/30">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             No watch history
@@ -203,8 +203,8 @@ export default async function UserDetailPage({
                 </div>
 
                 {/* Saved Anime */}
-                <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] backdrop-blur-sm">
-                    <div className="flex items-center gap-3 border-b border-white/[0.06] px-5 py-4">
+                <div className="rounded-xl border border-hn-border/50 bg-hn-card backdrop-blur-sm">
+                    <div className="flex items-center gap-3 border-b border-hn-border/50 px-5 py-4">
                         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-hn-primary/10 ring-1 ring-hn-primary/20">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor" className="h-4 w-4 text-hn-primary">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
@@ -218,7 +218,7 @@ export default async function UserDetailPage({
 
                     {user.savedAnime.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-12 text-sm text-hn-text-muted">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="mb-2 h-8 w-8 text-white/10">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="mb-2 h-8 w-8 text-hn-text-muted/30">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
                             </svg>
                             No saved anime

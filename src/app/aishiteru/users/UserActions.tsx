@@ -61,7 +61,7 @@ export function RoleSelect({
             value={targetRole}
             disabled={isPending}
             onChange={(e) => handleChange(e.target.value as Role)}
-            className="rounded-lg border border-white/[0.08] bg-hn-card px-2.5 py-1.5 text-xs font-medium text-hn-text outline-none ring-0 transition-all duration-200 hover:border-hn-primary/30 focus:border-hn-primary/40 focus:ring-1 focus:ring-hn-primary/20 disabled:opacity-50"
+            className="rounded-lg border border-hn-border/60 bg-hn-card px-2.5 py-1.5 text-xs font-medium text-hn-text outline-none ring-0 transition-all duration-200 hover:border-hn-primary/30 focus:border-hn-primary/40 focus:ring-1 focus:ring-hn-primary/20 disabled:opacity-50"
         >
             {roleOptions.map((r) => (
                 <option key={r} value={r} className="bg-hn-dark text-hn-text">

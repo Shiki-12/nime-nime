@@ -21,7 +21,7 @@ export default function AdminDashboardLoading() {
                 {[1, 2, 3].map((i) => (
                     <div
                         key={i}
-                        className="rounded-xl border border-white/[0.06] bg-white/[0.03] p-6"
+                        className="rounded-xl border border-hn-border/50 bg-hn-card p-6"
                     >
                         <div className="flex items-center justify-between">
                             <div className="space-y-3">
@@ -36,9 +36,9 @@ export default function AdminDashboardLoading() {
             </div>
 
             {/* ── Recent members skeleton ─────────────────────────────── */}
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.03]">
+            <div className="rounded-xl border border-hn-border/50 bg-hn-card">
                 {/* Header */}
-                <div className="flex items-center justify-between border-b border-white/[0.06] px-6 py-4">
+                <div className="flex items-center justify-between border-b border-hn-border/50 px-6 py-4">
                     <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-lg skeleton" />
                         <div className="space-y-1.5">

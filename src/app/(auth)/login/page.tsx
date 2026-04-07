@@ -70,7 +70,7 @@ export default function LoginPage() {
             {/* Header */}
             <div className="mb-8 text-center">
                 <h1 className="text-2xl font-extrabold text-hn-primary">NimeNime 🎌</h1>
-                <p className="mt-1 text-sm text-white/40">Sign in to your account</p>
+                <p className="mt-1 text-sm text-hn-text-muted/60">Sign in to your account</p>
             </div>
 
             <Suspense fallback={null}>
@@ -87,7 +87,7 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Email */}
                 <div>
-                    <label htmlFor="login-email" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-white/30">
+                    <label htmlFor="login-email" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-hn-text-muted/50">
                         Email
                     </label>
                     <input
@@ -96,14 +96,14 @@ export default function LoginPage() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="you@example.com"
-                        className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 text-sm text-white placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
+                        className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 text-sm text-hn-text placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
                         disabled={loading}
                     />
                 </div>
 
                 {/* Password */}
                 <div>
-                    <label htmlFor="login-password" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-white/30">
+                    <label htmlFor="login-password" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-hn-text-muted/50">
                         Password
                     </label>
                     <div className="relative">
@@ -113,13 +113,13 @@ export default function LoginPage() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Enter your password"
-                            className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 pr-10 text-sm text-white placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
+                            className="w-full rounded-lg border border-white/5 bg-hn-dark px-4 py-3 pr-10 text-sm text-hn-text placeholder-white/25 outline-none transition-colors focus:border-hn-primary/40"
                             disabled={loading}
                         />
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-hn-text-muted/60 hover:text-hn-text transition-colors"
                             aria-label={showPassword ? "Hide password" : "Show password"}
                         >
                             {showPassword ? (
@@ -154,7 +154,7 @@ export default function LoginPage() {
             {/* ── Divider ────────────────────────────────────────── */}
             <div className="my-6 flex items-center gap-3">
                 <div className="h-px flex-1 bg-white/10" />
-                <span className="text-xs font-medium text-white/30">or continue with</span>
+                <span className="text-xs font-medium text-hn-text-muted/50">or continue with</span>
                 <div className="h-px flex-1 bg-white/10" />
             </div>
 
@@ -163,7 +163,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={handleGoogleSignIn}
                 disabled={googleLoading}
-                className="group flex w-full items-center justify-center gap-3 rounded-full border border-white/10 bg-white/5 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10 hover:shadow-lg hover:shadow-white/5 disabled:cursor-not-allowed disabled:opacity-50"
+                className="group flex w-full items-center justify-center gap-3 rounded-full border border-white/10 bg-white/5 py-3 text-sm font-semibold text-hn-text backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10 hover:shadow-lg hover:shadow-white/5 disabled:cursor-not-allowed disabled:opacity-50"
             >
                 {googleLoading ? (
                     <>
@@ -186,8 +186,20 @@ export default function LoginPage() {
                 )}
             </button>
 
+            <p className="mt-4 text-center text-xs text-hn-text-muted/70">
+                By continuing, you agree to our{" "}
+                <Link href="/terms" className="transition-colors hover:text-pink-400 hover:underline">
+                    Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link href="/privacy" className="transition-colors hover:text-pink-400 hover:underline">
+                    Privacy Policy
+                </Link>
+                .
+            </p>
+
             {/* Footer link */}
-            <p className="mt-6 text-center text-sm text-white/40">
+            <p className="mt-6 text-center text-sm text-hn-text-muted/60">
                 Don&apos;t have an account?{" "}
                 <Link href="/register" className="font-semibold text-hn-primary transition-colors hover:text-hn-primary/80">
                     Create one
