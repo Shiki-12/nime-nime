@@ -1,8 +1,12 @@
 import { getOngoingAnime, getCompletedAnime } from "@/lib/api";
 import AnimeCard from "@/components/AnimeCard";
 import HeroCarousel from "@/components/HeroCarousel";
+import ContinueWatching from "@/components/ContinueWatching";
+import type { ContinueWatchingItem } from "@/components/ContinueWatching";
 import Link from "next/link";
 import type { OngoingAnime } from "@/types/anime";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 // Tier 3: Frequently Updated — ongoing/completed feeds update hourly
 export const revalidate = 3600; // 1 hour
@@ -211,6 +215,54 @@ export default async function Home({ searchParams }: HomeProps) {
       err instanceof Error ? err.message : "Failed to fetch anime data.";
   }
 
+  // ── Fetch Continue Watching data (server-side) ───────────────────
+  let historyData: ContinueWatchingItem[] = [];
+  try {
+    const session = await auth();
+    if (session?.user?.id) {
+      // Get the most recently watched episode per anime (grouped)
+      const pagedGroups = await prisma.watchHistory.groupBy({
+        by: ["animeId"],
+        where: { userId: session.user.id },
+        _max: { watchedAt: true },
+        orderBy: { _max: { watchedAt: "desc" } },
+        take: 10,
+      });
+
+      if (pagedGroups.length > 0) {
+        const records = await prisma.watchHistory.findMany({
+          where: {
+            userId: session.user.id,
+            OR: pagedGroups.map((g) => ({
+              animeId: g.animeId,
+              watchedAt: g._max.watchedAt!,
+            })),
+          },
+        });
+
+        // Deduplicate per anime and map to component shape
+        const seen = new Set<string>();
+        historyData = pagedGroups
+          .map((g) => {
+            const rec = records.find((r) => r.animeId === g.animeId);
+            if (!rec || seen.has(rec.animeId)) return null;
+            seen.add(rec.animeId);
+            return {
+              animeSlug: rec.animeId,
+              title: rec.title,
+              image: rec.image,
+              type: rec.type,
+              episodeId: rec.episodeId,
+              episodeName: rec.episodeName,
+            };
+          })
+          .filter(Boolean) as ContinueWatchingItem[];
+      }
+    }
+  } catch {
+    // Silent — don't break the homepage if history fetch fails
+  }
+
   return (
     <>
       {/* Hero Carousel */}
@@ -286,6 +338,13 @@ export default async function Home({ searchParams }: HomeProps) {
               ))}
             </div>
           </section>
+        )}
+
+        {/* ── Continue Watching section (Moved to bottom) ─────── */}
+        {historyData.length > 0 && (
+          <div className="mt-14">
+            <ContinueWatching history={historyData} />
+          </div>
         )}
       </div>
     </>

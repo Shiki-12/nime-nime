@@ -13,6 +13,13 @@ enum Role {
   OWNER
 }
 
+enum BroadcastType {
+  INFO
+  WARNING
+  DANGER
+  SUCCESS
+}
+
 model User {
   id                String    @id @default(cuid())
   name              String
@@ -176,4 +183,17 @@ model Notification {
   @@index([userId, isRead])
   @@index([createdAt])
   @@map("notifications")
+}
+
+model Broadcast {
+  id        String        @id @default(cuid())
+  message   String
+  type      BroadcastType @default(INFO)
+  startDate DateTime
+  endDate   DateTime
+  isActive  Boolean       @default(true)
+  createdAt DateTime      @default(now())
+
+  @@index([isActive, startDate, endDate])
+  @@map("broadcasts")
 }

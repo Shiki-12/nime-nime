@@ -539,7 +539,7 @@ export default function Navbar() {
     if (pathname.startsWith("/hentai")) return null;
 
     return (
-        <header className="navbar-glass fixed left-0 right-0 top-0 z-50 w-full">
+        <header className="navbar-glass fixed left-0 right-0 top-[var(--announcement-height,0px)] z-50 w-full transition-[top] duration-300">
             <div className="flex h-14 md:h-[60px] w-full items-center gap-3 px-4 sm:px-6 lg:px-10">
                 {/* ── Left zone: Hamburger + Logo ── */}
                 <div className="flex items-center gap-2 shrink-0">

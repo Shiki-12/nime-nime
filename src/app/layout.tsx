@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import SyncOnLogin from "@/components/SyncOnLogin";
 import Navbar from "@/components/Navbar";
+import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/hooks/useTheme";
 import "./globals.css";
@@ -43,8 +44,9 @@ export default function RootLayout({
         <SessionProvider>
           <ThemeProvider>
             <SyncOnLogin />
+            <AnnouncementBar />
             <Navbar />
-            <main className="pt-[60px]">{children}</main>
+            <main className="pt-[calc(60px+var(--announcement-height,0px))]">{children}</main>
             <Footer />
           </ThemeProvider>
         </SessionProvider>

@@ -4,12 +4,67 @@ import AnimeCharacters from "@/components/AnimeCharacters";
 import AnimeDetailHeader from "@/components/AnimeDetailHeader";
 import DetailEpisodeList from "@/components/DetailEpisodeList";
 import MalRatingCard from "@/components/MalRatingCard";
+import type { Metadata } from "next";
 
 // Tier 2: Moderately Static — anime metadata updates occasionally
 export const revalidate = 10800; // 3 hours
 
 interface AnimeDetailPageProps {
     params: Promise<{ slug: string }>;
+}
+
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://nime-nime.web.id";
+
+export async function generateMetadata({ params }: AnimeDetailPageProps): Promise<Metadata> {
+    const { slug } = await params;
+
+    try {
+        const { detail: anime } = await getAnimeDetail(slug);
+
+        const ogUrl = new URL("/api/og", BASE_URL);
+        ogUrl.searchParams.set("title", anime.title);
+        ogUrl.searchParams.set("poster", anime.poster);
+        if (anime.rating) ogUrl.searchParams.set("rating", anime.rating);
+
+        const ogImage = ogUrl.toString();
+
+        return {
+            title: `${anime.title} — NimeNime`,
+            description: anime.synopsis
+                ? anime.synopsis.slice(0, 160) + (anime.synopsis.length > 160 ? "…" : "")
+                : `Nonton ${anime.title} subtitle Indonesia gratis di NimeNime.`,
+            openGraph: {
+                title: anime.title,
+                description: anime.synopsis
+                    ? anime.synopsis.slice(0, 160)
+                    : `Nonton ${anime.title} sub Indo gratis.`,
+                images: [
+                    {
+                        url: ogImage,
+                        width: 1200,
+                        height: 630,
+                        alt: anime.title,
+                    },
+                ],
+                type: "website",
+                siteName: "NimeNime",
+                url: `${BASE_URL}/anime/${slug}`,
+            },
+            twitter: {
+                card: "summary_large_image",
+                title: anime.title,
+                description: anime.synopsis
+                    ? anime.synopsis.slice(0, 160)
+                    : `Nonton ${anime.title} sub Indo gratis.`,
+                images: [ogImage],
+            },
+        };
+    } catch {
+        return {
+            title: "Anime — NimeNime",
+            description: "Nonton anime subtitle Indonesia gratis di NimeNime.",
+        };
+    }
 }
 
 export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) {
