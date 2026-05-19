@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { SessionProvider } from "next-auth/react";
-import SyncOnLogin from "@/components/SyncOnLogin";
-import Navbar from "@/components/Navbar";
-import AnnouncementBar from "@/components/AnnouncementBar";
-import Footer from "@/components/Footer";
-import { ThemeProvider } from "@/hooks/useTheme";
+import AppShell from "@/components/AppShell";
 import "./globals.css";
 
 const inter = Inter({
@@ -41,15 +36,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} font-sans antialiased`}
       >
-        <SessionProvider>
-          <ThemeProvider>
-            <SyncOnLogin />
-            <AnnouncementBar />
-            <Navbar />
-            <main className="pt-[calc(60px+var(--announcement-height,0px))]">{children}</main>
-            <Footer />
-          </ThemeProvider>
-        </SessionProvider>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );
