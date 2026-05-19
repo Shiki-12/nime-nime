@@ -20,16 +20,25 @@ export default async function GenreFilterPage({ params, searchParams }: GenrePag
 
     let animeList: OngoingAnime[] = [];
     let pagination: Pagination = { hasNext: false, hasPrev: false, currentPage };
-    let fetchError: string | null = null;
 
-    // Fetch anime results + totalPages in parallel
-    const [apiResult, totalPages] = await Promise.all([
-        getAnimeByGenre(genre_slug, currentPage).catch((err) => {
-            fetchError = err instanceof Error ? err.message : "Failed to fetch data.";
-            return null;
+    const [animeResult, totalPages] = await Promise.all([
+        getAnimeByGenre(genre_slug, currentPage)
+            .then((data) => ({ data, error: null }))
+            .catch((error) => {
+            console.error("[GenreFilterPage] Failed to fetch genre anime:", error);
+            return {
+                data: null,
+                error:
+                    "The genre API is currently unreachable. Please try again later.",
+            };
         }),
-        fetchGenreTotalPages(genre_slug),
+        fetchGenreTotalPages(genre_slug).catch((error) => {
+            console.error("[GenreFilterPage] Failed to fetch genre pagination:", error);
+            return 1;
+        }),
     ]);
+    const apiResult = animeResult.data;
+    const fetchError = animeResult.error;
 
     if (apiResult) {
         animeList = apiResult.animes;

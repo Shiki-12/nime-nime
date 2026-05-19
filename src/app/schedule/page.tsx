@@ -1,8 +1,10 @@
 import { getAnimeSchedule } from "@/lib/api";
 import ScheduleTabs from "./ScheduleTabs";
+import Link from "next/link";
 
 // Tier 3: Frequently Updated — schedule changes daily/hourly
 export const revalidate = 3600; // 1 hour
+export const dynamic = "force-dynamic";
 
 // Indonesian → English day name mapping (for display)
 const DAY_LABELS: Record<string, string> = {
@@ -25,16 +27,29 @@ export const metadata = {
 };
 
 export default async function SchedulePage() {
-    const data = await getAnimeSchedule();
+    let days: {
+        key: string;
+        label: string;
+        animes: Awaited<ReturnType<typeof getAnimeSchedule>>["schedule"][string];
+    }[] = [];
+    let fetchError: string | null = null;
 
-    // Build ordered schedule entries
-    const days = DAY_ORDER
-        .filter((key) => key in data.schedule)
-        .map((key) => ({
-            key,
-            label: DAY_LABELS[key] ?? key,
-            animes: data.schedule[key],
-        }));
+    try {
+        const data = await getAnimeSchedule();
+
+        // Build ordered schedule entries
+        days = DAY_ORDER
+            .filter((key) => key in data.schedule)
+            .map((key) => ({
+                key,
+                label: DAY_LABELS[key] ?? key,
+                animes: data.schedule[key],
+            }));
+    } catch (error) {
+        console.error("[SchedulePage] Failed to fetch schedule:", error);
+        fetchError =
+            "The schedule API is currently unreachable. Please try again later.";
+    }
 
     // Detect current day (Asia/Jakarta)
     const todayIdx = new Date(
@@ -56,7 +71,24 @@ export default async function SchedulePage() {
                 </p>
             </div>
 
-            <ScheduleTabs days={days} defaultDay={defaultKey} />
+            {fetchError ? (
+                <div className="mx-auto max-w-xl rounded-xl border border-red-500/20 bg-red-500/5 p-6 text-center">
+                    <h2 className="text-xl font-bold text-hn-text">
+                        Schedule unavailable
+                    </h2>
+                    <p className="mt-2 text-sm leading-6 text-hn-text-muted/70">
+                        {fetchError}
+                    </p>
+                    <Link
+                        href="/schedule"
+                        className="mt-5 inline-flex rounded-full bg-hn-primary px-5 py-2 text-sm font-semibold text-hn-dark transition-opacity hover:opacity-90"
+                    >
+                        Try again
+                    </Link>
+                </div>
+            ) : (
+                <ScheduleTabs days={days} defaultDay={defaultKey} />
+            )}
         </main>
     );
 }

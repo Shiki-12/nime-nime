@@ -21,16 +21,25 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
 
     let animeList: OngoingAnime[] = [];
     let pagination: Pagination = { hasNext: false, hasPrev: false, currentPage };
-    let fetchError: string | null = null;
 
-    // Fetch anime results + totalPages in parallel
-    const [apiResult, totalPages] = await Promise.all([
-        searchAnime(decodedQuery, currentPage).catch((err) => {
-            fetchError = err instanceof Error ? err.message : "Search failed.";
-            return null;
+    const [searchResult, totalPages] = await Promise.all([
+        searchAnime(decodedQuery, currentPage)
+            .then((data) => ({ data, error: null }))
+            .catch((error) => {
+            console.error("[SearchPage] Failed to fetch search results:", error);
+            return {
+                data: null,
+                error:
+                    "The search API is currently unreachable. Please try again later.",
+            };
         }),
-        fetchSearchTotalPages(decodedQuery),
+        fetchSearchTotalPages(decodedQuery).catch((error) => {
+            console.error("[SearchPage] Failed to fetch search pagination:", error);
+            return 1;
+        }),
     ]);
+    const apiResult = searchResult.data;
+    const fetchError = searchResult.error;
 
     if (apiResult) {
         animeList = apiResult.animes;

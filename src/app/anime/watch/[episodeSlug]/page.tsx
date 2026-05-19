@@ -23,7 +23,32 @@ export default async function StreamingPage({
   const sp = await searchParams;
   const animeSlug = sp.anime;
 
-  const episode = await getEpisodeData(episodeSlug);
+  let episode: Awaited<ReturnType<typeof getEpisodeData>> | null = null;
+
+  try {
+    episode = await getEpisodeData(episodeSlug);
+  } catch (error) {
+    console.error("[StreamingPage] Failed to fetch episode data:", error);
+  }
+
+  if (!episode) {
+    return (
+      <div className="mx-auto max-w-[1440px] px-4 py-16 lg:px-6">
+        <div className="mx-auto max-w-xl rounded-xl border border-red-500/20 bg-red-500/5 p-6 text-center">
+          <h1 className="text-xl font-bold text-hn-text">Episode unavailable</h1>
+          <p className="mt-2 text-sm leading-6 text-hn-text-muted/70">
+            The episode API is currently unreachable. Please try again later.
+          </p>
+          <Link
+            href={`/anime/watch/${episodeSlug}${animeSlug ? `?anime=${animeSlug}` : ""}`}
+            className="mt-5 inline-flex rounded-full bg-hn-primary px-5 py-2 text-sm font-semibold text-hn-dark transition-opacity hover:opacity-90"
+          >
+            Try again
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   let episodes: EpisodeItem[] = [];
   let animeTitle: string | null = null;
@@ -36,8 +61,8 @@ export default async function StreamingPage({
       animeTitle = detail.title;
       animePoster = detail.poster;
       animeType = detail.type;
-    } catch {
-      // Silently fail
+    } catch (error) {
+      console.error("[StreamingPage] Failed to fetch anime detail sidebar:", error);
     }
   }
 

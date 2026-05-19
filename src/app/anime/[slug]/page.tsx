@@ -5,6 +5,8 @@ import AnimeDetailHeader from "@/components/AnimeDetailHeader";
 import DetailEpisodeList from "@/components/DetailEpisodeList";
 import MalRatingCard from "@/components/MalRatingCard";
 import type { Metadata } from "next";
+import Link from "next/link";
+import type { AnimeDetail } from "@/types/anime";
 
 // Tier 2: Moderately Static — anime metadata updates occasionally
 export const revalidate = 10800; // 3 hours
@@ -69,13 +71,44 @@ export async function generateMetadata({ params }: AnimeDetailPageProps): Promis
 
 export default async function AnimeDetailPage({ params }: AnimeDetailPageProps) {
     const { slug } = await params;
+    let anime: AnimeDetail | null = null;
+    let serialSlug: string | null = null;
 
-    // Dual-fetch: run API calls and scraper concurrently
-    const [{ detail: anime }, serialSlug] = await Promise.all([
-        getAnimeDetail(slug),
-        fetchSerialSlug(slug),
-    ]);
+    try {
+        // Dual-fetch: run API calls and scraper concurrently
+        const [detailResponse, fetchedSerialSlug] = await Promise.all([
+            getAnimeDetail(slug),
+            fetchSerialSlug(slug).catch((error) => {
+                console.error("[AnimeDetailPage] Failed to fetch serial slug:", error);
+                return null;
+            }),
+        ]);
+        anime = detailResponse.detail;
+        serialSlug = fetchedSerialSlug;
+    } catch (error) {
+        console.error("[AnimeDetailPage] Failed to fetch anime detail:", error);
+    }
 
+    if (!anime) {
+        return (
+            <div className="mx-auto max-w-[1440px] px-4 py-16 lg:px-6">
+                <div className="mx-auto max-w-xl rounded-xl border border-red-500/20 bg-red-500/5 p-6 text-center">
+                    <h1 className="text-xl font-bold text-hn-text">
+                        Anime unavailable
+                    </h1>
+                    <p className="mt-2 text-sm leading-6 text-hn-text-muted/70">
+                        The anime detail API is currently unreachable. Please try again later.
+                    </p>
+                    <Link
+                        href={`/anime/${slug}`}
+                        className="mt-5 inline-flex rounded-full bg-hn-primary px-5 py-2 text-sm font-semibold text-hn-dark transition-opacity hover:opacity-90"
+                    >
+                        Try again
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="relative w-full overflow-x-hidden">

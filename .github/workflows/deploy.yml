@@ -18,10 +18,11 @@ jobs:
           key: ${{ secrets.KEY }}
           port: 22
           script: |
+            set -euo pipefail
             cd /var/www/Nime-nime
             git pull origin main
             npm ci
-            npx prisma migrate deploy
             npm run build
+            npx prisma migrate deploy
             pm2 restart nime-nime --update-env
             pm2 restart nimenime-bot --update-env
