@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 
 const DEFAULT_MAINTENANCE_MESSAGE = "Admin belum bayar tagihan, jadi yaudah.";
 
@@ -22,8 +23,8 @@ export default function MaintenancePage() {
 
       <section className="relative w-full max-w-2xl rounded-lg border border-hn-border bg-hn-dark/80 p-7 shadow-2xl shadow-black/40 backdrop-blur-2xl sm:p-10">
         <div className="mb-6 flex items-center gap-3">
-          <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-hn-primary/15 text-lg font-black text-hn-primary ring-1 ring-hn-primary/25">
-            N
+          <span className="flex h-11 w-11 items-center justify-center overflow-hidden">
+            <Image src="/favicon.ico" alt="NimeNime" width={100} height={100} className="object-contain rounded-lg" />
           </span>
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-hn-secondary">
