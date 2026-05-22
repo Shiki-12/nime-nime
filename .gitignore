@@ -47,5 +47,5 @@ next-env.d.ts
 src/generated/
 
 /.idea/
-/.kiro/
-/.vscode/
+/.kiro
+/.vscode
