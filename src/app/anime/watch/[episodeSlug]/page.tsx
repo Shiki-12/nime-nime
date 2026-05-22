@@ -1,11 +1,33 @@
 import Link from "next/link";
 import { getEpisodeData, getAnimeDetail } from "@/lib/api";
+import { getAggregatedVideoServers } from "@/lib/otakudesu";
 import WatchHistoryTracker from "@/components/WatchHistoryTracker";
 import EpisodeList from "@/components/EpisodeList";
 import SidebarEpisodeList from "@/components/SidebarEpisodeList";
 import EpisodeComments from "@/components/EpisodeComments";
 import type { EpisodeItem } from "@/types/anime";
 import VideoPlayer from "@/components/VideoPlayer";
+
+/**
+ * Extract episode number from an episode title or slug.
+ * Tries patterns like "Episode 5", "Ep 12", or trailing numbers in slugs.
+ * Returns the matched number as a string, or "1" as fallback.
+ */
+function extractEpisodeNumber(title: string, slug: string): string {
+  // Try to match "Episode X" or "Ep X" pattern in the title (case-insensitive)
+  const titleMatch = title.match(/(?:episode|ep)\s*(\d+)/i);
+  if (titleMatch) return titleMatch[1];
+
+  // Try to match trailing number in the slug (e.g., "naruto-episode-5" → "5")
+  const slugMatch = slug.match(/(?:episode-|ep-)(\d+)/i);
+  if (slugMatch) return slugMatch[1];
+
+  // Fallback: last number in the slug
+  const lastNum = slug.match(/(\d+)(?!.*\d)/);
+  if (lastNum) return lastNum[1];
+
+  return "1";
+}
 
 // Tier 2: Moderately Static — episode/stream data updates occasionally
 export const revalidate = 10800; // 3 hours
@@ -66,6 +88,14 @@ export default async function StreamingPage({
     }
   }
 
+  // Extract episode number and aggregate video servers from multiple providers
+  const episodeNumber = extractEpisodeNumber(episode.title, episodeSlug);
+  const aggregatedStreams = await getAggregatedVideoServers(
+    animeTitle || episode.title,
+    episodeNumber,
+    episodeSlug
+  );
+
   return (
     <div className="mx-auto max-w-[1440px] px-4 pt-8 pb-20 lg:px-6">
       {/* Breadcrumb */}
@@ -115,7 +145,7 @@ export default async function StreamingPage({
           </div>
 
           {/* Video Player with resolution/server selector */}
-          <VideoPlayer streams={episode.streams} title={episode.title} />
+          <VideoPlayer streams={aggregatedStreams} title={episode.title} />
 
           {/* Track this episode in watch history */}
           {animeSlug && animeTitle && (

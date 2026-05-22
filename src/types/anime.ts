@@ -84,6 +84,62 @@ export interface EpisodeResponse {
   downloads: unknown[];
 }
 
+// ─── Multi-Server Video Aggregator ─────────────────────────────────
+export interface VideoServer {
+  provider: string;
+  quality: string;
+  url: string;
+}
+
+// ─── Otakudesu API Response Types ──────────────────────────────────
+export interface OtakudesuSearchResult {
+  slug: string;
+  title: string;
+  animeId?: string;
+  poster?: string;
+  genres?: string[];
+  status?: string;
+  rating?: string;
+}
+
+export interface OtakudesuSearchResponse {
+  status: string;
+  data: {
+    animeList: OtakudesuSearchResult[];
+  };
+}
+
+export interface OtakudesuEpisodeEntry {
+  eps: string;
+  slug: string;
+  episodeId: string;
+}
+
+export interface OtakudesuDetailResponse {
+  status: string;
+  data: {
+    episodeList: OtakudesuEpisodeEntry[];
+  };
+}
+
+export interface OtakudesuQuality {
+  quality: string;
+  url: string;
+  title?: string;
+  serverId?: string;
+  serverList?: { title: string; serverId: string }[];
+}
+
+export interface OtakudesuEpisodeResponse {
+  status: string;
+  data: {
+    defaultStreamingUrl: string;
+    server: {
+      qualities: OtakudesuQuality[];
+    };
+  };
+}
+
 // ─── Schedule ──────────────────────────────────────────────────────
 export interface ScheduleResponse {
   status: string;

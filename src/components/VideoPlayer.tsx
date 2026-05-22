@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import type { StreamSource } from "@/types/anime";
+import type { VideoServer } from "@/types/anime";
 import VideoPlayerWrapper from "./VideoPlayerWrapper";
 
 interface VideoPlayerProps {
-    streams: StreamSource[];
+    streams: VideoServer[];
     title: string;
 }
 
@@ -60,11 +60,11 @@ export default function VideoPlayer({ streams, title }: VideoPlayerProps) {
                                 >
                                     {streams.map((s, i) => (
                                         <option
-                                            key={`${s.name}-${i}`}
+                                            key={`${s.url}-${i}`}
                                             value={i}
                                             className="bg-hn-dark text-hn-text"
                                         >
-                                            {s.name}
+                                            {s.provider} - {s.quality}
                                         </option>
                                     ))}
                                 </select>
