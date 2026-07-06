@@ -82,8 +82,11 @@ function buildProxyUrl(targetUrl: string, apiKey: string): string {
 
 // ─── Main Fetch Function ───────────────────────────────────────────
 
+/** Minimum timeout for proxy requests (ScraperAPI needs 15-30s to solve CF challenges) */
+const PROXY_TIMEOUT_MS = 60_000;
+
 export interface CfFetchOptions {
-    /** Timeout in milliseconds for each attempt. Default: 15000 */
+    /** Timeout in milliseconds for direct fetch attempts. Default: 15000 */
     timeoutMs?: number;
     /** If true, skip the direct fetch and go straight to Scraper API. Default: false */
     forceProxy?: boolean;
@@ -207,8 +210,10 @@ async function _proxyFetch(url: string, timeoutMs: number): Promise<string> {
     );
 
     const controller = new AbortController();
-    // Proxy requests can be slower due to JS rendering; use 2x timeout
-    const timeout = setTimeout(() => controller.abort(), timeoutMs * 2);
+    // Proxy requests need 15-30s for JS rendering + CF challenge solving;
+    // use a fixed 60s floor so short caller timeouts (e.g. 8s) don't abort prematurely
+    const proxyTimeout = Math.max(timeoutMs, PROXY_TIMEOUT_MS);
+    const timeout = setTimeout(() => controller.abort(), proxyTimeout);
 
     try {
         const res = await fetch(proxyUrl, {
