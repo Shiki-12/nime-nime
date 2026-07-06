@@ -14,7 +14,7 @@
  */
 
 const rawApi = process.env.ANIME_API_URL || "https://www.sankavollerei.com/anime/animasu";
-const rawHtml = process.env.ANIME_HTML_URL || "https://v1.animasu.app";
+const rawHtml = process.env.ANIME_HTML_URL || "https://v1.animasu.work";
 const rawOtakudesu = process.env.OTAKUDESU_API_URL || "https://www.sankavollerei.com/anime";
 
 /** JSON API base URL — for structured data endpoints (/home, /search, /detail, etc.) */

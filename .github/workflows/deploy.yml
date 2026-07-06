@@ -1,16 +1,17 @@
-name: Deploy GCP
+name: Deploy EC2
 
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: server-update
+
     steps:
-      - name: Execute Deployment Script via SSH
+      - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
@@ -19,10 +20,29 @@ jobs:
           port: 22
           script: |
             set -euo pipefail
-            cd /var/www/Nime-nime
-            git pull origin main
+
+            echo "==> Go to project directory"
+            cd /var/www/nime-nime
+
+            echo "==> Pull latest code"
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "==> Install dependencies"
             npm ci
+
+            echo "==> Sync Prisma database"
+            npx prisma generate
+            npx prisma db push
+
+            echo "==> Build Next.js app"
             npm run build
-            npx prisma migrate deploy --skip-generate || true
-            pm2 restart nime-nime --update-env
+
+            echo "==> Restart PM2 services"
+            pm2 restart nime --update-env
             pm2 restart nimenime-bot --update-env
+
+            echo "==> Save PM2 process list"
+            pm2 save
+
+            echo "==> Deployment finished"
