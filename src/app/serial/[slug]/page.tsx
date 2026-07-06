@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ANIME_HTML_URL } from "@/lib/config";
+import { cfFetchHtml } from "@/lib/cf-fetch";
 
 // ─── Cache ─────────────────────────────────────────────────────────
 // Serial relationships rarely change
@@ -28,22 +29,7 @@ async function scrapeSerialPage(url: string): Promise<{
     animes: SerialAnime[];
     nextPageUrl: string | null;
 }> {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-
-    const res = await fetch(url, {
-        signal: controller.signal,
-        headers: {
-            "User-Agent":
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-        },
-        cache: "no-store",
-    });
-
-    clearTimeout(timeout);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-    const html = await res.text();
+    const html = await cfFetchHtml(url, { timeoutMs: 8000 });
     const $ = cheerio.load(html);
 
     // Extract franchise title

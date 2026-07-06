@@ -1,5 +1,6 @@
 import * as cheerio from "cheerio";
 import { ANIME_HTML_URL } from "@/lib/config";
+import { cfFetchHtml } from "@/lib/cf-fetch";
 
 /**
  * Silently scrape the source website Animasu to check whether this anime
@@ -11,24 +12,9 @@ import { ANIME_HTML_URL } from "@/lib/config";
  */
 export async function fetchSerialSlug(slug: string): Promise<string | null> {
     try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 5000);
-
-        const res = await fetch(`${ANIME_HTML_URL}/anime/${slug}/`, {
-            signal: controller.signal,
-            headers: {
-                "User-Agent":
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-            },
-            // Don't let Next.js cache these scraper requests
-            cache: "no-store",
+        const html = await cfFetchHtml(`${ANIME_HTML_URL}/anime/${slug}/`, {
+            timeoutMs: 5000,
         });
-
-        clearTimeout(timeout);
-
-        if (!res.ok) return null;
-
-        const html = await res.text();
         const $ = cheerio.load(html);
 
         const href = $('a[href*="/serial/"]').attr("href");

@@ -28,3 +28,17 @@ export const OTAKUDESU_API_URL = rawOtakudesu.replace(/\/+$/, "");
 
 /** Cache TTL for Otakudesu API responses in seconds (minimum 1 hour to respect 50 req/min rate limit) */
 export const OTAKUDESU_CACHE_TTL = 3600;
+
+/**
+ * ─── Scraper API (Cloudflare Bypass) ────────────────────────────────
+ *
+ * When the target HTML site enables Cloudflare Under Attack Mode,
+ * direct fetch fails with 403. These settings configure an external
+ * Scraper API to handle JS rendering and CF bypass.
+ *
+ * Leave SCRAPER_API_KEY empty to disable (direct fetch only).
+ */
+export const SCRAPER_API_KEY = process.env.SCRAPER_API_KEY || "";
+export const SCRAPER_PROVIDER = (process.env.SCRAPER_PROVIDER || "scraperapi") as
+    | "scraperapi"
+    | "zenrows";

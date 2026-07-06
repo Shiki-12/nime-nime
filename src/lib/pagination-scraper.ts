@@ -10,8 +10,8 @@
 
 import { unstable_cache } from "next/cache";
 import * as cheerio from "cheerio";
-import { BROWSER_HEADERS } from "@/lib/fetcher";
 import { ANIME_HTML_URL } from "@/lib/config";
+import { cfFetchHtml } from "@/lib/cf-fetch";
 
 const ANIMASU_BASE = ANIME_HTML_URL;
 
@@ -28,17 +28,7 @@ async function _scrapeTotalPages(url: string): Promise<number> {
     try {
         console.log("[pagination-scraper] Fetching:", url);
 
-        const res = await fetch(url, {
-            headers: BROWSER_HEADERS,
-            next: { revalidate: 21600 }, // 6-hour HTTP cache as secondary layer
-        });
-
-        if (!res.ok) {
-            console.log("[pagination-scraper] HTTP error:", res.status, "for", url);
-            return 1;
-        }
-
-        const html = await res.text();
+        const html = await cfFetchHtml(url);
         const $ = cheerio.load(html);
 
         // Collect all page numbers from every extraction strategy
