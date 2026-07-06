@@ -49,3 +49,7 @@ src/generated/
 /.idea/
 /.kiro
 /.vscode
+
+NIMENIME_QA_PRODUCTION_READY_ROADMAP.md
+README_AWS_Free_Tier_Deploy_Nime.md
+PROJECT_DISCOVERY_AND_AUDIT.md
